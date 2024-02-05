@@ -1,0 +1,6 @@
+@SolarSystemManager.RESTAPI_HostAddress = http://localhost:5015
+
+GET {{SolarSystemManager.RESTAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,5 +1,5 @@
 <template>
-  <div>Login</div>
+  <div>Unauthorized</div>
 </template>
 
 <script setup lang="ts">

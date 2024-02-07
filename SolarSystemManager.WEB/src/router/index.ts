@@ -6,12 +6,47 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/LandingPageView.vue')
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: () => import('../views/SignUpView.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/DashboardView.vue')
+    },
+    {
+      path: '/systemeditor',
+      name: 'systemeditor',
+      component: () => import('../views/SystemEditorView.vue')
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: () => import('../views/SettingsView.vue')
+    },
+    {
+      path: '/notfound',
+      name: 'notfound',
+      component: () => import('../views/NotFoundView.vue')
+    },
+    {
+      path: '/unauthorized',
+      name: 'unauthorized',
+      component: () => import('../views/UnauthorizedView.vue')
+    },
+    {
+      path: '/editor',
+      name: 'editor',
+      component: () => import('../views/SystemEditorView.vue')
     }
   ]
 })

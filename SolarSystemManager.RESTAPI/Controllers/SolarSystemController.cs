@@ -16,19 +16,20 @@ namespace SolarSystemManager.RESTAPI.Controllers
         }
 
         [HttpGet]
-        [EnableCors]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetAllSolarSystems")]
-        public string GetAllSolarSystems()
+        public IActionResult GetAllSolarSystems()
         {
-            return "You got a solar system!";
+            string test = "Reached the API!!";
+            return Ok(test);
         }
 
         [HttpPost]
-        [EnableCors]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSolarSystemById")]
-        public string GetSolarSystemById(int id)
+        public IActionResult GetSolarSystemById(int id)
         {
-            return "You got #"+ id;
+            return Ok("Success!");
         }
     }
 }

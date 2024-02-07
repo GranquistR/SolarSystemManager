@@ -2,6 +2,7 @@
   <div>
     <h1>Home</h1>
     <p>Home page content</p>
+    <p>{{ allSolarSystems }}</p>
   </div>
 </template>
 
@@ -9,9 +10,11 @@
 import SolarSystemService from '@/services/SolarSystemService'
 import { ref } from 'vue'
 
-const allSolarSystems = ref<string>(SolarSystemService.GetAllSolarSystems())
+const allSolarSystems = ref<string>('')
 
-console.log('Script is run here!')
+SolarSystemService.getAllSolarSystems().then((response) => {
+  allSolarSystems.value = response
+})
 </script>
 
 <style scoped>

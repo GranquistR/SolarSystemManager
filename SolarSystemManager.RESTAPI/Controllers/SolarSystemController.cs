@@ -29,7 +29,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystemById")]
         public IActionResult GetSolarSystemById(int id)
         {
-            return Ok("Success!");
+            return Ok("Success! " + id);
         }
     }
 }

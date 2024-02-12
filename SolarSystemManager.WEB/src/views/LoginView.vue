@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex justify-content-center">
+  <div style="height: 98vh" class="flex align-items-center justify-content-center">
     <LoginCard></LoginCard>
   </div>
 </template>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HeaderBar></HeaderBar>
     <h1>Home</h1>
     <p>Home page content</p>
     <p>{{ allSolarSystems }}</p>
@@ -7,6 +8,7 @@
 </template>
 
 <script setup lang="ts">
+import HeaderBar from '@/components/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import { ref } from 'vue'
 

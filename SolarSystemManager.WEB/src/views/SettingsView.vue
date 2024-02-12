@@ -1,0 +1,14 @@
+<template>
+  <div>Settings</div>
+</template>
+
+<script setup lang="ts">
+console.log('code here')
+</script>
+
+<style scoped>
+/* css here */
+div {
+  color: red;
+}
+</style>

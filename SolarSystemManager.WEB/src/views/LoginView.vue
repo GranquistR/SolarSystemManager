@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <h1>Login</h1>
-    <p>Login page content</p>
+  <div class="w-full flex justify-content-center">
+    <LoginCard></LoginCard>
   </div>
 </template>
+
+<script setup lang="ts">
+import LoginCard from '@/components/Login/LoginCard.vue'
+</script>

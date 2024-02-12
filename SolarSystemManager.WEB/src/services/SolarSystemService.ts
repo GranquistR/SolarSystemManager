@@ -7,4 +7,10 @@ export default class SolarSystemService {
       return data
     })
   }
+  static async getSolarSystemById(id: number) {
+    return FetchAPIService.post('/SolarSystem/GetSolarSystemById', id).then((data) => {
+      console.log('SolarSystemService: ', data)
+      return data
+    })
+  }
 }

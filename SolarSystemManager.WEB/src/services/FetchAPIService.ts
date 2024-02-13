@@ -1,5 +1,3 @@
-import { json } from "stream/consumers"
-
 export default class FetchAPIService {
   private static baseURL: string = 'https://localhost:7247'
 
@@ -30,8 +28,8 @@ export default class FetchAPIService {
     let response
     try {
       const response = await fetch(url, {
-        method: "POST", 
-        mode: "cors",
+        method: 'POST',
+        mode: 'cors',
         body: JSON.stringify(data)
       })
       if (!response.ok) {

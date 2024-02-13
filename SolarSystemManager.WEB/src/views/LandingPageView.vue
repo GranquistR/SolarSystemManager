@@ -1,9 +1,8 @@
 <template>
   <div>
     <HeaderBar></HeaderBar>
-    <h1>Home</h1>
+    <h1>landing</h1>
     <p>Home page content</p>
-    <p>{{ allSolarSystems }}</p>
   </div>
 </template>
 

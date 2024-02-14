@@ -20,7 +20,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetAllSolarSystems")]
         public IActionResult GetAllSolarSystems()
         {
-            string test = "Reached the API!!";
+            string test = "Reach the API!!";
             return Ok(test);
         }
 
@@ -29,7 +29,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystemById")]
         public IActionResult GetSolarSystemById(int id)
         {
-            return Ok("Success!");
+            return Ok("Success! " + id);
         }
     }
 }

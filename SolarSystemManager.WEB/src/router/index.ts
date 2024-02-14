@@ -5,7 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'landingpage',
       component: () => import('../views/LandingPageView.vue')
     },
     {
@@ -34,11 +34,6 @@ const router = createRouter({
       component: () => import('../views/SettingsView.vue')
     },
     {
-      path: '/notfound',
-      name: 'notfound',
-      component: () => import('../views/NotFoundView.vue')
-    },
-    {
       path: '/unauthorized',
       name: 'unauthorized',
       component: () => import('../views/UnauthorizedView.vue')
@@ -47,6 +42,11 @@ const router = createRouter({
       path: '/editor',
       name: 'editor',
       component: () => import('../views/SystemEditorView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'notfound',
+      component: () => import('../views/NotFoundView.vue')
     }
   ]
 })

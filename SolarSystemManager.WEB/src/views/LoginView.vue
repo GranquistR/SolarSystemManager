@@ -1,14 +1,13 @@
 <template>
-  <div>Login</div>
+  <div>
+    <HeaderBar></HeaderBar>
+    <div style="height: 90vh" class="flex align-items-center justify-content-center">
+      <LoginCard></LoginCard>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-console.log('code here')
+import LoginCard from '@/components/Login/LoginCard.vue'
+import HeaderBar from '@/components/Header/HeaderBar.vue'
 </script>
-
-<style scoped>
-/* css here */
-div {
-  color: red;
-}
-</style>

@@ -1,9 +1,11 @@
 <template>
+  <HeaderBar dashboard landing login settings signup editor></HeaderBar>
+
   <div>Unauthorized</div>
 </template>
 
 <script setup lang="ts">
-console.log('code here')
+import HeaderBar from '@/components/Header/HeaderBar.vue'
 </script>
 
 <style scoped>

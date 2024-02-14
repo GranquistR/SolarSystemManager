@@ -4,7 +4,7 @@ export default class FetchAPIService {
   static async get(url: string): Promise<any> {
     let response
     try {
-      response = await fetch(this.baseURL + url, { mode: 'cors' })
+      response = await fetch(this.baseURL + url, { mode: 'cors', method: 'GET' })
       if (!response.ok) {
         throw new Error('Network response was not ok.')
       }
@@ -24,13 +24,14 @@ export default class FetchAPIService {
     }
   }
 
-  static async post(url: string, data: number): Promise<any> {
+  static async post(url: string, data: any): Promise<any> {
     let response
     try {
-      const response = await fetch(url, {
-        method: 'POST',
+      response = await fetch(this.baseURL + url, {
         mode: 'cors',
-        body: JSON.stringify(data)
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
       })
       if (!response.ok) {
         throw new Error('Network response was not ok.')
@@ -43,10 +44,11 @@ export default class FetchAPIService {
 
     try {
       if (response) {
-        return response
+        const data = await response.text()
+        return data
       }
     } catch (error) {
-      throw new Error('Error With Request')
+      throw new Error('Error parsing JSON')
     }
   }
 }

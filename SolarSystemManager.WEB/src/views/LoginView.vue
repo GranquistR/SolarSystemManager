@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LightHeaderBar></LightHeaderBar>
+    <HeaderBar></HeaderBar>
     <div style="height: 90vh" class="flex align-items-center justify-content-center">
       <LoginCard></LoginCard>
     </div>
@@ -9,5 +9,5 @@
 
 <script setup lang="ts">
 import LoginCard from '@/components/Login/LoginCard.vue'
-import LightHeaderBar from '@/components/LightHeaderBar.vue'
+import HeaderBar from '@/components/Header/HeaderBar.vue'
 </script>

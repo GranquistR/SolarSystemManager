@@ -1,6 +1,7 @@
 <template>
   <div>
-    <HeaderBar></HeaderBar>
+    <HeaderBar dashboard landing login settings signup editor></HeaderBar>
+
     <img
       src="../assets/Images/openStars.jpg"
       alt="open space"
@@ -30,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import HeaderBar from '@/components/HeaderBar.vue'
+import HeaderBar from '@/components/Header/HeaderBar.vue'
 
 const hover = ref(false)
 </script>

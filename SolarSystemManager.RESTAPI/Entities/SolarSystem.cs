@@ -73,3 +73,4 @@ namespace SolarSystemManager.RESTAPI.Entities
             }*/
         }
     }
+}

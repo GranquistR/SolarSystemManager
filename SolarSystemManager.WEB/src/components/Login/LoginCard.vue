@@ -65,8 +65,11 @@ function Login() {
     if (response == 'Success!') {
       isLoading.value = false
       //save login to cookies
-      document.cookie = `username=${username.value};`
-      document.cookie = `password=${password.value};`
+      let date = new Date()
+      //set date to 1 day from now
+      date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+      document.cookie = `username=${username.value}; expires=${date}`
+      document.cookie = `password=${password.value}; expires=`
       window.location.href = '/dashboard'
     } else {
       failedLogin()

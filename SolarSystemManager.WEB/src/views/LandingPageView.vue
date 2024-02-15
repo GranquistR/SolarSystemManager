@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderBar dashboard landing login settings signup editor></HeaderBar>
+    <HeaderBar></HeaderBar>
     <h1>landing</h1>
     <p>Home page content</p>
     {{ allSolarSystems }}

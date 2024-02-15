@@ -1,6 +1,6 @@
 <template>
   <div>
-    <HeaderBar></HeaderBar>
+    <HeaderBar no-links></HeaderBar>
     <div style="height: 90vh" class="flex align-items-center justify-content-center">
       <LoginCard></LoginCard>
     </div>

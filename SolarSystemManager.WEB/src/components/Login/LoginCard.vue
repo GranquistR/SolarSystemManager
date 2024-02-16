@@ -39,7 +39,7 @@ import Message from 'primevue/message'
 import { ref } from 'vue'
 import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
-
+import encrypt from '@/services/encryption'
 const username = ref('')
 const password = ref('')
 
@@ -49,7 +49,7 @@ const hasFailed = ref(false)
 function Login() {
   isLoading.value = true
 
-  LoginService.Login(new User(username.value, password.value)).then((response) => {
+  LoginService.Login(new User(username.value, encrypt(password.value, "saltEX"))).then((response) => {
     if (response == 'Success!') {
       isLoading.value = false
       window.location.href = '/dashboard'

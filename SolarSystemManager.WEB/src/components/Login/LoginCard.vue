@@ -36,7 +36,7 @@ import Card from 'primevue/card'
 import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
 
@@ -46,20 +46,44 @@ const password = ref('')
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
+onMounted(() => {
+  if (document.cookie.includes('username=')) {
+    username.value = document.cookie.split('username=')[1].split(';')[0]
+    password.value = document.cookie.split('password=')[1].split(';')[0]
+    Login()
+  }
+})
+
 function Login() {
   isLoading.value = true
+  if (username.value == '' || password.value == '') {
+    failedLogin()
+    return
+  }
 
   LoginService.Login(new User(username.value, password.value)).then((response) => {
     if (response == 'Success!') {
       isLoading.value = false
+      //save login to cookies
+      let date = new Date()
+      //set date to 1 day from now
+      date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+      document.cookie = `username=${username.value}; expires=${date}`
+      document.cookie = `password=${password.value}; expires=`
       window.location.href = '/dashboard'
     } else {
-      isLoading.value = false
-      hasFailed.value = true
-      setTimeout(() => {
-        hasFailed.value = false
-      }, 2000)
+      failedLogin()
     }
   })
+}
+
+function failedLogin() {
+  document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  isLoading.value = false
+  hasFailed.value = true
+  setTimeout(() => {
+    hasFailed.value = false
+  }, 2000)
 }
 </script>

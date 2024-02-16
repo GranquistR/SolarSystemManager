@@ -1,5 +1,5 @@
 <template>
-  <HeaderBar dashboard landing login settings signup editor></HeaderBar>
+  <HeaderBar require-login></HeaderBar>
 
   <div>Editor</div>
 </template>

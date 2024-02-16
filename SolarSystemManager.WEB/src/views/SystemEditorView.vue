@@ -11,7 +11,7 @@ import { ref } from 'vue'
 
 const currentSolarSystem = ref<string>('')
 
-SolarSystemService.SolarSystemInfoTest().then((response) => {
+SolarSystemService.GetPublicSolarSystems().then((response) => {
   currentSolarSystem.value = response
 })
 </script>

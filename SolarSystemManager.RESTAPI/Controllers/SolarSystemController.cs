@@ -36,13 +36,45 @@ namespace SolarSystemManager.RESTAPI.Controllers
         //Leo's dummy test
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("SolarSystemInfoTest")]
-        public IActionResult SolarSystemInfoTest()
+        [Route("GetPublicSolarSystems")]
+        public IActionResult GetPublicSolarSystems()
         {
-            var testSys = new SolarSystem(1, 2, "Sol", false);
-           // string test = "Solar System ID: " + testSys.solarSystemID + " | Owner ID: " + testSys.ownerID +
-             //       " | Solar System Name: " + testSys.systemName + " | Solar System Private: " + testSys.systemIsPrivate;
-            return Ok(testSys);
+            IEnumerable<SolarSystem> solarSystems = new List<SolarSystem>
+
+            {
+                new SolarSystem(1, 2, "Sol", false),
+                new SolarSystem(2, 3, "Alpha Centauri", true),
+                new SolarSystem(3, 4, "Proxima Centauri", true),
+                new SolarSystem(4, 5, "Barnard's Star", true),
+                new SolarSystem(5, 6, "Wolf 359", true),
+                new SolarSystem(6, 7, "Lalande 21185", true),
+                new SolarSystem(7, 8, "Sirius", true),
+                new SolarSystem(8, 9, "Luyten 726-8", true),
+                new SolarSystem(9, 10, "Ross 154", true),
+                new SolarSystem(10, 11, "Ross 248", true),
+                new SolarSystem(11, 12, "Epsilon Eridani", true),
+                new SolarSystem(12, 13, "Lacaille 9352", true),
+                new SolarSystem(13, 14, "Ross 128", true),
+                new SolarSystem(14, 15, "EZ Aquarii", true),
+                new SolarSystem(15, 16, "61 Cygni", true),
+                new SolarSystem(16, 17, "Procyon", true),
+                new SolarSystem(17, 18, "Struve 2398", true),
+                new SolarSystem(18, 19, "Groombridge 34", true),
+                new SolarSystem(19, 20, "DX Cancri", true),
+                new SolarSystem(20, 21, "Tau Ceti", true),
+                new SolarSystem(21, 22, "Luyten's Star", true),
+                new SolarSystem(22, 23, "Kapteyn's Star", true),
+                new SolarSystem(23, 24, "Kruger 60", true),
+                new SolarSystem(24, 25, "Gliese 682", true),
+                new SolarSystem(25, 26, "Epsilon Indi", true),
+                new SolarSystem(26, 27, "Gliese 674", true),
+                new SolarSystem(27, 28, "Gliese", false)
+            };
+
+
+            // string test = "Solar System ID: " + testSys.solarSystemID + " | Owner ID: " + testSys.ownerID +
+            //       " | Solar System Name: " + testSys.systemName + " | Solar System Private: " + testSys.systemIsPrivate;
+            return Ok(solarSystems.Where(s=>!s.systemIsPrivate).ToList());
         }
     }
 }

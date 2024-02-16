@@ -40,9 +40,9 @@ namespace SolarSystemManager.RESTAPI.Controllers
         public IActionResult SolarSystemInfoTest()
         {
             var testSys = new SolarSystem(1, 2, "Sol", false);
-            string test = "Solar System ID: " + testSys.solarSystemID + "\nOwner ID: " + testSys.ownerID +
-                    "\nSolar System Name: " + testSys.systemName + "\nSolar System Private: " + testSys.systemIsPrivate;
-            return Ok(test);
+           // string test = "Solar System ID: " + testSys.solarSystemID + " | Owner ID: " + testSys.ownerID +
+             //       " | Solar System Name: " + testSys.systemName + " | Solar System Private: " + testSys.systemIsPrivate;
+            return Ok(testSys);
         }
     }
 }

@@ -11,7 +11,7 @@ import { ref } from 'vue'
 
 const currentSolarSystem = ref<any>([])
 
-SolarSystemService.getSolarSystemById(1).then((response) => {
+SolarSystemService.GetSolarSystemById(1).then((response) => {
   currentSolarSystem.value = response
 })
 </script>

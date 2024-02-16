@@ -4,10 +4,10 @@ namespace SolarSystemManager.RESTAPI.Entities
 {
     public class User
     {
-        public int userID { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-
+        public int? userID { get; set; }
+        public required string username { get; set; }
+        public required string password { get; set; }
+        public string settings { get; set; }
     }
 
     public class LoginRequest

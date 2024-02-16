@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using SolarSystemManager.RESTAPI.Entities;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -30,6 +31,18 @@ namespace SolarSystemManager.RESTAPI.Controllers
         public IActionResult GetSolarSystemById(int id)
         {
             return Ok("Success! " + id);
+        }
+        
+        //Leo's dummy test
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("SolarSystemInfoTest")]
+        public IActionResult SolarSystemInfoTest()
+        {
+            var testSys = new SolarSystem(1, 2, "Sol", false);
+            string test = "Solar System ID: " + testSys.solarSystemID + "\nOwner ID: " + testSys.ownerID +
+                    "\nSolar System Name: " + testSys.systemName + "\nSolar System Private: " + testSys.systemIsPrivate;
+            return Ok(test);
         }
     }
 }

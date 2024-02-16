@@ -9,9 +9,9 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import { ref } from 'vue'
 
-const currentSolarSystem = ref<string>('')
+const currentSolarSystem = ref<any>([])
 
-SolarSystemService.GetPublicSolarSystems().then((response) => {
+SolarSystemService.getSolarSystemById(1).then((response) => {
   currentSolarSystem.value = response
 })
 </script>

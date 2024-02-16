@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using SolarSystemManager.RESTAPI.Entities;
-using System;
-using System.Collections;
 using System.Linq;
+
 namespace SolarSystemManager.RESTAPI.Services
 {
     public class UserService
@@ -14,20 +13,30 @@ namespace SolarSystemManager.RESTAPI.Services
         /// </summary>
         /// <param name="cred"></param>
         /// <returns></returns>
-        /// using System;
+        ///         
 
+        List<User> users = new List<User> {
+                new User
+                {
+                    userID = 1234,
+                    username = "user",
+                    password = "password"
+                },
 
-        public class AVLTree
+                new User
+                {
+                    userID = 4321,
+                    username = "admin",
+                    password = "admin"
+                }
+        };
+        public bool ValidateUser(Entities.LoginRequest cred)
         {
             public class Node
             {
-                public string username;
-                public string password;
-                public string salt;
-                public int height;
-                public Node left, right;
-
-                public Node(string username, string password, string salt)
+                //replace with actual login logic
+                //just need to check if the credentials are in our list of users
+                if (users.Any(p => p.username == cred.username) && users.Any(p => p.password == cred.password))
                 {
                     this.username = username;
                     this.password = password;

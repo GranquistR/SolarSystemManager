@@ -32,7 +32,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {  
             //this should eventually have a capability to draw data from the database based on the id
             //that would then create the object and return it to the editor, me thinks -Leo
-            var testSys = new SolarSystem(id, 2, "Sol", false); //Leo's other dummy test
+            var testSys = new SolarSystem(1, 2, "Sol", false); //Leo's other dummy test
 
             return Ok(testSys);
         }

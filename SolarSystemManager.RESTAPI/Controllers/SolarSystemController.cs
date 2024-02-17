@@ -32,12 +32,32 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {  
             //this should eventually have a capability to draw data from the database based on the id
             //that would then create the object and return it to the editor, me thinks -Leo
-            var testSys = new SolarSystem(1, 2, "Sol", false); //Leo's other dummy test
+            var testSys = new SolarSystem(1, 2, "Sol", false); //Leo's dummy test
 
             return Ok(testSys);
         }
-        
-        //Leo's dummy test
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("AddSpaceObject")]
+        public IActionResult AddSpaceObject(string type)
+        {
+            //this just creates a new solar system object for the time being for testing purposes,
+            //not actually drawing from the object in the editor. Data from this function WILL NOT STICK rn. -Leo
+            var testSys = new SolarSystem(1, 2, "Sol", false); //Leo's dummy test
+            if (type == "Star")
+            {
+                testSys.addSpaceObject(1, "Sun", "Star", 0, 0, 864600, 0xFFA718); //adds data about the sun
+            }
+            else if(type == "Planet")
+            {
+                testSys.addSpaceObject(2, "Earth", "Planet", 0, 93, 7926, 0x80FFF5); //adds data about earth
+            }
+
+            return Ok(testSys);
+        }
+
+        //Data table test
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetPublicSolarSystems")]
@@ -75,9 +95,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 new SolarSystem(27, 28, "Gliese", false)
             };
 
-
-            // string test = "Solar System ID: " + testSys.solarSystemID + " | Owner ID: " + testSys.ownerID +
-            //       " | Solar System Name: " + testSys.systemName + " | Solar System Private: " + testSys.systemIsPrivate;
             return Ok(solarSystems.Where(s=>!s.systemIsPrivate).ToList());
         }
     }

@@ -15,7 +15,7 @@
     <!-- actual fixed header -->
     <div class="fixed w-full p-2 flex align-items-center">
       <!-- logo -->
-      <RouterLink class="unstyled" to="/">
+      <RouterLink class="router-link-unstyled" to="/">
         <h1 class="ml-8 flex">
           <img src="../../assets/Images/spacebox.png" alt="SpaceBox Logo" height="50px" />
           <div class="ml-4 m-auto" style="letter-spacing: 0.8rem">SPACEBOX</div>
@@ -30,7 +30,7 @@
         <!-- logged out links -->
         <div v-if="!isLoggedIn">
           <!-- login link -->
-          <RouterLink class="unstyled" to="/login">
+          <RouterLink to="/login">
             <Button icon="pi pi-user" severity="secondary" rounded outlined></Button>
           </RouterLink>
         </div>
@@ -38,11 +38,11 @@
         <!-- logged in links -->
         <div v-else class="icon-container">
           <!-- dashboard link -->
-          <RouterLink class="unstyled mr-2" to="/dashboard" v-if="isLoggedIn">
+          <RouterLink class="mr-2" to="/dashboard" v-if="isLoggedIn">
             <Button outlined severity="secondary" icon="pi pi-home" aria-label="Filter"></Button>
           </RouterLink>
           <!-- user settings link  -->
-          <RouterLink class="unstyled" to="/settings" v-if="isLoggedIn">
+          <RouterLink to="/settings" v-if="isLoggedIn">
             <Button
               :label="username + '&nbsp;&nbsp;'"
               icon="pi pi-user"
@@ -98,10 +98,6 @@ window.addEventListener('scroll', () => {
 }
 h1 {
   font-family: nasa-font;
-}
-.unstyled {
-  text-decoration: none;
-  color: inherit;
 }
 .icon-container {
   display: flex;

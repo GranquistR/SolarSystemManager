@@ -4,7 +4,7 @@
     <Card class="m-2 text-center w-30rem">
       <template #header> </template>
       <template #title>Hello, {{ username }} </template>
-      <template #subtitle>User type {{userType}}</template>
+      <template #subtitle>User type: {{userType}}</template>
       <template #content> <Button label="Logout" class="mt-3" @click="logout"></Button> </template>
       <template #footer> </template>
     </Card>
@@ -30,7 +30,8 @@ onMounted(() => {
     console.log('test');
     console.log(password.value);
     SettingsService.getUserSettings(new User(username.value, password.value)).then((result: any) => {
-      userType.value = result
+      let obj = JSON.parse(result);
+      userType.value = obj.role;
       console.log("result: " + result);
     }).catch((error: any) => {
     console.error('Error:', error);

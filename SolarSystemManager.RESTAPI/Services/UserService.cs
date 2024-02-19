@@ -31,7 +31,7 @@ namespace SolarSystemManager.RESTAPI.Services
                 username = "admin",
                 password = "admin",
                 settings =
-                        "{\"role\":\"Admin\",\"contrast\":\"1\"}"
+                        "{\"role\":\"administrator\",\"contrast\":\"1\"}"
 
             }
         ];

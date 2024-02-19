@@ -22,7 +22,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("Login")]
-        public IActionResult Login(LoginRequest cred)
+        public IActionResult Login([FromBody]LoginRequest cred)
         {
             if (_userService.ValidateUser(cred))
             {
@@ -47,7 +47,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSettings")]
-        public IActionResult GetSettings(LoginRequest cred)
+        public IActionResult GetSettings([FromBody]LoginRequest cred)
         {
             string data = _userService.GetUserData(cred);
 

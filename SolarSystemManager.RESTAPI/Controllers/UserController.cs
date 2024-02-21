@@ -7,13 +7,13 @@ namespace SolarSystemManager.RESTAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class UserController : ControllerBase
     {
 
         private readonly ILogger<SolarSystemController> _logger;
         private readonly UserService _userService;
 
-        public LoginController(ILogger<SolarSystemController> logger)
+        public UserController(ILogger<SolarSystemController> logger)
         {
             _logger = logger;
             _userService = new UserService();
@@ -30,24 +30,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             return Ok("Invalid username or password!");
         }
-    }
-
-    public class SettingsController : ControllerBase
-    {
-
-        private readonly ILogger<SolarSystemController> _logger;
-        private readonly UserService _userService;
-
-        public SettingsController(ILogger<SolarSystemController> logger)
-        {
-            _logger = logger;
-            _userService = new UserService();
-        }
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSettings")]
-        public IActionResult GetSettings([FromBody]LoginRequest cred)
+        [Route("GetUserSettings")]
+        public IActionResult GetUserSettings([FromBody] LoginRequest cred)
         {
             string data = _userService.GetUserData(cred);
 

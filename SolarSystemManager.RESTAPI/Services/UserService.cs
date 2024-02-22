@@ -15,7 +15,7 @@ namespace SolarSystemManager.RESTAPI.Services
         /// <returns></returns>
         ///         
 
-        List<User> users = [
+        List<User> users1 = [
                 new User
                 {
                     userID = 1234,
@@ -39,6 +39,8 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             try
             {
+                SQLService _sqlService = new SQLService();
+                List<User> users = _sqlService.GetUsers();
                 //replace with actual login logic
                 //just need to check if the credentials are in our list of users
                 if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
@@ -61,7 +63,7 @@ namespace SolarSystemManager.RESTAPI.Services
             try
             {
                 //check Credentials of user
-                User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
+                User cUser = users1.First(p => (p.username == cred.username) && (p.password == cred.password));
 
                 if (cUser != null)
                 {

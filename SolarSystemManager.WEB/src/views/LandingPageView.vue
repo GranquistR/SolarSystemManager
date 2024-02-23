@@ -52,11 +52,12 @@
   </div>
 
   <!-- spacer -->
-  <div style="margin-top: 20rem"></div>
+  <div style="margin-top: 15rem"></div>
   <div class="text-center">
     <h2>Take a look</h2>
     <p>See what we have to offer with these popular, user-made solar systems.</p>
     <Carousel
+      v-if="!isLoading && !failedToLoad"
       :value="allSolarSystems"
       :numVisible="3"
       :numScroll="3"
@@ -71,6 +72,10 @@
         </div>
       </template>
     </Carousel>
+    <ProgressSpinner v-if="isLoading" class="m-4" />
+    <InlineMessage v-if="!isLoading && failedToLoad" severity="error" class="m-4">
+      Failed to load solar systems. Please try again later.
+    </InlineMessage>
   </div>
 </template>
 
@@ -79,14 +84,29 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Carousel from 'primevue/carousel'
+import ProgressSpinner from 'primevue/progressspinner'
+import InlineMessage from 'primevue/inlinemessage'
 
 const allSolarSystems = ref<string>('')
+const isLoading = ref(false)
+const failedToLoad = ref(false)
 
-SolarSystemService.GetPublicSolarSystems().then((response) => {
-  allSolarSystems.value = response
+onMounted(() => {
+  isLoading.value = true
+  SolarSystemService.GetPublicSolarSystems()
+    .then((response) => {
+      allSolarSystems.value = response
+      isLoading.value = false
+    })
+    .catch((error) => {
+      console.log('error in LandingPageView: ' + error)
+      failedToLoad.value = true
+      isLoading.value = false
+    })
 })
+
 const responsiveOptions = ref([
   {
     breakpoint: '1920px',

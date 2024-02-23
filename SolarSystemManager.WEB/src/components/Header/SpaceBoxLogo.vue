@@ -1,5 +1,5 @@
 <template>
-  <h1 class="ml-8 flex">
+  <h1 class="ml-8 flex m-0">
     <img
       src="../../assets/Images/spacebox-logo.png"
       alt="SpaceBox Logo"

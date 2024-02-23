@@ -1,15 +1,19 @@
 /* GLOBAL STYLES ONLY */
 
-*,
+/* *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
   font-weight: normal;
-}
+} */
 
 #app {
   font-weight: normal;
+}
+
+body {
+  margin: 0;
 }
 
 .router-link-unstyled {

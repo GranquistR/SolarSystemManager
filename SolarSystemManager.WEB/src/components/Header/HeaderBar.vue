@@ -74,7 +74,7 @@
 import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
-import SpaceBoxLogo from '../SpaceBoxLogo.vue'
+import SpaceBoxLogo from './SpaceBoxLogo.vue'
 
 const Props = defineProps<{
   noLinks?: boolean

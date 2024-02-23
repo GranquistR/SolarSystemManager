@@ -50,11 +50,28 @@
       <p>Unique Planets</p>
     </div>
   </div>
-  <!-- ummmm -->
 
-  <p style="margin-top: 30rem">other stuff here?</p>
-  <h1>you where ejected!</h1>
-  <img src="../assets/Images/spaceman.webp" width="700px" />
+  <!-- spacer -->
+  <div style="margin-top: 20rem"></div>
+  <div class="text-center">
+    <h2>Take a look</h2>
+    <p>See what we have to offer with these popular, user-made solar systems.</p>
+    <Carousel
+      :value="allSolarSystems"
+      :numVisible="3"
+      :numScroll="3"
+      :responsiveOptions="responsiveOptions"
+    >
+      <template #item="slotProps">
+        <div class="border-1 surface-border border-round m-2 p-3">
+          <div>
+            {{ slotProps.data.systemName }}
+          </div>
+          <img src="../assets/Images/among-us-twerk.gif" width="200px" />
+        </div>
+      </template>
+    </Carousel>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -63,12 +80,35 @@ import SolarSystemService from '@/services/SolarSystemService'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
+import Carousel from 'primevue/carousel'
 
 const allSolarSystems = ref<string>('')
 
-SolarSystemService.getAllSolarSystems().then((response) => {
+SolarSystemService.GetPublicSolarSystems().then((response) => {
   allSolarSystems.value = response
 })
+const responsiveOptions = ref([
+  {
+    breakpoint: '1920px',
+    numVisible: 4,
+    numScroll: 4
+  },
+  {
+    breakpoint: '1199px',
+    numVisible: 3,
+    numScroll: 3
+  },
+  {
+    breakpoint: '767px',
+    numVisible: 2,
+    numScroll: 2
+  },
+  {
+    breakpoint: '575px',
+    numVisible: 1,
+    numScroll: 1
+  }
+])
 </script>
 
 <style scoped>
@@ -79,6 +119,12 @@ h1 {
   font-size: 600%;
   letter-spacing: 0.4rem;
 }
+h2 {
+  font-weight: bold;
+  font-stretch: expanded;
+  font-size: 300%;
+  letter-spacing: 0.4rem;
+}
 p {
   opacity: 75%;
   font-size: 1.1rem;
@@ -87,7 +133,7 @@ p {
 }
 .greeting {
   padding-top: 10rem;
-  margin-left: 10rem;
+  margin-left: 10%;
 }
 .greeting p {
   width: 34rem;
@@ -103,7 +149,7 @@ p {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url(../assets/Images/space1.jpg) center center / cover no-repeat;
+  background: url(../assets/Images/spaceman-looking-at-planet.jpg) center center / cover no-repeat;
   -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 85%);
   mask-image: linear-gradient(to bottom, black 30%, transparent 85%);
 

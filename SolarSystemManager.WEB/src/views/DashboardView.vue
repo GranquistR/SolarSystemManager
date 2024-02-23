@@ -50,7 +50,7 @@ console.log('code here')
 //const currentSolarSystem = ref<string>('')
 
 SolarSystemService.GetPublicSolarSystems().then((response) => {
-  solarSystems.value = JSON.parse(response)
+  solarSystems.value = response
   solarSystems.value.forEach((solarSystem: any) => {
     solarSystem.systemVisibility = solarSystem.systemVisibility == 0 ? 'Public' : 'Private'
   })

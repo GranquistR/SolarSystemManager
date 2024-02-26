@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
+using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -18,8 +19,8 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetAllSolarSystems")]
-        public IActionResult GetAllSolarSystems()
+        [Route("TestGet")]
+        public IActionResult TestGet()
         {
             string test = "Reach the API!!";
             return Ok(test);
@@ -27,75 +28,50 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSolarSystemById")]
-        public IActionResult GetSolarSystemById(int id)
-        {  
-            //this should eventually have a capability to draw data from the database based on the id
-            //that would then create the object and return it to the editor, me thinks -Leo
-            var testSys = new SolarSystem(id, 2, "Sol", false); //Leo's dummy test
-
-            return Ok(testSys);
-        }
-
-        [HttpPost]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("AddSpaceObject")]
-        public IActionResult AddSpaceObject(string objectType)
+        [Route("TestPost")]
+        public IActionResult TestPost(int id)
         {
-            //this just creates a new solar system object for the time being for testing purposes,
-            //not actually drawing from the object in the editor. Data from this function WILL NOT STICK rn. -Leo
-            var testSys = new SolarSystem(1, 2, "Sol", false); //Leo's dummy test
-            if (objectType == "Star")
-            {
-                testSys.addSpaceObject(1, "Sun", "Star", 0, 0, 864600, 0xFFA718); //adds data about the sun
-            }
-            else if(objectType== "Planet")
-            {
-               testSys.addSpaceObject(2, "Earth", "Planet", 0, 93, 7926, 0x80FFF5); //adds data about earth
-            }
-
-            return Ok(testSys);
+            return Ok("Success! " + id);
         }
-
-        //Data table test
+        
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetPublicSolarSystems")]
-        public IActionResult GetPublicSolarSystems()
+        [Route("GetAllPublicSolarSystems")]
+        public IActionResult GetAllPublicSolarSystems()
         {
             IEnumerable<SolarSystem> solarSystems = new List<SolarSystem>
 
             {
-                new SolarSystem(1, 2, "Sol", false),
-                new SolarSystem(2, 3, "Alpha Centauri", true),
-                new SolarSystem(3, 4, "Proxima Centauri", true),
-                new SolarSystem(4, 5, "Barnard's Star", true),
-                new SolarSystem(5, 6, "Wolf 359", true),
-                new SolarSystem(6, 7, "Lalande 21185", true),
-                new SolarSystem(7, 8, "Sirius", true),
-                new SolarSystem(8, 9, "Luyten 726-8", true),
-                new SolarSystem(9, 10, "Ross 154", true),
-                new SolarSystem(10, 11, "Ross 248", true),
-                new SolarSystem(11, 12, "Epsilon Eridani", true),
-                new SolarSystem(12, 13, "Lacaille 9352", true),
-                new SolarSystem(13, 14, "Ross 128", true),
-                new SolarSystem(14, 15, "EZ Aquarii", true),
-                new SolarSystem(15, 16, "61 Cygni", true),
-                new SolarSystem(16, 17, "Procyon", true),
-                new SolarSystem(17, 18, "Struve 2398", true),
-                new SolarSystem(18, 19, "Groombridge 34", true),
-                new SolarSystem(19, 20, "DX Cancri", true),
-                new SolarSystem(20, 21, "Tau Ceti", true),
-                new SolarSystem(21, 22, "Luyten's Star", true),
-                new SolarSystem(22, 23, "Kapteyn's Star", true),
-                new SolarSystem(23, 24, "Kruger 60", true),
-                new SolarSystem(24, 25, "Gliese 682", true),
-                new SolarSystem(25, 26, "Epsilon Indi", true),
-                new SolarSystem(26, 27, "Gliese 674", true),
-                new SolarSystem(27, 28, "Gliese", false)
+                new SolarSystem(1, 2, "Sol", Visibility.Public),
+                new SolarSystem(2, 3, "Alpha Centauri", Visibility.Private),
+                new SolarSystem(3, 4, "Proxima Centauri", Visibility.Public),
+                new SolarSystem(4, 5, "Barnard's Star", Visibility.Private),
+                new SolarSystem(5, 6, "Wolf 359", Visibility.Public),
+                new SolarSystem(6, 7, "Lalande 21185", Visibility.Private),
+                new SolarSystem(7, 8, "Sirius", Visibility.Public),
+                new SolarSystem(8, 9, "Luyten 726-8", Visibility.Private),
+                new SolarSystem(9, 10, "Ross 154", Visibility.Public),
+                new SolarSystem(10, 11, "Ross 248", Visibility.Private),
+                new SolarSystem(11, 12, "Epsilon Eridani", Visibility.Public),
+                new SolarSystem(12, 13, "Lacaille 9352", Visibility.Private),
+                new SolarSystem(13, 14, "Ross 128", Visibility.Public),
+                new SolarSystem(14, 15, "EZ Aquarii", Visibility.Private),
+                new SolarSystem(15, 16, "61 Cygni", Visibility.Public),
+                new SolarSystem(16, 17, "Procyon", Visibility.Private),
+                new SolarSystem(17, 18, "Struve 2398", Visibility.Public),
+                new SolarSystem(18, 19, "Groombridge 34", Visibility.Private),
+                new SolarSystem(19, 20, "DX Cancri", Visibility.Public),
+                new SolarSystem(20, 21, "Tau Ceti", Visibility.Private),
+                new SolarSystem(21, 22, "Luyten's Star", Visibility.Public),
+                new SolarSystem(22, 23, "Kapteyn's Star", Visibility.Private),
+                new SolarSystem(23, 24, "Kruger 60", Visibility.Public),
+                new SolarSystem(24, 25, "Gliese 682", Visibility.Private),
+                new SolarSystem(25, 26, "Epsilon Indi", Visibility.Public),
+                new SolarSystem(26, 27, "Gliese 674", Visibility.Private),
+                new SolarSystem(27, 28, "Gliese", Visibility.Public)
             };
 
-            return Ok(solarSystems.Where(s=>!s.systemIsPrivate).ToList());
+            return Ok(solarSystems.Where(s=>s.systemVisibility == Visibility.Public).ToList());
         }
     }
 }

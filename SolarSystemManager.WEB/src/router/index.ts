@@ -44,7 +44,7 @@ const router = createRouter({
       component: () => import('../views/SystemEditorView.vue')
     },
     {
-      path: '/:pathMatch(.*)*',
+      path: '/:catchAll(.*)',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')
     }

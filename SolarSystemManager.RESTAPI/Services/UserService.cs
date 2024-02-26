@@ -15,28 +15,33 @@ namespace SolarSystemManager.RESTAPI.Services
         /// <returns></returns>
         ///         
 
-        List<User> users = new List<User> {
+        List<User> users = [
                 new User
                 {
                     userID = 1234,
                     username = "user",
-                    password = "password"
+                    password = "password",
+                    settings =
+                        "{\"role\":\"member\",\"contrast\":\"1\"}"
                 },
 
-                new User
-                {
-                    userID = 4321,
-                    username = "admin",
-                    password = "admin"
-                }
-        };
+            new User
+            {
+                userID = 4321,
+                username = "admin",
+                password = "admin",
+                settings =
+                        "{\"role\":\"administrator\",\"contrast\":\"1\"}"
+
+            }
+        ];
         public bool ValidateUser(Entities.LoginRequest cred)
         {
             try
             {
                 //replace with actual login logic
                 //just need to check if the credentials are in our list of users
-                if (users.Any(p => p.username == cred.username) && users.Any(p => p.password == cred.password))
+                if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
                 {
                     return true;
                 }
@@ -49,7 +54,28 @@ namespace SolarSystemManager.RESTAPI.Services
             {
                 return false;
             }
-            
-        } 
+
+        }
+        public string GetUserData(Entities.LoginRequest cred)
+        {
+            try
+            {
+                //check Credentials of user
+                User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
+
+                if (cUser != null)
+                {
+                    return cUser.settings;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid username or password");
+                }
+            }
+            catch
+            {
+                return "0";
+            }
+        }
     }
 }

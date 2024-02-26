@@ -1,8 +1,10 @@
 # SolarSystemManager
 
-## Recommended IDE Setup
+## Required IDE Setup
 
 [Node.JS](https://nodejs.org/en)
+
+[Visual Studio](https://visualstudio.microsoft.com/)
 
 [VS Code](https://code.visualstudio.com/)
 
@@ -10,13 +12,13 @@
 
 ## Setup for Local Development
 
-Pull the Repo into Visual Studio
+Pull the Repo and open SolarSystemManger.sln in Visual Studio
 
 Set the .RESTAPI project to be the startup project
 
 Run the project with the button labeled 'https' to run the backend
 
-Open Viusal Studio Code and open the .WEB folder
+Open Visual Studio Code and open the .WEB folder
 
 Open the terminal
 
@@ -58,6 +60,10 @@ vue-format
 
 [Vue 3](https://vuejs.org/)
 
-[Vuetify](https://vuetifyjs.com/en/)
+[PrimeVue](https://primevue.org/)
+
+[PrimeFlex](https://primeflex.org/)
+
+[PrimeIcons](https://www.primefaces.org/roma/icons.xhtml)
 
 [RESTful API](https://learn.microsoft.com/en-us/aspnet/web-api/overview/older-versions/build-restful-apis-with-aspnet-web-api)

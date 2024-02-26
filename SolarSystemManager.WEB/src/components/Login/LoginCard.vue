@@ -69,7 +69,7 @@ function Login() {
       //set date to 1 day from now
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
       document.cookie = `username=${username.value}; expires=${date}`
-      document.cookie = `password=${password.value}; expires=`
+      document.cookie = `password=${password.value}; expires=${date}`
       window.location.href = '/dashboard'
     } else {
       failedLogin()

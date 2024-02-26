@@ -7,6 +7,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         public int? userID { get; set; }
         public required string username { get; set; }
         public required string password { get; set; }
+        public required string role { get; set; }
         public string settings { get; set; }
     }
 

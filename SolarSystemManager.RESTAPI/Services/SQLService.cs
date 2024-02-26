@@ -29,6 +29,7 @@ namespace SolarSystemManager.RESTAPI.Services
                     {
                         username = sqlite_datareader.GetString(1),
                         password = sqlite_datareader.GetString(2),
+                        role = sqlite_datareader.GetString(3),
                     });            
                 }
                 sqlite_conn.Close();
@@ -39,6 +40,9 @@ namespace SolarSystemManager.RESTAPI.Services
                 throw new BadHttpRequestException("Bad SQL Request!");
             }
         }
+
+       
+
     }
 }
 

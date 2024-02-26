@@ -1,8 +1,10 @@
 # SolarSystemManager
 
-## Recommended IDE Setup
+## Required IDE Setup
 
 [Node.JS](https://nodejs.org/en)
+
+[Visual Studio](https://visualstudio.microsoft.com/)
 
 [VS Code](https://code.visualstudio.com/)
 
@@ -10,7 +12,7 @@
 
 ## Setup for Local Development
 
-Pull the Repo into Visual Studio
+Pull the Repo and open SolarSystemManger.sln in Visual Studio
 
 Set the .RESTAPI project to be the startup project
 

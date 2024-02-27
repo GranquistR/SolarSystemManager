@@ -39,13 +39,6 @@ onMounted(() => {
         console.error('Error:', error)
       })
   }
-  // const cookies = document.cookie.split(';')
-  // for (let i = 0; i < cookies.length; i++) {
-  //   const cookie = cookies[i].split('=')
-  //   if (cookie[0].trim() === 'username') {
-  //     username.value = cookie[1]
-  //   }
-  // }
 })
 
 function logout() {

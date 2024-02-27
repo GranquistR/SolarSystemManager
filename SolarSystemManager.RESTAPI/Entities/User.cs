@@ -1,8 +1,9 @@
 ﻿using System.Text.Json.Serialization;
+using SolarSystemManager.RESTAPI.Repos;
 
 namespace SolarSystemManager.RESTAPI.Entities
 {
-    public class User
+    public class User : Generic
     {
         public int? userID { get; set; }
         public required string username { get; set; }

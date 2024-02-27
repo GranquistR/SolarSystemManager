@@ -2,50 +2,23 @@
 using SolarSystemManager.RESTAPI.Entities;
 using System.Linq;
 using System.Text.Json;
+using SolarSystemManager.RESTAPI.Repos;
+
 
 namespace SolarSystemManager.RESTAPI.Services
 {
     public class UserService
     {
-        /// <summary>
-        /// This validates the user
-        /// Will be replaced with actual login logic
-        /// WIll be used to validate the user on every endpoint that requires authentication
-        /// </summary>
-        /// <param name="cred"></param>
-        /// <returns></returns>
-        ///         
-
-        //List<User> users1 = [
-        //        new User
-        //        {
-        //            userID = 1234,
-        //            username = "user",
-        //            password = "password",
-        //            settings =
-        //                "{\"role\":\"member\",\"contrast\":\"1\"}"
-        //        },
-
-        //    new User
-        //    {
-        //        userID = 4321,
-        //        username = "admin",
-        //        password = "admin",
-        //        settings =
-        //                "{\"role\":\"administrator\",\"contrast\":\"1\"}"
-
-        //    }
-        //];
-
-        SQLService _sqlService = new SQLService();
+        
+        BaseRepo _baseRepo = BaseRepo.Instance();
         public bool ValidateUser(Entities.LoginRequest cred)
         {
             try
             {
-                List<User> users = _sqlService.GetUsers();
-                //replace with actual login logic
-                //just need to check if the credentials are in our list of users
-                if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
+                // Send SQL request and cast returned data to correct type 
+                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
+            
+            if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
                 {
                     return true;
                 }
@@ -64,7 +37,8 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             try
             {
-                List<User> users = _sqlService.GetUsers();
+                // Send SQL request and cast returned data to correct type 
+                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
                 //check Credentials of user
                 User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
 

@@ -25,4 +25,11 @@ export default class SolarSystemService {
        return JSON.parse(data)
     })
     }
+
+    static async AddSpaceObject(id: number) {
+      return FetchAPIService.post('/SolarSystem/AddSpaceObject', id).then((data) => {
+        console.log('SolarSystemService: ', data)
+        return data
+      })
+    }
 }

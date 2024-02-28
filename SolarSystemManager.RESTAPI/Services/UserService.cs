@@ -15,8 +15,8 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             try
             {
-                // Send SQL request and cast returned data to correct type 
-                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
+                // Send SQL request 
+                List<User> users = _baseRepo.GetUserData();
             
             if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
                 {
@@ -37,8 +37,9 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             try
             {
-                // Send SQL request and cast returned data to correct type 
-                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
+                // Send SQL request 
+                List<User> users = _baseRepo.GetUserData();
+
                 //check Credentials of user
                 User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
 

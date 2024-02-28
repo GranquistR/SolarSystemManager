@@ -19,5 +19,12 @@ export default class SolarSystemService {
       console.log('SolarSystemService: ', data)
       return data
     })
-  }
+    }
+
+    static async GetSpaceObjects(): Promise<any> {
+        return FetchAPIService.get('/SolarSystem/GetSpaceObjects').then((data) => {
+            console.log('SolarSystemService: ', data)
+            return data
+        })
+    }
 }

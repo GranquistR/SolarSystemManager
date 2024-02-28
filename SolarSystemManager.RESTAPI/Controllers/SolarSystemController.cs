@@ -1,3 +1,5 @@
+using System.Data;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
@@ -72,6 +74,27 @@ namespace SolarSystemManager.RESTAPI.Controllers
             };
 
             return Ok(solarSystems.Where(s=>s.systemVisibility == Visibility.Public).ToList());
+        }
+
+        //dummy data for graphics testing
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSpaceObjects")]
+        public IActionResult GetSpaceObjects()
+        {
+            IEnumerable<SpaceObject> spaceObjects = new List<SpaceObject>
+            {
+              //space object template
+              //new SpaceObject(objID, systemId, objName, objType, x, y, objSize, objColor);
+                new SpaceObject(1, 1, "Sirius A", "Star", 5, 0, 10, 0x18D3BC), //two stars
+                new SpaceObject(2, 1, "Sirius B", "Star", 0, 0, 7, 0x25BCD6),
+
+                new SpaceObject(3, 1, "Thor", "Planet", 15, 0, 2, 0xE5E21C), //three planets
+                new SpaceObject(4, 1, "Loki", "Planet", 20, 0, 1, 0x1CE556),
+                new SpaceObject(5, 1, "Odin", "Planet", 25, 0, 3, 0x2F1CE5)
+            };
+
+            return Ok(spaceObjects);
         }
     }
 }

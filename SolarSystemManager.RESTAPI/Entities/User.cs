@@ -5,11 +5,16 @@ namespace SolarSystemManager.RESTAPI.Entities
 {
     public class User : Generic
     {
-        public int? userID { get; set; }
-        public required string username { get; set; }
-        public required string password { get; set; }
-        public required string role { get; set; }
-        public string settings { get; set; }
+        public int userID { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public Role role { get; set; }
+    }
+
+    public enum Role
+    {
+        Member=0,
+        Admin=1
     }
 
     public class LoginRequest

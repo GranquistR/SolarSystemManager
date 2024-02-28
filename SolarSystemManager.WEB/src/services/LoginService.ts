@@ -16,8 +16,7 @@ export default class LoginService {
   static async getUserSettings(user: User): Promise<any> {
     return FetchAPIService.post('/User/GetUserSettings', user)
       .then((data) => {
-        console.log('SettingsService: ', data)
-        return data
+        return JSON.parse(data)
       })
       .catch((error) => {
         alert('Error in LoginService. Check console for details.')

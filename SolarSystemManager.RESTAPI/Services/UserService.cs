@@ -13,48 +13,20 @@ namespace SolarSystemManager.RESTAPI.Services
         BaseRepo _baseRepo = BaseRepo.Instance();
         public bool ValidateUser(Entities.LoginRequest cred)
         {
-            try
-            {
-                // Send SQL request and cast returned data to correct type 
-                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
-            
-            if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
-                {
-                    return true;
-                }
-                else
-                {
-                    throw new BadHttpRequestException("Invalid username or password");
-                }
-            }
-            catch
-            {
-                return false;
-            }
-
+            return _baseRepo.GetAllUsers().Any(p => (p.username == cred.username) && (p.password == cred.password));
         }
-        public string GetUserData(Entities.LoginRequest cred)
+        public User GetUserSettingsData(Entities.LoginRequest cred)
         {
-            try
-            {
-                // Send SQL request and cast returned data to correct type 
-                List<User> users = _baseRepo.GetData("SELECT UserID,Username,Password,Role FROM User").Cast<User>().ToList();
-                //check Credentials of user
-                User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
+            var user = _baseRepo.GetAllUsers().FirstOrDefault(p => (p.username == cred.username) && (p.password == cred.password));
 
-                if (cUser != null)
-                {
-                    return JsonSerializer.Serialize(cUser); 
-                }
-                else
-                {
-                    throw new BadHttpRequestException("Invalid username or password");
-                }
-            }
-            catch
+            if (user != default)
             {
-                return "0";
+                return user;
             }
+            else
+            {
+               throw new BadHttpRequestException("No user found with given credentials");
+            }   
         }
     }
 }

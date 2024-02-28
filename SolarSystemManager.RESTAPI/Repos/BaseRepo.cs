@@ -1,5 +1,6 @@
 ﻿using SolarSystemManager.RESTAPI.Entities;
 using System.Data.SQLite;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SolarSystemManager.RESTAPI.Repos
 {
@@ -12,7 +13,8 @@ namespace SolarSystemManager.RESTAPI.Repos
         private BaseRepo() { }
         public static BaseRepo Instance()
         {
-            if (_instance == null) {
+            if (_instance == null)
+            {
                 // prevents multiple instances os BaseRepo
                 lock (_lock)
                 {
@@ -25,31 +27,28 @@ namespace SolarSystemManager.RESTAPI.Repos
             return _instance;
         }
 
-        public List<Generic> GetData(string request)
+        public IEnumerable<User> GetAllUsers()
         {
-            List<Generic> data = new List<Generic>();
+            var users = new List<User>();
 
-            if(request.Contains("User"))
+            sqlite_conn.Open();
+            SQLiteDataReader sqlite_datareader;
+            SQLiteCommand sqlite_cmd;
+            sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT UserID, Username, Password, Role FROM User";
+            sqlite_datareader = sqlite_cmd.ExecuteReader();
+            while (sqlite_datareader.Read())
             {
-                sqlite_conn.Open();
-                SQLiteDataReader sqlite_datareader;
-                SQLiteCommand sqlite_cmd;
-                sqlite_cmd = sqlite_conn.CreateCommand();
-                sqlite_cmd.CommandText = request;
-                sqlite_datareader = sqlite_cmd.ExecuteReader();
-                while (sqlite_datareader.Read())
+                users.Add(new User
                 {
-                    data.Add(new User
-                    {
-                        username = sqlite_datareader.GetString(1),
-                        password = sqlite_datareader.GetString(2),
-                        role = sqlite_datareader.GetString(3),
-                    });
-                }
-                sqlite_conn.Close();
-                return data;
+                    userID = sqlite_datareader.GetInt32(0),
+                    username = sqlite_datareader.GetString(1),
+                    password = sqlite_datareader.GetString(2),
+                    role = (Role)sqlite_datareader.GetInt32(3),
+                });
             }
-            return data;
+            sqlite_conn.Close();
+            return users;
         }
 
     }

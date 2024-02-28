@@ -24,11 +24,18 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("Login")]
         public IActionResult Login([FromBody]LoginRequest cred)
         {
-            if (_userService.ValidateUser(cred))
+            try
             {
-                return Ok("Success!");
+                if (_userService.ValidateUser(cred))
+                {
+                    return Ok("Success!");
+                }
+                return Ok("Invalid username or password!");
             }
-            return Ok("Invalid username or password!");
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
 
         [HttpPost]
@@ -36,13 +43,20 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetUserSettings")]
         public IActionResult GetUserSettings([FromBody] LoginRequest cred)
         {
-            string data = _userService.GetUserData(cred);
-
-            if (data != "0")
+            try
             {
-                return Ok(data);
+                return Ok(_userService.GetUserSettingsData(cred));                
             }
-            return Ok("Could Not Find Data");
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+
         }
     }
 }

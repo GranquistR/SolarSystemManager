@@ -6,17 +6,20 @@
       <div v-else style="height: 5px"></div>
     </template>
     <template #title>
-      <h1>SpaceBox</h1>
+      <h1>Login</h1>
     </template>
-    <template #subtitle>Welcome to the Universe!</template>
+    <template #subtitle>Welcome back, Traveler!</template>
     <template #content>
       <div class="flex flex-column gap-2">
         <label for="username">Username</label>
         <InputText variant="filled" id="username" v-model="username" style="width: 245px" />
         <label for="password">Password</label>
-        <Password variant="filled" id="password" v-model="password" />
+        <Password variant="filled" id="password" v-model="password" :feedback="false" />
       </div>
-      <Button class="mt-3" @click="Login"> Login </Button>
+      <div class="flex mt-3">
+        <Button @click="Login"> Login </Button>
+        <RouterLink to="/signup" style="margin: auto">Create Account</RouterLink>
+      </div>
     </template>
     <template #footer>
       <transition-group name="p-message" tag="div">

@@ -80,13 +80,19 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystem")]
         public IActionResult GetSolarSystem()
         {
-            IEnumerable<SolarSystem> solarSystem = new List<SolarSystem>
+             SolarSystem dummySolarSystem = new SolarSystem(1, 2, "Sol", Visibility.Public);
 
-            {
-                new SolarSystem(1, 2, "Sol", Visibility.Public),
-            };
+             return Ok(dummySolarSystem);
+        }
 
-            return Ok(solarSystem);
+        //add space object
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("AddSpaceObject")]
+        public IActionResult AddSpaceObject()
+        {
+            //will take a solar system id and space object information and update that in the data base
+            return Ok("Add Space Obejct Works");
         }
     }
 }

@@ -18,5 +18,11 @@ export default class SolarSystemService {
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems').then((data) => {
       return JSON.parse(data)
     })
-  }
+    }
+
+  static async GetSolarSystem(): Promise<any> {
+    return FetchAPIService.get('/SolarSystem/GetSolarSystem').then((data) => {
+       return JSON.parse(data)
+    })
+    }
 }

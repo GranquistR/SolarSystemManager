@@ -14,29 +14,17 @@ namespace SolarSystemManager.RESTAPI.Services
         /// <param name="cred"></param>
         /// <returns></returns>
         ///         
-
-        List<User> users = new List<User> {
-                new User
-                {
-                    userID = 1234,
-                    username = "user",
-                    password = "password"
-                },
-
-                new User
-                {
-                    userID = 4321,
-                    username = "admin",
-                    password = "admin"
-                }
-        };
-        public bool ValidateUser(Entities.LoginRequest cred)
+        public class AVLTree
         {
             public class Node
             {
-                //replace with actual login logic
-                //just need to check if the credentials are in our list of users
-                if (users.Any(p => p.username == cred.username) && users.Any(p => p.password == cred.password))
+                public string username;
+                public string password;
+                public string salt;
+                public int height;
+                public Node left, right;
+
+                public Node(string username, string password, string salt)
                 {
                     this.username = username;
                     this.password = password;
@@ -175,7 +163,25 @@ namespace SolarSystemManager.RESTAPI.Services
             {
                 return Search(root, username);
             }
-
+            /*
+            public Node findPass(string username, string password)
+            {
+                AVLTree.Node result = tree.Search(username);
+                if (result != null)
+                {
+                    if (result.password == password)
+                    {
+                        return result;
+                    } else
+                    {
+                        return null;
+                    }
+                } else
+                {
+                    return null;
+                }
+            }
+            */
             // Wrapper function to print the AVL tree
             public void PrintTree()
             {
@@ -207,34 +213,102 @@ namespace SolarSystemManager.RESTAPI.Services
 
                 // You can continue inserting nodes or perform other operations here
             }
-
         }
 
-
-
-            public bool ValidateUser(Entities.LoginRequest cred)
-            {
-                try
+        AVLTree tree = new AVLTree();
+        List<User> users = new List<User> {
+                new User
                 {
-                    //replace with actual login logic
-                    //just need to check if the credentials are in our list of users
-                    if (cred.username == "admin" && cred.password == "admin")
+                    userID = 1234,
+                    username = "user",
+                    password = "password"
+                },
+
+                new User
+                {
+                    userID = 4321,
+                    username = "admin",
+                    password = "e4cbf2232a1090956d07d6197acce64830392162187d2a35b419b5fc9d9c8"
+                }
+        };
+        private readonly AVLTree _avlTree = new AVLTree();
+
+        public string? GetSalt(string username)
+        {
+            AVLTree.Node userNode = _avlTree.Search(username);
+            return userNode?.salt;
+        }
+
+        public bool ValidatePass(string username, string hashedPassword)
+        {
+            AVLTree.Node userNode = _avlTree.Search(username);
+            return userNode?.password == hashedPassword;
+        }
+        public string? ValidateUser(Entities.LoginRequest cred)
+        {
+            try
+            {
+                AVLTree.Node result = tree.Search(cred.username);
+                if (result != null)
+                {
+                    return result.salt;
+                } else
+                {
+                    throw new BadHttpRequestException("Invalid username or password");
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public bool ValidatePass(Entities.LoginRequest cred)
+        {
+            try
+            {
+                AVLTree.Node result = tree.Search(cred.username);
+                if (result != null)
+                {
+                    if (result.password == cred.password)
                     {
                         return true;
-                    }
-                    else
+                    } else
                     {
                         throw new BadHttpRequestException("Invalid username or password");
                     }
                 }
-                catch
+                else
                 {
-                    return false;
+                    throw new BadHttpRequestException("Invalid username or password");
                 }
-
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        private static bool ValidateUser1(Entities.LoginRequest cred)
+        {
+            try
+            {
+                //replace with actual login logic
+                //just need to check if the credentials are in our list of users
+                if (cred.username == "admin" && cred.password == "admin")
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid username or password");
+                }
+            }
+            catch
+            {
+                return false;
             }
 
         }
     }
+}
 
 

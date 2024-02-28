@@ -37,12 +37,12 @@ import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 
 import { onMounted, ref } from 'vue'
-import LoginService from '@/services/LoginService'
+import LoginService from '@/LoginService'
 import User from '@/Entities/UserLogin'
 import encrypt from '@/services/encryption'
+
 const username = ref('')
 const password = ref('')
-
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
@@ -54,19 +54,21 @@ onMounted(() => {
   }
 })
 
-function Login() {
+async function Login() {
   isLoading.value = true
   if (username.value == '' || password.value == '') {
     failedLogin()
     return
   }
 
-  LoginService.Login(new User(username.value, encrypt(password.value, "saltEX"))).then((response) => {
-    if (response == 'Success!') {
+  try {
+    const saltResponse = await LoginService.getSalt(username.value)
+    const encryptedPassword = encrypt.encrypt(password.value, saltResponse.data)
+    
+    const response = await LoginService.Login(new User(username.value, encryptedPassword))
+    if (response.data === 'Success!') {
       isLoading.value = false
-      //save login to cookies
       let date = new Date()
-      //set date to 1 day from now
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
       document.cookie = `username=${username.value}; expires=${date}`
       document.cookie = `password=${password.value}; expires=`
@@ -74,7 +76,11 @@ function Login() {
     } else {
       failedLogin()
     }
-  })
+  } catch (error) {
+    console.error('Error in LoginService: ', error)
+    alert('Error in LoginService. Check console for details.')
+    failedLogin()
+  }
 }
 
 function failedLogin() {

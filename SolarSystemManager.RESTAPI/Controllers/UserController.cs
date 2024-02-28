@@ -24,9 +24,13 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("Login")]
         public IActionResult Login(LoginRequest cred)
         {
-            if (_userService.ValidateUser(cred))
+            if (_userService.ValidateUser(cred) != null)
             {
-                return Ok("Success!");
+                if (_userService.ValidatePass(cred))
+                {
+                    return Ok("Success!");
+                }
+                return Ok("Invalid username or password!");
             }
             return Ok("Invalid username or password!");
         }

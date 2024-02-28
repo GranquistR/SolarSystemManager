@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
+using SolarSystemManager.RESTAPI.Services;
 using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
 
 namespace SolarSystemManager.RESTAPI.Controllers
@@ -11,10 +12,12 @@ namespace SolarSystemManager.RESTAPI.Controllers
     {
 
         private readonly ILogger<SolarSystemController> _logger;
+        private readonly SolarSystemService _solarSystemService;
 
         public SolarSystemController(ILogger<SolarSystemController> logger)
         {
             _logger = logger;
+            _solarSystemService = new SolarSystemService();
         }
 
         [HttpGet]
@@ -31,6 +34,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("TestPost")]
         public IActionResult TestPost(int id)
         {
+            _solarSystemService.DeleteSolarSystem(id);
             return Ok("Success! " + id);
         }
         

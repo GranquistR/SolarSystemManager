@@ -2,7 +2,7 @@
 
 namespace SolarSystemManager.RESTAPI.Entities
 {
-    public class SpaceObject : Generic
+    public class SpaceObject
     {
         /// <summary>
         /// Primary key of the space object within the database

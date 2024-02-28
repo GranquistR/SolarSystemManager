@@ -23,7 +23,6 @@ namespace SolarSystemManager.RESTAPI.Repos
             return _instance;
         }
 
-        public IEnumerable<User> GetAllUsers()
         #region Example
         // example of data retrieval to object
         //public List<SomeDataType> GetSomeData()
@@ -50,7 +49,7 @@ namespace SolarSystemManager.RESTAPI.Repos
         #endregion
 
         #region UserTable
-        public List<User> GetUserData()
+        public List<User> GetAllUsers()
         {
             var users = new List<User>();
 
@@ -73,6 +72,8 @@ namespace SolarSystemManager.RESTAPI.Repos
             sqlite_conn.Close();
             return users;
         }
+
+        #endregion
 
         #region SolarSystemTable
         public bool DeleteSolarSystem(int targetID)

@@ -98,5 +98,32 @@ namespace SolarSystemManager.RESTAPI.Repos
             return true;
         }
         #endregion
+
+        #region DynamicSQL
+
+        private static object countLock = new object();
+        public int Count(string tableName)
+        {
+            int rowcount = 0;
+
+            lock (countLock)
+            {
+                sqlite_conn.Open();
+                SQLiteDataReader sqlite_datareader;
+                SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                sqlite_cmd.CommandText = "SELECT COUNT(*) FROM " + tableName;
+                sqlite_datareader = sqlite_cmd.ExecuteReader();
+                while (sqlite_datareader.Read())
+                {
+                    rowcount = sqlite_datareader.GetInt32(0);
+                }
+                sqlite_conn.Close();
+            }
+
+            return rowcount;
+        }
+
+
+        #endregion
     }
 }

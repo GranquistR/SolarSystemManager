@@ -34,4 +34,15 @@ export default class LoginService {
         console.error('Error in LoginService: ', error)
       })
   }
+
+  static async GetUserCount(): Promise<any> {
+    return FetchAPIService.get('/User/GetUserCount')
+      .then((data) => {
+        return data
+      })
+      .catch((error) => {
+        alert('Error in LoginService. Check console for details.')
+        console.error('Error in LoginService: ', error)
+      })
+  }
 }

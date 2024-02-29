@@ -77,5 +77,43 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
             return Ok(solarSystems.Where(s=>s.systemVisibility == Visibility.Public).ToList());
         }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSolarSystemCount")]
+        public IActionResult GetSolarSystemCount()
+        {
+            try
+            {
+                return Ok(_solarSystemService.SolarSystemCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSpaceObjectCount")]
+        public IActionResult GetSpaceObjectCount()
+        {
+            try
+            {
+                return Ok(_solarSystemService.SpaceObjectCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

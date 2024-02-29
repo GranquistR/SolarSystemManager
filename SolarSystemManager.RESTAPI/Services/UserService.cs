@@ -48,5 +48,10 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member });
             
         }
+
+        public int UserCount()
+        {
+            return _baseRepo.Count("User");
+        }
     }
 }

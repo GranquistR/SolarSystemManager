@@ -79,5 +79,24 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
 
         }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetUserCount")]
+        public IActionResult GetUserCount()
+        {
+            try
+            {
+                return Ok(_userService.UserCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

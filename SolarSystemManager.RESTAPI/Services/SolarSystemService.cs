@@ -11,5 +11,15 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.DeleteSolarSystem(id);
             return true;
         }
+
+        public int SolarSystemCount()
+        {
+            return _baseRepo.Count("SolarSystem");
+        }
+
+        public int SpaceObjectCount()
+        {
+            return _baseRepo.Count("SpaceObject");
+        }
     }
 }

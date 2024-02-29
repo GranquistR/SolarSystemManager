@@ -27,7 +27,7 @@ onMounted(() => {
     const _username = document.cookie.split('username=')[1].split(';')[0]
     const _password = document.cookie.split('password=')[1].split(';')[0]
 
-    LoginService.getUserSettings(new User(_username, _password))
+    LoginService.GetUserSettings(new User(_username, _password))
       .then((result) => {
         username.value = result.username
         userType.value = result.role === 1 ? 'Administrator' : 'Member'

@@ -28,5 +28,25 @@ namespace SolarSystemManager.RESTAPI.Services
                throw new BadHttpRequestException("No user found with given credentials");
             }   
         }
+
+        public void CreateAccount(Entities.LoginRequest newAccount)
+        {
+            if (_baseRepo.GetAllUsers().Any(p => p.username == newAccount.username))
+            {
+                throw new BadHttpRequestException("Username already exists");
+            }
+            if(newAccount.username.Length < 1)
+            {
+                throw new BadHttpRequestException("Username too short!");
+
+            }
+            if(newAccount.password.Length < 1)
+            {
+                throw new BadHttpRequestException("Password too short!");
+            }
+
+            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member });
+            
+        }
     }
 }

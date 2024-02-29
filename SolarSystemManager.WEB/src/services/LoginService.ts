@@ -13,10 +13,21 @@ export default class LoginService {
       })
   }
 
-  static async getUserSettings(user: User): Promise<any> {
+  static async GetUserSettings(user: User): Promise<any> {
     return FetchAPIService.post('/User/GetUserSettings', user)
       .then((data) => {
         return JSON.parse(data)
+      })
+      .catch((error) => {
+        alert('Error in LoginService. Check console for details.')
+        console.error('Error in LoginService: ', error)
+      })
+  }
+
+  static async CreateAccount(user: User): Promise<any> {
+    return FetchAPIService.post('/User/CreateAccount', user)
+      .then((data) => {
+        return data
       })
       .catch((error) => {
         alert('Error in LoginService. Check console for details.')

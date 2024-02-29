@@ -40,6 +40,27 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("CreateAccount")]
+        public IActionResult CreateAccount([FromBody] LoginRequest newAccount)
+        {
+            try
+            {
+                _userService.CreateAccount(newAccount);
+                return Ok("Success!");
+            }
+            catch (BadHttpRequestException e)
+            {
+                return Ok(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetUserSettings")]
         public IActionResult GetUserSettings([FromBody] LoginRequest cred)
         {

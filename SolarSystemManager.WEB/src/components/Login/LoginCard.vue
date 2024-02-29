@@ -1,5 +1,5 @@
 <template>
-  <Card style="height: 40rem" class="w-25rem align-items-center overflow-hidden pb-5">
+  <Card style="height: fit-content" class="w-25rem align-items-center overflow-hidden">
     <template #header>
       <img src="../../assets/Images/star-banner.webp" alt="Space Image" height="200px" />
       <ProgressBar v-if="isLoading" mode="indeterminate" style="height: 5px"></ProgressBar>

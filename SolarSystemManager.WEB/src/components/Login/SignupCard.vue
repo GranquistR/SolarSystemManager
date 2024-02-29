@@ -1,5 +1,5 @@
 <template>
-  <Card style="height: 40rem" class="w-25rem align-items-center overflow-hidden pb-5">
+  <Card style="height: fit-content" class="w-25rem align-items-center overflow-hidden">
     <template #header>
       <img src="../../assets/Images/galaxy_banner.jpg" alt="Space Image" height="200px" />
       <ProgressBar v-if="isLoading" mode="indeterminate" style="height: 5px"></ProgressBar>
@@ -23,7 +23,7 @@
     <template #footer>
       <transition-group name="p-message" tag="div">
         <Message severity="error" :closable="false" v-if="hasFailed">
-          &nbsp;Could not make account. Please try again.
+          {{ errorMessages }}
         </Message>
       </transition-group>
     </template>
@@ -38,18 +38,46 @@ import Card from 'primevue/card'
 import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
+import LoginService from '@/services/LoginService'
+import User from '@/Entities/UserLogin'
 
 const username = ref('')
 const password = ref('')
 
 const isLoading = ref(false)
 const hasFailed = ref(false)
+const errorMessages = ref('')
 
 onMounted(() => {
   document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
 })
 
 function Signup() {
-  alert('Signup: ' + username.value + ',' + password.value)
+  LoginService.CreateAccount(new User(username.value, password.value))
+    .then((result) => {
+      if (result == 'Success!') {
+        isLoading.value = false
+        let date = new Date()
+        date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+        document.cookie = `username=${username.value}; expires=${date}`
+        document.cookie = `password=${password.value}; expires=${date}`
+        window.location.href = '/dashboard'
+      } else {
+        errorMessages.value = result
+        failed()
+      }
+    })
+    .catch((error: any) => {
+      console.error('Error:', error)
+      hasFailed.value = true
+    })
+}
+
+function failed() {
+  isLoading.value = false
+  hasFailed.value = true
+  setTimeout(() => {
+    hasFailed.value = false
+  }, 2000)
 }
 </script>

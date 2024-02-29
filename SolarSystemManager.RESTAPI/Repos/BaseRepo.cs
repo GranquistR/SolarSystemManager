@@ -73,6 +73,18 @@ namespace SolarSystemManager.RESTAPI.Repos
             return users;
         }
 
+        public void CreateUser(User newUser)
+        {
+            sqlite_conn.Open();
+            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "INSERT INTO User (Username, Password, Role) VALUES (@username, @password, @role);";
+            sqlite_cmd.Parameters.AddWithValue("@username", newUser.username);
+            sqlite_cmd.Parameters.AddWithValue("@password", newUser.password);
+            sqlite_cmd.Parameters.AddWithValue("@role", (int)newUser.role);
+            sqlite_cmd.ExecuteNonQuery();
+            sqlite_conn.Close();
+        }
+
         #endregion
 
         #region SolarSystemTable

@@ -1,5 +1,6 @@
 ﻿using SolarSystemManager.RESTAPI.Entities;
 using System.Data.SQLite;
+using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SolarSystemManager.RESTAPI.Repos
@@ -10,6 +11,7 @@ namespace SolarSystemManager.RESTAPI.Repos
         // static classes are inharintly thread safe
         private static BaseRepo _instance;
         private SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source=" + Environment.CurrentDirectory.Replace("RESTAPI", "DATABASE\\SpaceBox.db") + ";Version=3;Compress=True;");
+        private static object countLock = new object();
         private BaseRepo() { }
         public static BaseRepo Instance()
         {
@@ -88,6 +90,42 @@ namespace SolarSystemManager.RESTAPI.Repos
         #endregion
 
         #region SolarSystemTable
+
+        public List<SolarSystem> GetAllSolarSystems()
+        {
+            lock (countLock)
+            {
+                var solarSystems = new List<SolarSystem>();
+                var spaceObjects = new List<SpaceObject>();
+
+                sqlite_conn.Open();
+                SQLiteDataReader sqlite_datareader;
+                SQLiteCommand sqlite_cmd;
+                sqlite_cmd = sqlite_conn.CreateCommand();
+                sqlite_cmd.CommandText = "SELECT SSID, UserID, Name, Visibility FROM SolarSystem";
+                sqlite_datareader = sqlite_cmd.ExecuteReader();
+                while (sqlite_datareader.Read())
+                {
+                    solarSystems.Add(new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3)));
+                }
+
+                sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject";
+                sqlite_datareader = sqlite_cmd.ExecuteReader();
+                while (sqlite_datareader.Read())
+                {
+                    spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), sqlite_datareader.GetString(3), sqlite_datareader.GetInt32(4), sqlite_datareader.GetInt32(5), sqlite_datareader.GetInt32(6), sqlite_datareader.GetInt32(7)));
+                }
+
+                foreach (var solarSystem in solarSystems)
+                {
+                    solarSystem.spaceObjects = spaceObjects.FindAll(s => s.solarSystemID == solarSystem.systemId);
+                }
+
+                sqlite_conn.Close();
+                return solarSystems;
+            }
+        }
+
         public bool DeleteSolarSystem(int targetID)
         {
             sqlite_conn.Open();
@@ -101,7 +139,6 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region DynamicSQL
 
-        private static object countLock = new object();
         public int Count(string tableName)
         {
             int rowcount = 0;

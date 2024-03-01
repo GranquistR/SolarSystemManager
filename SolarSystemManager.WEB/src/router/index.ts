@@ -50,12 +50,6 @@ const router = createRouter({
     
     },
     {
-      path: '/solarview',
-      name: 'solarview',
-      component: () => import('../views/SolarView.js')
-    
-    },
-    {
       path: '/:catchAll(.*)',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')

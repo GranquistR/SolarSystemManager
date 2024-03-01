@@ -97,6 +97,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             //will take a solar system id and space object information and update that in the data base
             return Ok("Add Space Obejct Works");
+        }
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSolarSystemCount")]

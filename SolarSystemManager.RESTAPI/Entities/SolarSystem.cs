@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using SolarSystemManager.RESTAPI.Repos;
+
 namespace SolarSystemManager.RESTAPI.Entities
 {
     public class SolarSystem

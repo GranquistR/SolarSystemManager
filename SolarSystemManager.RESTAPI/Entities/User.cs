@@ -1,20 +1,13 @@
 ﻿using System.Text.Json.Serialization;
-using SolarSystemManager.RESTAPI.Repos;
 
 namespace SolarSystemManager.RESTAPI.Entities
 {
     public class User
     {
-        public int userID { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
-        public Role role { get; set; }
-    }
-
-    public enum Role
-    {
-        Member=0,
-        Admin=1
+        public int? userID { get; set; }
+        public required string username { get; set; }
+        public required string password { get; set; }
+        public string settings { get; set; }
     }
 
     public class LoginRequest

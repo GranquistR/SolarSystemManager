@@ -38,15 +38,15 @@
   <!-- statistics -->
   <div class="grid grid-nogutter text-center">
     <div class="col-4">
-      <h1>{{ userCount }}</h1>
+      <h1>69</h1>
       <p>Active Users</p>
     </div>
     <div class="col-4">
-      <h1>{{ solarSystemCount }}</h1>
+      <h1>69</h1>
       <p>Solar Systems</p>
     </div>
     <div class="col-4">
-      <h1>{{ spaceObjectCount }}</h1>
+      <h1>69</h1>
       <p>Unique Planets</p>
     </div>
   </div>
@@ -82,7 +82,6 @@
 <script setup lang="ts">
 import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
-import LoginService from '@/services/LoginService'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted } from 'vue'
@@ -93,10 +92,6 @@ import InlineMessage from 'primevue/inlinemessage'
 const allSolarSystems = ref<string>('')
 const isLoading = ref(false)
 const failedToLoad = ref(false)
-
-const solarSystemCount = ref(0)
-const spaceObjectCount = ref(0)
-const userCount = ref(0)
 
 onMounted(() => {
   isLoading.value = true
@@ -110,16 +105,6 @@ onMounted(() => {
       failedToLoad.value = true
       isLoading.value = false
     })
-
-  SolarSystemService.GetSpaceObjectCount().then((response) => {
-    spaceObjectCount.value = response
-  })
-  SolarSystemService.GetSolarSystemCount().then((response) => {
-    solarSystemCount.value = response
-  })
-  LoginService.GetUserCount().then((response) => {
-    userCount.value = response
-  })
 })
 
 const responsiveOptions = ref([

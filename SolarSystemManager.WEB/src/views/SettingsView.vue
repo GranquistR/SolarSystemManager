@@ -19,23 +19,33 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import { ref, onMounted } from 'vue'
 
-const username = ref<string>('')
-const userType = ref<string>('')
+const username = ref('')
+const password = ref('')
+const userType = ref('')
 
 onMounted(() => {
   if (document.cookie.includes('username=')) {
-    const _username = document.cookie.split('username=')[1].split(';')[0]
-    const _password = document.cookie.split('password=')[1].split(';')[0]
-
-    LoginService.GetUserSettings(new User(_username, _password))
-      .then((result) => {
-        username.value = result.username
-        userType.value = result.role === 1 ? 'Administrator' : 'Member'
+    username.value = document.cookie.split('username=')[1].split(';')[0]
+    password.value = document.cookie.split('password=')[1].split(';')[0]
+    console.log('test')
+    console.log(password.value)
+    LoginService.getUserSettings(new User(username.value, password.value))
+      .then((result: any) => {
+        let obj = JSON.parse(result)
+        userType.value = obj.role
+        console.log('result: ' + result)
       })
       .catch((error: any) => {
         console.error('Error:', error)
       })
   }
+  // const cookies = document.cookie.split(';')
+  // for (let i = 0; i < cookies.length; i++) {
+  //   const cookie = cookies[i].split('=')
+  //   if (cookie[0].trim() === 'username') {
+  //     username.value = cookie[1]
+  //   }
+  // }
 })
 
 function logout() {

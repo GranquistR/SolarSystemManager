@@ -1,57 +1,81 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using SolarSystemManager.RESTAPI.Entities;
 using System.Linq;
-using System.Text.Json;
-using SolarSystemManager.RESTAPI.Repos;
-
 
 namespace SolarSystemManager.RESTAPI.Services
 {
     public class UserService
     {
-        
-        BaseRepo _baseRepo = BaseRepo.Instance();
+        /// <summary>
+        /// This validates the user
+        /// Will be replaced with actual login logic
+        /// WIll be used to validate the user on every endpoint that requires authentication
+        /// </summary>
+        /// <param name="cred"></param>
+        /// <returns></returns>
+        ///         
+
+        List<User> users = [
+                new User
+                {
+                    userID = 1234,
+                    username = "user",
+                    password = "password",
+                    settings =
+                        "{\"role\":\"member\",\"contrast\":\"1\"}"
+                },
+
+            new User
+            {
+                userID = 4321,
+                username = "admin",
+                password = "admin",
+                settings =
+                        "{\"role\":\"administrator\",\"contrast\":\"1\"}"
+
+            }
+        ];
         public bool ValidateUser(Entities.LoginRequest cred)
         {
-            return _baseRepo.GetAllUsers().Any(p => (p.username == cred.username) && (p.password == cred.password));
+            try
+            {
+                //replace with actual login logic
+                //just need to check if the credentials are in our list of users
+                if (users.Any(p => (p.username == cred.username) && (p.password == cred.password)))
+                {
+                    return true;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid username or password");
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
         }
-        public User GetUserSettingsData(Entities.LoginRequest cred)
+        public string GetUserData(Entities.LoginRequest cred)
         {
-            var user = _baseRepo.GetAllUsers().FirstOrDefault(p => (p.username == cred.username) && (p.password == cred.password));
-
-            if (user != default)
+            try
             {
-                return user;
+                //check Credentials of user
+                User cUser = users.First(p => (p.username == cred.username) && (p.password == cred.password));
+
+                if (cUser != null)
+                {
+                    return cUser.settings;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid username or password");
+                }
             }
-            else
+            catch
             {
-               throw new BadHttpRequestException("No user found with given credentials");
-            }   
-        }
-
-        public void CreateAccount(Entities.LoginRequest newAccount)
-        {
-            if (_baseRepo.GetAllUsers().Any(p => p.username == newAccount.username))
-            {
-                throw new BadHttpRequestException("Username already exists");
+                return "0";
             }
-            if(newAccount.username.Length < 1)
-            {
-                throw new BadHttpRequestException("Username too short!");
-
-            }
-            if(newAccount.password.Length < 1)
-            {
-                throw new BadHttpRequestException("Password too short!");
-            }
-
-            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member });
-            
-        }
-
-        public int UserCount()
-        {
-            return _baseRepo.Count("User");
         }
     }
 }

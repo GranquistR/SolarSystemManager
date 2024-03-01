@@ -24,79 +24,25 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("Login")]
         public IActionResult Login([FromBody]LoginRequest cred)
         {
-            try
+            if (_userService.ValidateUser(cred))
             {
-                if (_userService.ValidateUser(cred))
-                {
-                    return Ok("Success!");
-                }
-                return Ok("Invalid username or password!");
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpPost]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] LoginRequest newAccount)
-        {
-            try
-            {
-                _userService.CreateAccount(newAccount);
                 return Ok("Success!");
             }
-            catch (BadHttpRequestException e)
-            {
-                return Ok(e.Message);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok("Invalid username or password!");
         }
-
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetUserSettings")]
         public IActionResult GetUserSettings([FromBody] LoginRequest cred)
         {
-            try
-            {
-                return Ok(_userService.GetUserSettingsData(cred));                
-            }
-            catch (BadHttpRequestException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            string data = _userService.GetUserData(cred);
 
-
-        }
-
-        [HttpGet]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetUserCount")]
-        public IActionResult GetUserCount()
-        {
-            try
+            if (data != "0")
             {
-                return Ok(_userService.UserCount());
+                return Ok(data);
             }
-            catch (BadHttpRequestException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok("Could Not Find Data");
         }
     }
 }

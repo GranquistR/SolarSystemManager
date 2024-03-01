@@ -1,6 +1,4 @@
-﻿using SolarSystemManager.RESTAPI.Repos;
-
-namespace SolarSystemManager.RESTAPI.Entities
+﻿namespace SolarSystemManager.RESTAPI.Entities
 {
     public class SpaceObject
     {

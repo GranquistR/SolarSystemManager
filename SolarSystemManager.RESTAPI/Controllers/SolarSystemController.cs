@@ -115,5 +115,26 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        //for testing purposes, creates a solar system object. Eventually will get a solar system object from the database
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSolarSystem")]
+        public IActionResult GetSolarSystem()
+        {
+             SolarSystem dummySolarSystem = new SolarSystem(1, 2, "Sol", Visibility.Public);
+
+             return Ok(dummySolarSystem);
+        }
+
+        //add space object
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("AddSpaceObject")]
+        public IActionResult AddSpaceObject()
+        {
+            //will take a solar system id and space object information and update that in the data base
+            return Ok("Add Space Obejct Works");
+        }
     }
 }

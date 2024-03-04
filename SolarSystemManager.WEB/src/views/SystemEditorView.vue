@@ -25,7 +25,7 @@ import Button from 'primevue/button'
 
 const currentSolarSystem = ref<any>([])
 
-SolarSystemService.GetSolarSystem().then((response) => {
+SolarSystemService.GetSolarSystem(22).then((response) => {
   currentSolarSystem.value = response
 })
 

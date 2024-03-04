@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
+using SolarSystemManager.RESTAPI.Services;
+using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -10,16 +12,18 @@ namespace SolarSystemManager.RESTAPI.Controllers
     {
 
         private readonly ILogger<SolarSystemController> _logger;
+        private readonly SolarSystemService _solarSystemService;
 
         public SolarSystemController(ILogger<SolarSystemController> logger)
         {
             _logger = logger;
+            _solarSystemService = new SolarSystemService();
         }
 
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetAllSolarSystems")]
-        public IActionResult GetAllSolarSystems()
+        [Route("TestGet")]
+        public IActionResult TestGet()
         {
             string test = "Reach the API!!";
             return Ok(test);
@@ -27,22 +31,68 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSolarSystemById")]
-        public IActionResult GetSolarSystemById(int id)
+        [Route("TestPost")]
+        public IActionResult TestPost(int id)
         {
+            _solarSystemService.DeleteSolarSystem(id);
             return Ok("Success! " + id);
         }
         
-        //Leo's dummy test
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("SolarSystemInfoTest")]
-        public IActionResult SolarSystemInfoTest()
+        [Route("GetAllPublicSolarSystems")]
+        public IActionResult GetAllPublicSolarSystems()
         {
-            var testSys = new SolarSystem(1, 2, "Sol", false);
-           // string test = "Solar System ID: " + testSys.solarSystemID + " | Owner ID: " + testSys.ownerID +
-             //       " | Solar System Name: " + testSys.systemName + " | Solar System Private: " + testSys.systemIsPrivate;
-            return Ok(testSys);
+            try
+            {
+                return Ok(_solarSystemService.GetAllSolarSystems().Where(s => s.systemVisibility == Visibility.Public).OrderBy(x=>x.systemName));
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSolarSystemCount")]
+        public IActionResult GetSolarSystemCount()
+        {
+            try
+            {
+                return Ok(_solarSystemService.SolarSystemCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSpaceObjectCount")]
+        public IActionResult GetSpaceObjectCount()
+        {
+            try
+            {
+                return Ok(_solarSystemService.SpaceObjectCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
         }
     }
 }

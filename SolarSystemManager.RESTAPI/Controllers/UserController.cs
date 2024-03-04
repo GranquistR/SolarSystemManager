@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
-using SolarSystemManager.RESTAPI.Services;  
+using SolarSystemManager.RESTAPI.Services;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class UserController : ControllerBase
     {
 
         private readonly ILogger<SolarSystemController> _logger;
         private readonly UserService _userService;
 
-        public LoginController(ILogger<SolarSystemController> logger)
+        public UserController(ILogger<SolarSystemController> logger)
         {
             _logger = logger;
             _userService = new UserService();
@@ -22,40 +22,81 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("Login")]
-        public IActionResult Login(LoginRequest cred)
+        public IActionResult Login([FromBody]LoginRequest cred)
         {
-            
-                if (_userService.ValidatePass(cred) == true)
+            try
+            {
+                if (_userService.ValidateUser(cred))
                 {
                     return Ok("Success!");
                 }
                 return Ok("Invalid username or password!");
             }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("CreateAccount")]
+        public IActionResult CreateAccount([FromBody] LoginRequest newAccount)
+        {
+            try
+            {
+                _userService.CreateAccount(newAccount);
+                return Ok("Success!");
+            }
+            catch (BadHttpRequestException e)
+            {
+                return Ok(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSalts")]
-        public IActionResult GetSalt([FromBody] string username)
+        [Route("GetUserSettings")]
+        public IActionResult GetUserSettings([FromBody] LoginRequest cred)
         {
-
-            try {
-                string salt = _userService.GetSalts(username);
-                if (salt != null) {
-
-                    return Ok(salt);
-                }
-                return Ok("Invalid username or password!");
-            } catch (BadHttpRequestException e)
+            try
+            {
+                return Ok(_userService.GetUserSettingsData(cred));                
+            }
+            catch (BadHttpRequestException e)
             {
                 return BadRequest(e.Message);
-            } catch
-            {
-                return StatusCode(StatusCodes.Status400BadRequest);
             }
-        } 
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetUserCount")]
+        public IActionResult GetUserCount()
+        {
+            try
+            {
+                return Ok(_userService.UserCount());
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
- }
-    
-
-
+}

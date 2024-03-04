@@ -26,7 +26,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                if (_userService.ValidateUser(cred))
+                if (_userService.ValidateUser(cred) != null)
                 {
                     return Ok("Success!");
                 }

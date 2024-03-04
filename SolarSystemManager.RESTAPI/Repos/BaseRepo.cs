@@ -175,9 +175,39 @@ namespace SolarSystemManager.RESTAPI.Repos
                 {
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
                     sqlite_cmd.CommandText = "DELETE FROM SolarSystem WHERE SSID=" + targetID + ";";
                     sqlite_cmd.ExecuteNonQuery();
                     return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
+        public SolarSystem GetSolarSystemByID(int id)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteDataReader sqlite_datareader;
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "SELECT SSID, OwnerID, Name, Visibility FROM SolarSystem WHERE SSID=" + id + ";";
+                    sqlite_datareader = sqlite_cmd.ExecuteReader();
+                    sqlite_datareader.Read();
+                    SolarSystem temp = new SolarSystem(
+                        sqlite_datareader.GetInt32(0),
+                        sqlite_datareader.GetInt32(1),
+                        sqlite_datareader.GetString(2),
+                        (Visibility)sqlite_datareader.GetInt32(3)
+                        );
+                    sqlite_datareader.Close();
+                    return temp;
                 }
                 finally
                 {

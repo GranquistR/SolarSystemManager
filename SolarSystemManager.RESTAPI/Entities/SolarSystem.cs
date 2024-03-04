@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using SolarSystemManager.RESTAPI.Repos;
+
 namespace SolarSystemManager.RESTAPI.Entities
 {
     public class SolarSystem
@@ -29,7 +31,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         ///<summary>
         /// List of space objects within solar system, empty by default
         /// </summary>
-        public IEnumerable<SpaceObject> spaceObjects = Enumerable.Empty<SpaceObject>();
+        public IEnumerable<SpaceObject> spaceObjects { get; set;}
 
         /// <summary>
         /// Solar system constuctor, sets up basic info like primary key, owner foreign key, name, and privacy setting
@@ -45,7 +47,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         /// <summary>
         /// Parameters are to create a new space object, creates and adds space object to list. May need to modifiy later but this works for now.
         /// </summary>
-        public void addSpaceObject(int objID, string objName, string objType, int x, int y, int objSize, int objColor)
+        public void addSpaceObject(int objID, string objName, string objType, int x, int y, int objSize, string objColor)
         {
             var newObject = new SpaceObject(objID, systemId, objName, objType, x, y, objSize, objColor);
             spaceObjects = spaceObjects.Append(newObject);

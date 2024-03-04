@@ -1,4 +1,6 @@
-﻿namespace SolarSystemManager.RESTAPI.Entities
+﻿using SolarSystemManager.RESTAPI.Repos;
+
+namespace SolarSystemManager.RESTAPI.Entities
 {
     public class SpaceObject
     {
@@ -33,14 +35,14 @@
         ///<summary>
         /// Object color as hexidecimal code
         /// </summary>
-        public int? objectColor { get; set; }
+        public string? objectColor { get; set; }
         ///<summary>
         /// Constructor for space object, may add default values for some things like size, color
         /// spaceObjectID, solarSystemID are generated and not accessible by end user.
         /// Name, type, and coords may be prompted upon creation (depends on UI design)
         /// </summary>
         public SpaceObject(int _spaceObjectID, int _solarSystemID, string _objectName,
-            string _objectType, int _xCoord, int _yCoord, int _objectSize, int _objectColor)
+            string _objectType, int _xCoord, int _yCoord, int _objectSize, string _objectColor)
         {
             spaceObjectID = _spaceObjectID;
             solarSystemID = _solarSystemID;

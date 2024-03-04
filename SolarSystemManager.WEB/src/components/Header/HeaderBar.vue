@@ -33,7 +33,7 @@
             severity="secondary"
             rounded
             outlined
-            label="Login &nbsp;&nbsp;"
+            label="Login"
             iconPos="right"
           ></Button>
         </RouterLink>
@@ -49,13 +49,13 @@
             icon="pi pi-home"
             rounded
             iconPos="right"
-            label="Dashboard &nbsp;&nbsp;"
+            label="Dashboard"
           ></Button>
         </RouterLink>
         <!-- user settings link  -->
         <RouterLink to="/settings" v-if="isLoggedIn">
           <Button
-            :label="username + '&nbsp;&nbsp;'"
+            :label="username"
             icon="pi pi-user"
             severity="secondary"
             iconPos="right"
@@ -74,7 +74,7 @@
 import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
-import SpaceBoxLogo from '../SpaceBoxLogo.vue'
+import SpaceBoxLogo from './SpaceBoxLogo.vue'
 
 const Props = defineProps<{
   noLinks?: boolean

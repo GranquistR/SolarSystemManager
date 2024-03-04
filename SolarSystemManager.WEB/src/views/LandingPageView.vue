@@ -38,37 +38,112 @@
   <!-- statistics -->
   <div class="grid grid-nogutter text-center">
     <div class="col-4">
-      <h1>69</h1>
+      <h1>{{ userCount }}</h1>
       <p>Active Users</p>
     </div>
     <div class="col-4">
-      <h1>69</h1>
+      <h1>{{ solarSystemCount }}</h1>
       <p>Solar Systems</p>
     </div>
     <div class="col-4">
-      <h1>69</h1>
+      <h1>{{ spaceObjectCount }}</h1>
       <p>Unique Planets</p>
     </div>
   </div>
-  <!-- ummmm -->
 
-  <p style="margin-top: 30rem">other stuff here?</p>
-  <h1>you where ejected!</h1>
-  <img src="../assets/Images/spaceman.webp" width="700px" />
+  <!-- spacer -->
+  <div style="margin-top: 15rem"></div>
+  <div class="text-center">
+    <h2>Take a look</h2>
+    <p>See what we have to offer with these popular, user-made solar systems.</p>
+    <Carousel
+      v-if="!isLoading && !failedToLoad"
+      :value="allSolarSystems"
+      :numVisible="3"
+      :numScroll="3"
+      :responsiveOptions="responsiveOptions"
+    >
+      <template #item="slotProps">
+        <div class="border-1 surface-border border-round m-2 p-3">
+          <div>
+            {{ slotProps.data.systemName }}
+          </div>
+          <img src="../assets/Images/among-us-twerk.gif" width="200px" />
+        </div>
+      </template>
+    </Carousel>
+    <ProgressSpinner v-if="isLoading" class="m-4" />
+    <InlineMessage v-if="!isLoading && failedToLoad" severity="error" class="m-4">
+      Failed to load solar systems. Please try again later.
+    </InlineMessage>
+  </div>
 </template>
 
 <script setup lang="ts">
 import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
+import LoginService from '@/services/LoginService'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import Carousel from 'primevue/carousel'
+import ProgressSpinner from 'primevue/progressspinner'
+import InlineMessage from 'primevue/inlinemessage'
 
 const allSolarSystems = ref<string>('')
+const isLoading = ref(false)
+const failedToLoad = ref(false)
 
-SolarSystemService.getAllSolarSystems().then((response) => {
-  allSolarSystems.value = response
+const solarSystemCount = ref(0)
+const spaceObjectCount = ref(0)
+const userCount = ref(0)
+
+onMounted(() => {
+  isLoading.value = true
+  SolarSystemService.GetPublicSolarSystems()
+    .then((response) => {
+      allSolarSystems.value = response
+      isLoading.value = false
+    })
+    .catch((error) => {
+      console.log('error in LandingPageView: ' + error)
+      failedToLoad.value = true
+      isLoading.value = false
+    })
+
+  SolarSystemService.GetSpaceObjectCount().then((response) => {
+    spaceObjectCount.value = response
+  })
+  SolarSystemService.GetSolarSystemCount().then((response) => {
+    solarSystemCount.value = response
+  })
+  LoginService.GetUserCount().then((response) => {
+    userCount.value = response
+  })
 })
+
+const responsiveOptions = ref([
+  {
+    breakpoint: '1920px',
+    numVisible: 4,
+    numScroll: 4
+  },
+  {
+    breakpoint: '1199px',
+    numVisible: 3,
+    numScroll: 3
+  },
+  {
+    breakpoint: '767px',
+    numVisible: 2,
+    numScroll: 2
+  },
+  {
+    breakpoint: '575px',
+    numVisible: 1,
+    numScroll: 1
+  }
+])
 </script>
 
 <style scoped>
@@ -79,6 +154,12 @@ h1 {
   font-size: 600%;
   letter-spacing: 0.4rem;
 }
+h2 {
+  font-weight: bold;
+  font-stretch: expanded;
+  font-size: 300%;
+  letter-spacing: 0.4rem;
+}
 p {
   opacity: 75%;
   font-size: 1.1rem;
@@ -87,7 +168,7 @@ p {
 }
 .greeting {
   padding-top: 10rem;
-  margin-left: 10rem;
+  margin-left: 10%;
 }
 .greeting p {
   width: 34rem;
@@ -103,7 +184,7 @@ p {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url(../assets/Images/space1.jpg) center center / cover no-repeat;
+  background: url(../assets/Images/spaceman-looking-at-planet.jpg) center center / cover no-repeat;
   -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 85%);
   mask-image: linear-gradient(to bottom, black 30%, transparent 85%);
 

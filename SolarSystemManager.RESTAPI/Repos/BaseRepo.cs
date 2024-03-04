@@ -186,7 +186,7 @@ namespace SolarSystemManager.RESTAPI.Repos
             }
         }
 
-        public SolarSystem GetSolarSystem(int targetID)
+        public SolarSystem GetSolarSystemByID(int targetID)
         {
             lock (countLock)
             {
@@ -200,8 +200,20 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.CommandText = "SELECT SSID, OwnerID, Name, Visibility from SolarSystem WHERE SSID=" + targetID + ";";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     sqlite_datareader.Read();
-                    SolarSystem dummy = new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3));
-                    return dummy;
+                    SolarSystem dummySolarSystem = new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3));
+
+                    sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_datareader = sqlite_cmd.ExecuteReader();
+                  
+
+                    var spaceObjects = new List<SpaceObject>();
+                    while (sqlite_datareader.Read())
+                    {
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), sqlite_datareader.GetString(3), sqlite_datareader.GetInt32(4), sqlite_datareader.GetInt32(5), sqlite_datareader.GetInt32(6), sqlite_datareader.GetString(7)));
+                    }
+                    dummySolarSystem.spaceObjects = spaceObjects;
+                    return dummySolarSystem;
                 }
                 finally
                 {
@@ -210,37 +222,6 @@ namespace SolarSystemManager.RESTAPI.Repos
 
             }
         }
-
-        // //This is an example of how to get data from the database
-        //public List<SomeDataType> GetSomeData()
-        //{
-        //    lock (countLock)
-        //    {
-        //        try
-        //        {
-        //            sqlite_conn.Open();
-        //            List<UsSomeDataType> data = new List<SomeDataType>();
-        //            SQLiteDataReader sqlite_datareader;
-        //            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-        //            sqlite_cmd.CommandText = "SELECT all collum data requests sepperated by commas FROM Table Name";
-        //            sqlite_datareader = sqlite_cmd.ExecuteReader();
-        //            while (sqlite_datareader.Read())
-        //            {
-        //                data.Add(new SomeDataType
-        //                {
-        //                    Parameter1 = sqlite_datareader.GetInt32(0),
-        //                    Parameter2 = sqlite_datareader.GetString(1),
-        //                    // IMPORTANT, the string value 0 will be the first request in the SQL string
-        //                });
-        //            }
-        //            return data;
-        //        }
-        //        finally
-        //        {
-        //            sqlite_conn.Close();
-        //        }
-        //    }
-        //}
 
         #endregion
 

@@ -98,13 +98,13 @@ namespace SolarSystemManager.RESTAPI.Controllers
         //for testing purposes, creates a solar system object. Eventually will get a solar system object from the database
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSolarSystem")]
-        public IActionResult GetSolarSystem(int id)
+        [Route("GetSolarSystemByID")]
+        public IActionResult GetSolarSystemByID(int id)
         {
             // SolarSystem dummySolarSystem = new SolarSystem(1, 2, "Sol", Visibility.Public);
               
 
-             return Ok(_solarSystemService.GetSolarSystem(id));
+             return Ok(_solarSystemService.GetSolarSystemByID(id));
         }
 
         //add space object

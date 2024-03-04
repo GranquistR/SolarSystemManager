@@ -99,11 +99,12 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSolarSystem")]
-        public IActionResult GetSolarSystem()
+        public IActionResult GetSolarSystem(int id)
         {
-             SolarSystem dummySolarSystem = new SolarSystem(1, 2, "Sol", Visibility.Public);
+            // SolarSystem dummySolarSystem = new SolarSystem(1, 2, "Sol", Visibility.Public);
+              
 
-             return Ok(dummySolarSystem);
+             return Ok(_solarSystemService.GetSolarSystem(id));
         }
 
         //add space object

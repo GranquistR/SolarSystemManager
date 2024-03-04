@@ -27,5 +27,10 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             return _baseRepo.Count("SpaceObject");
         }
+
+        public SolarSystem GetSolarSystem(int id)
+        {
+            return _baseRepo.GetSolarSystem(id);
+        }
     }
 }

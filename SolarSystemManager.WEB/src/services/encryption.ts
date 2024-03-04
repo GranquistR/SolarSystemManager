@@ -128,7 +128,7 @@ const EncryptionModule = (function () {
     generateSalt: generateSalt
   }
 })()
-
+/*
 function test() {
   for (let i: number = 0; i < 10000; ++i) {
     const message: string = `UnGodly1secure!Password3^Boss${i}`
@@ -140,4 +140,5 @@ function test() {
 }
 
 test()
+*/
 export default EncryptionModule

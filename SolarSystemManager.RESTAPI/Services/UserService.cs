@@ -233,22 +233,17 @@ namespace SolarSystemManager.RESTAPI.Services
         };
         private readonly AVLTree _avlTree = new AVLTree();
 
-        public string? GetSalt(string username)
-        {
-            AVLTree.Node userNode = _avlTree.Search(username);
-            return userNode?.salt;
-        }
 
-        public bool ValidatePass(string username, string hashedPassword)
-        {
-            AVLTree.Node userNode = _avlTree.Search(username);
-            return userNode?.password == hashedPassword;
-        }
-        public string? ValidateUser(Entities.LoginRequest cred)
+
+
+        public string GetSalts(string username)
         {
             try
             {
-                AVLTree.Node result = tree.Search(cred.username);
+                tree.Insert("admin", "8437f108d53f42d93199da22074b2b595216d2c51d2a7ccbe072bad7f3897", "adminSalt");
+                //password adminPass
+
+                AVLTree.Node result = tree.Search(username);
                 if (result != null)
                 {
                     return result.salt;
@@ -259,11 +254,13 @@ namespace SolarSystemManager.RESTAPI.Services
             }
             catch
             {
-                return null;
+                throw new BadHttpRequestException("Invalid username or password");
             }
         }
         public bool ValidatePass(Entities.LoginRequest cred)
         {
+            tree.Insert("admin", "8437f108d53f42d93199da22074b2b595216d2c51d2a7ccbe072bad7f3897", "adminSalt");
+
             try
             {
                 AVLTree.Node result = tree.Search(cred.username);
@@ -287,27 +284,9 @@ namespace SolarSystemManager.RESTAPI.Services
                 return false;
             }
         }
-        private static bool ValidateUser1(Entities.LoginRequest cred)
-        {
-            try
-            {
-                //replace with actual login logic
-                //just need to check if the credentials are in our list of users
-                if (cred.username == "admin" && cred.password == "admin")
-                {
-                    return true;
-                }
-                else
-                {
-                    throw new BadHttpRequestException("Invalid username or password");
-                }
-            }
-            catch
-            {
-                return false;
-            }
 
-        }
+
+
     }
 }
 

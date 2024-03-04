@@ -37,7 +37,7 @@ import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 
 import { onMounted, ref } from 'vue'
-import LoginService from '@/LoginService'
+import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
 import encrypt from '@/services/encryption'
 
@@ -62,11 +62,19 @@ async function Login() {
   }
 
   try {
-    const saltResponse = await LoginService.getSalt(username.value)
-    const encryptedPassword = encrypt.encrypt(password.value, saltResponse.data)
+    let encryptedPassword = "";
+    let passResp = "";
+    LoginService.GetSalt(username.value).then((response) => {
+      alert(response);
+
+      encryptedPassword = encrypt.encrypt(password.value, response)
+      alert(encryptedPassword);
+      LoginService.Login(new User(username.value, encryptedPassword)).then((repo) => {
+      passResp = repo.data;
+      });
+    });
     
-    const response = await LoginService.Login(new User(username.value, encryptedPassword))
-    if (response.data === 'Success!') {
+    if (passResp === 'Success!') {
       isLoading.value = false
       let date = new Date()
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000)

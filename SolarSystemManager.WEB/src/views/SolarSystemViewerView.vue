@@ -56,12 +56,12 @@ app.ticker.add((delta) =>
 });
 
 
-
+const solarObjects = ref([])
 // Get the json data for the solar system based on the id
-const solarObjects = SolarSystemService.GetSpaceObjects()
-
+solarObjects.value = SolarSystemService.GetSpaceObjects()
+console.log(solarObjects)
 //loop through the json data and plot the objects on the screen
-solarObjects.then((response) => {
+solarObjects.value.then((response) => {
 
   solarObjects.value = JSON.parse(response)
   console.log('hit')
@@ -74,14 +74,16 @@ solarObjects.then((response) => {
     console.log(solarObjects.value[i].objectSize)
     console.log(solarObjects.value[i].objectColor)
 
-    const sObj = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png');
-    sObj.anchor.set(0.5);
-    sObj.scale.set(solarObjects.value[i].objectSize,solarObjects.value[i].objectSize);
-    sObj.x = solarObjects.value[i].xCoord;
-    sObj.y = solarObjects.value[i].yCoord;
-    sObj.blendMode = PIXI.BLEND_MODES.ADD()
+    const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png');
+    sprite.anchor.set(0.5);
+    sprite.scale.set(solarObjects.value[i].objectSize *.2,solarObjects.value[i].objectSize * .2);
+    sprite.x = solarObjects.value[i].xCoord;
+    sprite.y = solarObjects.value[i].yCoord;
+    console.log('color: '+solarObjects.value[i].objectColor)
+    sprite.tint = solarObjects.value[i].objectColor;
+    //sObj.blendMode = PIXI.BLEND_MODES.ADD()
     // app.stage.addChild(sObj);
-    container.addChild(sObj);
+    container.addChild(sprite);
 
 
   }

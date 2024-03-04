@@ -23,20 +23,17 @@ export default class SolarSystemService {
         console.error('Error in LoginService: ', error)
       })
   }
+  
+  static async GetSpaceObjects(): Promise<any> {
+      return FetchAPIService.get('/SolarSystem/GetSpaceObjects').then((data) => {
+          console.log('SolarSystemService: ', data)
+          return data
+      })
+  }
 
   static async GetPublicSolarSystems(): Promise<any> {
-    return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems').then((data) => {
-      console.log('SolarSystemService: ', data)
-      return data
-    })
-    }
+   
 
-    static async GetSpaceObjects(): Promise<any> {
-        return FetchAPIService.get('/SolarSystem/GetSpaceObjects').then((data) => {
-            console.log('SolarSystemService: ', data)
-            return data
-        })
-    }
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
       .then((data) => {
         return JSON.parse(data)

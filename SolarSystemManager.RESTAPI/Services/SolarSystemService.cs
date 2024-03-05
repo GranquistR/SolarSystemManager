@@ -16,7 +16,7 @@ namespace SolarSystemManager.RESTAPI.Services
 
         public IEnumerable<SolarSystem> GetMySolarSystems(LoginRequest cred)
         {
-            var user = UserService.ValidateUser(cred);
+            var user = _userService.ValidateUser(cred);
             if(user == null)
             {
                 throw new BadHttpRequestException("401");
@@ -26,7 +26,7 @@ namespace SolarSystemManager.RESTAPI.Services
 
         public IEnumerable<SolarSystem> GetAllSolarSystemsAdmin(LoginRequest cred)
         {
-            var user = UserService.ValidateUser(cred);
+            var user = _userService.ValidateUser(cred);
             if(user == null)
             {
                 throw new BadHttpRequestException("401");

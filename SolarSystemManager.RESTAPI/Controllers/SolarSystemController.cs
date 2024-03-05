@@ -31,11 +31,24 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("TestPost")]
-        public IActionResult TestPost(int id)
+        [Route("DeleteSolarSystem")]
+        public IActionResult DeleteSolarSystem([FromBody] LoginRequest cred,int id)
         {
-            _solarSystemService.DeleteSolarSystem(id);
-            return Ok("Success! " + id);
+            try
+            {
+                return Ok(_solarSystemService.DeleteSolarSystem(cred, id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                if(e.Message == "401")
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
         }
         
         [HttpGet]

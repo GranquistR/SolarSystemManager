@@ -79,7 +79,27 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
 
         }
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSalts")]
+        public IActionResult GetSalt([FromBody] string username)
+        { 
+            try {
+                string salt = _userService.GetSalts(username);
+                if (salt != null) {
 
+                    return Ok(salt);
+                }
+                return Ok("Invalid username or password!");
+            } catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            } catch
+            {
+                return StatusCode(StatusCodes.Status400BadRequest);
+            }
+        }
+        
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetUserCount")]

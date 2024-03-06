@@ -1,6 +1,6 @@
 <template>
   <img
-    src="../../assets/images/spaceman.webp"
+    src="../../assets/images/spaceman-floating-in-space.webp"
     alt="astronaut on a space walk"
     style="width: 100%; height: 100%; position: fixed; object-fit: cover"
   />

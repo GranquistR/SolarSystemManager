@@ -41,6 +41,17 @@
 
       <!-- logged in links -->
       <div v-else class="icon-container">
+        <!-- admin page link -->
+        <RouterLink class="mr-2" to="/admin" v-if="isLoggedIn && isAdmin">
+          <Button
+            outlined
+            severity="secondary"
+            icon="pi pi-eye"
+            rounded
+            iconPos="right"
+            label="Admin"
+          ></Button>
+        </RouterLink>
         <!-- dashboard link -->
         <RouterLink class="mr-2" to="/dashboard" v-if="isLoggedIn">
           <Button
@@ -75,6 +86,8 @@ import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import SpaceBoxLogo from './SpaceBoxLogo.vue'
+import LoginService from '@/services/LoginService'
+import User from '@/Entities/UserLogin'
 
 const Props = defineProps<{
   noLinks?: boolean
@@ -85,8 +98,22 @@ const Props = defineProps<{
 onMounted(() => {
   //if username and password cookies exist
   if (document.cookie.includes('username') && document.cookie.includes('password')) {
-    isLoggedIn.value = true
-    username.value = document.cookie.split('username=')[1].split(';')[0]
+    let user = document.cookie.split('username=')[1].split(';')[0]
+    let pass = document.cookie.split('password=')[1].split(';')[0]
+    LoginService.GetUserSettings(new User(user,pass)).then((response) => {
+      console.log(response)
+      if(response == null) {
+        isLoggedIn.value = false
+        window.location.href = '/login'
+      }else{
+        isLoggedIn.value = true
+        username.value = response.username
+        if(response.role == 1) {
+          isAdmin.value = true
+        }
+      }
+    })
+
   } else {
     if (Props.requireLogin) {
       window.location.href = '/login'
@@ -95,6 +122,7 @@ onMounted(() => {
 })
 
 const username = ref('')
+const isAdmin = ref(false)
 const isLoggedIn = ref(false)
 const scrollY = ref(0)
 

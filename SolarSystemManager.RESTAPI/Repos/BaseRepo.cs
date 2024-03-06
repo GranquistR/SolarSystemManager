@@ -87,6 +87,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                             role = (Role)sqlite_datareader.GetInt32(3),
                         });
                     }
+                    sqlite_datareader.Close();
                     return users;
                 }
                 finally
@@ -142,21 +143,32 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
-                        solarSystems.Add(new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3)));
+                        solarSystems.Add(new SolarSystem(sqlite_datareader.GetInt32(0), 
+                                                         sqlite_datareader.GetInt32(1), 
+                                                         sqlite_datareader.GetString(2), 
+                                                         (Visibility)sqlite_datareader.GetInt32(3)));
                     }
-
+                    sqlite_datareader.Close();
                     sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
-                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), sqlite_datareader.GetString(3), sqlite_datareader.GetInt32(4), sqlite_datareader.GetInt32(5), sqlite_datareader.GetInt32(6), sqlite_datareader.GetString(7)));
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), 
+                                                         sqlite_datareader.GetInt32(1), 
+                                                         sqlite_datareader.GetString(2), 
+                                                         sqlite_datareader.GetString(3), 
+                                                         sqlite_datareader.GetInt32(4), 
+                                                         sqlite_datareader.GetInt32(5), 
+                                                         sqlite_datareader.GetInt32(6), 
+                                                         sqlite_datareader.GetString(7)));
                     }
 
                     foreach (var solarSystem in solarSystems)
                     {
                         solarSystem.spaceObjects = spaceObjects.FindAll(s => s.solarSystemID == solarSystem.systemId);
                     }
+                    sqlite_datareader.Close();
                     return solarSystems;
                 }
                 finally
@@ -272,6 +284,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     {
                         rowcount = sqlite_datareader.GetInt32(0);
                     }
+                    sqlite_datareader.Close();
                     return rowcount;
                 }
                 finally

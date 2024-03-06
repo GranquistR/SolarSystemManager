@@ -83,7 +83,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSalts")]
-        public IActionResult GetSalt(string username)
+        public IActionResult GetSalt([FromBody] string username)
         {
             try {
                 string salt = _userService.GetSalty(username);

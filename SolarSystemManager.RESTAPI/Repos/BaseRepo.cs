@@ -94,7 +94,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                             username = sqlite_datareader.GetString(1),
                             password = sqlite_datareader.GetString(2),
                             role = (Role)sqlite_datareader.GetInt32(3),
-                            salt = sqlite_datareader.GetString(5),
+                            salt = sqlite_datareader.GetString(4),
                         });
                     }
                     return users;

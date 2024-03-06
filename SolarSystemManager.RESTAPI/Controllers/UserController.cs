@@ -26,7 +26,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                if (_userService.ValidateUser(cred))
+                if (_userService.ValidateUser(cred) != null)
                 {
                     return Ok("Success!");
                 }
@@ -34,7 +34,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
 
@@ -54,7 +54,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
 
@@ -74,7 +74,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
 
 
@@ -115,7 +115,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
     }

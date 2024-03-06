@@ -75,7 +75,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     SQLiteDataReader sqlite_datareader;
                     SQLiteCommand sqlite_cmd;
                     sqlite_cmd = sqlite_conn.CreateCommand();
-                    sqlite_cmd.CommandText = "SELECT UserID, Username, Password, Role FROM User";
+                    sqlite_cmd.CommandText = "SELECT UserID, Username, Password, Role, Salt FROM User";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
@@ -85,6 +85,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                             username = sqlite_datareader.GetString(1),
                             password = sqlite_datareader.GetString(2),
                             role = (Role)sqlite_datareader.GetInt32(3),
+                            salt = sqlite_datareader.GetString(5),
                         });
                     }
                     return users;
@@ -105,10 +106,11 @@ namespace SolarSystemManager.RESTAPI.Repos
                 {
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-                    sqlite_cmd.CommandText = "INSERT INTO User (Username, Password, Role) VALUES (@username, @password, @role);";
+                    sqlite_cmd.CommandText = "INSERT INTO User (Username, Password, Role, Salt) VALUES (@username, @password, @role, @salt);";
                     sqlite_cmd.Parameters.AddWithValue("@username", newUser.username);
                     sqlite_cmd.Parameters.AddWithValue("@password", newUser.password);
                     sqlite_cmd.Parameters.AddWithValue("@role", (int)newUser.role);
+                    sqlite_cmd.Parameters.AddWithValue("@salt", newUser.salt);
                     sqlite_cmd.ExecuteNonQuery();
                     return;
                 }

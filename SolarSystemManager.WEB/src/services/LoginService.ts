@@ -47,9 +47,10 @@ export default class LoginService {
   }
 
   static async GetSalt(username: string) {
-    console.log('here');
-    return FetchAPIService.post('/login/GetSalts', username)
+    alert("login service: " + username);
+    return FetchAPIService.post('/User/GetSalts', username)
      .then((data) => {
+      console.log(data);
         return data
      }).catch((error) => {
       alert('Error in GetSaltService. Check console for details.')

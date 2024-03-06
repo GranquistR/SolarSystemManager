@@ -18,6 +18,13 @@ namespace SolarSystemManager.RESTAPI.Services
         /// <returns></returns>
         ///         
         BaseRepo _baseRepo = BaseRepo.Instance();
+
+        public string GetSalty(string username)
+        {
+            var user = _baseRepo.GetAllUsers().Find(p => (p.username == username));
+
+            return user.salt;
+        }
         public User? ValidateUser(Entities.LoginRequest cred)
         {
             return _baseRepo.GetAllUsers().Find(p => (p.username == cred.username) && (p.password == cred.password));           

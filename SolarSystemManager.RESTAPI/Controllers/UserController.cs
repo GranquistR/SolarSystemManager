@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
 using SolarSystemManager.RESTAPI.Services;
+using System.Collections.Specialized;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -82,10 +83,10 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSalts")]
-        public IActionResult GetSalt([FromBody] string username)
-        { 
+        public IActionResult GetSalt(string username)
+        {
             try {
-                string salt = _userService.GetSalts(username);
+                string salt = _userService.GetSalty(username);
                 if (salt != null) {
 
                     return Ok(salt);

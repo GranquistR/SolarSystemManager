@@ -26,6 +26,7 @@ export default class FetchAPIService {
 
   static async post(url: string, data: any): Promise<any> {
     let response
+    alert(url)
     try {
       response = await fetch(this.baseURL + url, {
         mode: 'cors',

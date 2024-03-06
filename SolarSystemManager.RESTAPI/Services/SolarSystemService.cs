@@ -65,6 +65,17 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.DeleteSolarSystem(id);
             return true;
         }
+
+        public bool DeleteSpaceObject(Entities.LoginRequest cred, int id)
+        {
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
+            {
+                throw new BadHttpRequestException("403");
+            }
+            _baseRepo.DeleteSpaceObject(id);
+            return true;
+        }
         public int SolarSystemCount()
         {
             return _baseRepo.Count("SolarSystem");

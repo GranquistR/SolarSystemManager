@@ -79,6 +79,15 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
+                        var test1 = sqlite_datareader.GetString(1);
+
+                        var test2 = sqlite_datareader.GetString(2);
+
+                        var test3 = sqlite_datareader.GetInt32(3);
+
+                        var test4 = sqlite_datareader.GetString(4);
+
+
                         users.Add(new User
                         {
                             userID = sqlite_datareader.GetInt32(0),

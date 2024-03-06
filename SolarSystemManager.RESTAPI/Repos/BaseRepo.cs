@@ -200,7 +200,10 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.CommandText = "SELECT SSID, OwnerID, Name, Visibility from SolarSystem WHERE SSID=" + targetID + ";";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     sqlite_datareader.Read();
-                    SolarSystem dummySolarSystem = new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3));
+                    SolarSystem dummySolarSystem = new SolarSystem(sqlite_datareader.GetInt32(0), 
+                                                                    sqlite_datareader.GetInt32(1), 
+                                                                    sqlite_datareader.GetString(2), 
+                                                                    (Visibility)sqlite_datareader.GetInt32(3));
 
                     sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject WHERE SSID=" + targetID + ";";
@@ -210,7 +213,14 @@ namespace SolarSystemManager.RESTAPI.Repos
                     var spaceObjects = new List<SpaceObject>();
                     while (sqlite_datareader.Read())
                     {
-                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), sqlite_datareader.GetString(3), sqlite_datareader.GetInt32(4), sqlite_datareader.GetInt32(5), sqlite_datareader.GetInt32(6), sqlite_datareader.GetString(7)));
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), 
+                                                        sqlite_datareader.GetInt32(1), 
+                                                        sqlite_datareader.GetString(2), 
+                                                        sqlite_datareader.GetString(3), 
+                                                        sqlite_datareader.GetInt32(4), 
+                                                        sqlite_datareader.GetInt32(5), 
+                                                        sqlite_datareader.GetInt32(6), 
+                                                        sqlite_datareader.GetString(7)));
                     }
                     dummySolarSystem.spaceObjects = spaceObjects;
                     return dummySolarSystem;

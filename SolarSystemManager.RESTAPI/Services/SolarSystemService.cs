@@ -55,7 +55,16 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.DeleteSolarSystem(id);
             return true;
         }
-
+        public bool DeleteSolarSystemAdmin(Entities.LoginRequest cred, int id)
+        {
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            if (temp.role != Role.Admin)
+            {
+                throw new BadHttpRequestException("403");
+            }
+            _baseRepo.DeleteSolarSystem(id);
+            return true;
+        }
         public int SolarSystemCount()
         {
             return _baseRepo.Count("SolarSystem");

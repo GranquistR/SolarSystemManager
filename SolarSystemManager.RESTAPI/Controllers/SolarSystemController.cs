@@ -50,7 +50,29 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 }
             }
         }
-        
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("DeleteSolarSystemAdmin")]
+        public IActionResult DeleteSolarSystemAdmin([FromBody] LoginRequest cred, int id)
+        {
+            try
+            {
+                return Ok(_solarSystemService.DeleteSolarSystemAdmin(cred, id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                if (e.Message == "401")
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
+        }
+
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetAllPublicSolarSystems")]

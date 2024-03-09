@@ -199,6 +199,24 @@ namespace SolarSystemManager.RESTAPI.Repos
                 }
             }
         }
+        public bool DeleteSpaceObject(int targetID)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
         public SolarSystem GetSolarSystemByID(int targetID)
         {
             lock (countLock)
@@ -270,25 +288,6 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@yCoord", 000);
                     sqlite_cmd.Parameters.AddWithValue("@size", size);
                     sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
-                    sqlite_cmd.ExecuteNonQuery();
-                    return 0; //success
-                }
-                finally
-                {
-                    sqlite_conn.Close();
-                }
-            }
-        }
-
-        public int RemoveSpaceObjectByID(int targetId) //removes space object by ID
-        {
-            lock (countLock)
-            {
-                try
-                {
-                    sqlite_conn.Open();
-                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID = " + targetId + ";";
                     sqlite_cmd.ExecuteNonQuery();
                     return 0; //success
                 }

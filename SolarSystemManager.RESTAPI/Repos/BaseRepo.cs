@@ -235,6 +235,59 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #endregion
 
+
+        #region SpaceObjectTable
+
+        public int AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
+                                            //one parameter is for debugging purposes
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "INSERT INTO SpaceObject (SSID, Name, Type, LocationX, LocationY, Size, Color) VALUES " +
+                        "(@ssid, @name, @type, @xCoord, @yCoord, @size, @color);";
+                    sqlite_cmd.Parameters.AddWithValue("@ssid", 22);
+                    sqlite_cmd.Parameters.AddWithValue("@name", "Earth");
+                    sqlite_cmd.Parameters.AddWithValue("@type", "planet");
+                    sqlite_cmd.Parameters.AddWithValue("@xCoord", 000);
+                    sqlite_cmd.Parameters.AddWithValue("@yCoord", 000);
+                    sqlite_cmd.Parameters.AddWithValue("@size", size);
+                    sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
+                    sqlite_cmd.ExecuteNonQuery();
+                    return 0; //success
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
+        public int RemoveSpaceObjectByID(int targetId) //removes space object by ID
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID = " + "@SOID" + ";";
+                    sqlite_cmd.Parameters.AddWithValue("@SOID", targetId);
+                    sqlite_cmd.ExecuteNonQuery();
+                    return 0; //success
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
+        #endregion
+
         #region DynamicSQL
 
         public int Count(string tableName)

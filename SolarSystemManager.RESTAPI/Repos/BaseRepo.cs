@@ -274,8 +274,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                 {
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID = " + "@SOID" + ";";
-                    sqlite_cmd.Parameters.AddWithValue("@SOID", targetId);
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID = " + targetId + ";";
                     sqlite_cmd.ExecuteNonQuery();
                     return 0; //success
                 }

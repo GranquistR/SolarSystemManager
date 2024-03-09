@@ -16,7 +16,7 @@
           <InputText variant="filled" id="size" v-model="objectSize" style="width: 245px" />
           <br><p1>Color: #5DE2E7</p1>
         </div>
-        <Button>Add Object</Button>
+        <Button @click="AddSpaceObject">Add Object</Button>
       </template>
     </Card>
   </div>
@@ -37,7 +37,6 @@
   <div class="flex-column flex w-9">
     <Card class="mb-4">
       <template #title>Objects in this solar system</template>
-      {{ currentSolarSystem.spaceObjects }}
       <template #content>
         <DataTable :value="currentSolarSystem.spaceObjects">
           <Column field="spaceObjectID" header="Database ID"></Column><!--For testing purposes only-->
@@ -64,7 +63,7 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 
 const currentSolarSystem = ref<any>([])
-const objectSize = ref('')
+const objectSize = ref<any>([]) //yes I know this is an issue, but idk how to get it to be a number
 const removeObjectByID = ref('')
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
@@ -73,7 +72,9 @@ SolarSystemService.GetSolarSystemByID(22).then((response) => {
 
 const test = ref<string>("")
 
-SolarSystemService.AddSpaceObject(objectSize).then((response) => { //this works right?
-  test.value = response
-})
+function AddSpaceObject(){
+  SolarSystemService.AddSpaceObject(objectSize).then((response) => {
+    test.value = response
+  })
+}
 </script>

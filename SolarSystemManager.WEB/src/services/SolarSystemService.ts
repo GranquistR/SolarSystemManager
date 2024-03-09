@@ -69,7 +69,7 @@ export default class SolarSystemService {
       })
     }
   static async RemoveSpaceObjectByID(id: number): Promise<any> {
-      return FetchAPIService.post('/SolarSystem/RemoveSpaceObjectByID', id).then((data) => {
+      return FetchAPIService.get(`/SolarSystem/RemoveSpaceObjectByID?id=${id}`).then((data) => {
             console.log('SolarSystemService: ', data)
             return data
       })

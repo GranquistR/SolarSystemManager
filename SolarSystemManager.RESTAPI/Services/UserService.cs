@@ -23,11 +23,11 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             try
             {
-                var user = _baseRepo.GetAllUsers().Find(p => (p.username == username));
+                var users = _baseRepo.GetAllUsers();
+                var user = FindUserByUsername(users, username);
                 if (user != default)
                 {
                     return user.salt;
-
                 }
                 else
                 {
@@ -39,6 +39,12 @@ namespace SolarSystemManager.RESTAPI.Services
                 return "Unable to connect to Database!";
             }
         }
+
+        private User FindUserByUsername(List<User> users, string username)
+        {
+            return users.Find(p => p.username == username);
+        }
+
         public User? ValidateUser(Entities.LoginRequest cred)
         {
             return _baseRepo.GetAllUsers().Find(p => (p.username == cred.username) && (p.password == cred.password));           

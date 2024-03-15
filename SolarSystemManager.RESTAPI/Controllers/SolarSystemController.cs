@@ -32,7 +32,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("DeleteSolarSystem")]
-        public IActionResult DeleteSolarSystem([FromBody] LoginRequest cred,int id)
+        public IActionResult DeleteSolarSystem([FromBody] LoginRequest cred, int id)
         {
             try
             {
@@ -40,7 +40,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch (BadHttpRequestException e)
             {
-                if(e.Message == "401")
+                if (e.Message == "401")
                 {
                     return StatusCode(StatusCodes.Status401Unauthorized);
                 }
@@ -50,7 +50,29 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 }
             }
         }
-        
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("DeleteSolarSystemAdmin")]
+        public IActionResult DeleteSolarSystemAdmin([FromBody] LoginRequest cred, int id)
+        {
+            try
+            {
+                return Ok(_solarSystemService.DeleteSolarSystemAdmin(cred, id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                if (e.Message == "401")
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
+            }
+        }
+
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetAllPublicSolarSystems")]
@@ -58,7 +80,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.GetAllPublicSolarSystems().Where(s => s.systemVisibility == Visibility.Public).OrderBy(x=>x.systemName));
+                return Ok(_solarSystemService.GetAllPublicSolarSystems().Where(s => s.systemVisibility == Visibility.Public).OrderBy(x => x.systemName));
             }
             catch (BadHttpRequestException e)
             {
@@ -81,7 +103,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch (BadHttpRequestException e)
             {
-                if(e.Message == "401")
+                if (e.Message == "401")
                 {
                     return StatusCode(StatusCodes.Status401Unauthorized, "Unable to validate credentials.");
                 }
@@ -89,7 +111,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,"Unknown error in SolarSystemController");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
             }
         }
 
@@ -156,6 +178,28 @@ namespace SolarSystemManager.RESTAPI.Controllers
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+            }
+        }
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("DeleteSpaceObject")]
+        public IActionResult DeleteSpaceObject([FromBody] LoginRequest cred, int id)
+        {
+            try
+            {
+                return Ok(_solarSystemService.DeleteSpaceObject(cred, id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                if (e.Message == "401")
+                {
+                    return StatusCode(StatusCodes.Status401Unauthorized);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden);
+                }
             }
         }
     }

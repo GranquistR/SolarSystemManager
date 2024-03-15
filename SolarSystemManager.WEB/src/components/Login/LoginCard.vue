@@ -65,21 +65,20 @@ async function Login() {
   }
 
   try {
-    let encryptedPassword = "";
-    let passResp = "";
-    LoginService.GetSalt(username.value).then((response) => {
-      alert(response);
+    // Fetch salt asynchronously
+    const saltResponse = await LoginService.GetSalt(username.value)
+    const salt = saltResponse.data // Assuming salt is present in response
 
-      encryptedPassword = encrypt.encrypt(password.value, response)
-      alert(encryptedPassword);
-      LoginService.Login(new User(username.value, encryptedPassword)).then((repo) => {
-      passResp = repo.data;
-      });
-    });
+    // Encrypt password using fetched salt
+    const encryptedPassword = encrypt.encrypt(password.value, salt)
+
+    // Attempt login asynchronously
+    const loginResponse = await LoginService.Login(new User(username.value, encryptedPassword))
+    const passResp = loginResponse.data
 
     if (passResp === "Success!") {
       isLoading.value = false
-      let date = new Date()
+      const date = new Date()
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
       document.cookie = `username=${username.value}; expires=${date}`
       document.cookie = `password=${password.value}; expires=${date}`

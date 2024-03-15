@@ -34,8 +34,8 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return Ok("Invalid username or password!");
             }
             catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+            { 
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Login");
             }
         }
 
@@ -55,7 +55,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Creation");
             }
         }
 
@@ -75,7 +75,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Settings");
             }
 
 
@@ -85,23 +85,31 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSalts")]
         public IActionResult GetSalt([FromBody] string username)
         {
-            try {
+
+            try
+            {
+
                 string salt = _userService.GetSalty(username);
-                if (salt != null) {
+                if (salt != null)
+                {
 
                     return Ok(salt);
                 }
                 return Ok("Invalid username or password!");
-            } catch (BadHttpRequestException e)
+            }
+            catch (BadHttpRequestException e)
             {
                 return BadRequest(e.Message);
-            } catch
+            }
+            catch
             {
                 return StatusCode(StatusCodes.Status400BadRequest);
             }
         }
-        
-        [HttpGet]
+
+    
+
+    [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetUserCount")]
         public IActionResult GetUserCount()
@@ -116,7 +124,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Count");
             }
         }
     }

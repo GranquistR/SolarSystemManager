@@ -21,9 +21,23 @@ namespace SolarSystemManager.RESTAPI.Services
 
         public string GetSalty(string username)
         {
-            var user = _baseRepo.GetAllUsers().Find(p => (p.username == username));
+            try
+            {
+                var user = _baseRepo.GetAllUsers().Find(p => (p.username == username));
+                if (user != default)
+                {
+                    return user.salt;
 
-            return user.salt;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid user!");
+                }
+            }
+            catch
+            {
+                return "Unable to connect to Database!";
+            }
         }
         public User? ValidateUser(Entities.LoginRequest cred)
         {

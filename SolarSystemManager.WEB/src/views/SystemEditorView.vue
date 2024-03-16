@@ -27,9 +27,9 @@
       <template #content>
         <div>
           <label for="size">Object ID: </label>
-          <InputText variant="filled" id="size" v-model="removeObjectByID" style="width: 245px" />
+          <InputText variant="filled" id="size" v-model="deleteSpaceObject" style="width: 245px" />
         </div>
-        <Button>Remove object</Button>
+        <Button @click="DeleteSpaceObject">Remove object</Button>
       </template>
     </Card>
   </div>
@@ -63,18 +63,18 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 
 const currentSolarSystem = ref<any>([])
-const objectSize = ref<any>([]) //yes I know this is an issue, but idk how to get it to be a number
-const removeObjectByID = ref('')
+const objectSize = ref('')
+const deleteSpaceObject = ref('')
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
   currentSolarSystem.value = response
 })
 
-const test = ref<string>("")
-
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(objectSize).then((response) => {
-    test.value = response
-  })
+  SolarSystemService.AddSpaceObject(parseInt(objectSize.value))
+}
+
+function DeleteSpaceObject(){
+  SolarSystemService.DeleteSpaceObject(parseInt(deleteSpaceObject.value))
 }
 </script>

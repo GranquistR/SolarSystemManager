@@ -219,5 +219,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             _solarSystemService.AddSpaceObject(size);
         }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("RemoveSpaceObject")]
+        public void RemoveSpaceObject(int id)
+        {
+            _solarSystemService.RemoveSpaceObject(id);
+        }
+
     }
 }

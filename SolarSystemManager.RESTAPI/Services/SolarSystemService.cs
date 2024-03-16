@@ -91,14 +91,9 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.GetSolarSystemByID(id);
         }
 
-        public int AddSpaceObject(int size)
+        public void AddSpaceObject(int size)
         {
-            return _baseRepo.AddSpaceObject(size);
-        }
-
-        public int RemoveSpaceObjectByID(int targetID)
-        {
-            return _baseRepo.RemoveSpaceObjectByID(targetID);
+            _baseRepo.AddSpaceObject(size);
         }
     }
 }

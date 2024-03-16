@@ -270,7 +270,7 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public int AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
+        public void AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
                                             //one parameter is for debugging purposes
         {
             lock (countLock)
@@ -289,7 +289,6 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@size", size);
                     sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
                     sqlite_cmd.ExecuteNonQuery();
-                    return 0; //success
                 }
                 finally
                 {

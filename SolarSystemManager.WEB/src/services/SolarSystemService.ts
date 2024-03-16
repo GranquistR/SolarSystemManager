@@ -63,13 +63,12 @@ export default class SolarSystemService {
     })
     }
   static async AddSpaceObject(size: number): Promise<any> {
-      return FetchAPIService.post('/SolarSystem/AddSpaceObject', size).then((data) => {
-        console.log('SolarSystemService: ', data)
-        return data
+      return FetchAPIService.get(`/SolarSystem/AddSpaceObject?size=${size}`).then((data) => {
+       
       })
     }
-  static async RemoveSpaceObjectByID(id: number): Promise<any> {
-      return FetchAPIService.get(`/SolarSystem/RemoveSpaceObjectByID?id=${id}`).then((data) => {
+  static async DeletSpaceObject(id: number): Promise<any> {
+      return FetchAPIService.get(`/SolarSystem/DeleteSpaceObject?id=${id}`).then((data) => {
             console.log('SolarSystemService: ', data)
             return data
       })

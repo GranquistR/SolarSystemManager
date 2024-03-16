@@ -29,7 +29,7 @@
           <label for="size">Object ID: </label>
           <InputText variant="filled" id="size" v-model="deleteSpaceObject" style="width: 245px" />
         </div>
-        <Button @click="DeleteSpaceObject">Remove object</Button>
+        <Button @click="RemoveSpaceObject">Remove object</Button>
       </template>
     </Card>
   </div>
@@ -74,7 +74,7 @@ function AddSpaceObject(){
   SolarSystemService.AddSpaceObject(parseInt(objectSize.value))
 }
 
-function DeleteSpaceObject(){
-  SolarSystemService.DeleteSpaceObject(parseInt(deleteSpaceObject.value))
+function RemoveSpaceObject(){
+  SolarSystemService.RemoveSpaceObject(parseInt(deleteSpaceObject.value))
 }
 </script>

@@ -76,7 +76,7 @@ async function Login() {
     const loginResponse = await LoginService.Login(new User(username.value, encryptedPassword))
     const passResp = loginResponse.data
 
-    if (passResp === "Success!") {
+    if (await passResp === "Success!") {
       isLoading.value = false
       const date = new Date()
       date.setTime(date.getTime() + 24 * 60 * 60 * 1000)

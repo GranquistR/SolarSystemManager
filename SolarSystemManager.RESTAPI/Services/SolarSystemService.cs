@@ -37,18 +37,18 @@ namespace SolarSystemManager.RESTAPI.Services
                 {
                     return _baseRepo.GetAllSolarSystems();
                 }
-                else 
-                { 
+                else
+                {
                     throw new BadHttpRequestException("403");
                 }
             }
-            
-        }   
+
+        }
 
         public bool DeleteSolarSystem(Entities.LoginRequest cred, int id)
         {
             User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId) 
+            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
             {
                 throw new BadHttpRequestException("403");
             }
@@ -91,9 +91,14 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.GetSolarSystemByID(id);
         }
 
-        public void AddSpaceObject(int size)
+        public void AddSpaceObject(int size) //non secure, for front end testing only
         {
             _baseRepo.AddSpaceObject(size);
+        }
+
+        public void RemoveSpaceObject(int id)
+        {
+            _baseRepo.DeleteSpaceObject(id); //non secure, for front end testing only
         }
     }
 }

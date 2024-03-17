@@ -270,12 +270,13 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public bool AddSpaceObject(int size, string type)
+        public bool AddSpaceObject(int size)
         {
             lock (countLock)
             {
                 try
                 {
+                    Console.WriteLine("Add space object started");
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "INSERT INTO SpaceObject (SSID, Name, Type, LocationX, LocationY, Size, Color) VALUES " +
@@ -288,6 +289,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@size", size);
                     sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
                     sqlite_cmd.ExecuteNonQuery();
+                    Console.WriteLine("Add space object completed");
                     return true;
                 }
                 finally

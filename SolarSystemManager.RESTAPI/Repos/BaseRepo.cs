@@ -270,8 +270,7 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public bool AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
-                                            //one parameter is for debugging purposes
+        public bool AddSpaceObject(int size, string type)
         {
             lock (countLock)
             {
@@ -283,7 +282,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                         "(@ssid, @name, @type, @xCoord, @yCoord, @size, @color);";
                     sqlite_cmd.Parameters.AddWithValue("@ssid", 22);
                     sqlite_cmd.Parameters.AddWithValue("@name", "Earth");
-                    sqlite_cmd.Parameters.AddWithValue("@type", "planet");
+                    sqlite_cmd.Parameters.AddWithValue("@type", type);
                     sqlite_cmd.Parameters.AddWithValue("@xCoord", 000);
                     sqlite_cmd.Parameters.AddWithValue("@yCoord", 000);
                     sqlite_cmd.Parameters.AddWithValue("@size", size);

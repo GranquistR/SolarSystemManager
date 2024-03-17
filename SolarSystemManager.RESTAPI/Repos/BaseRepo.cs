@@ -207,7 +207,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                 {
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID=" + targetID + ";";
                     sqlite_cmd.ExecuteNonQuery();
                     return true;
                 }
@@ -270,7 +270,7 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public void AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
+        public bool AddSpaceObject(int size) //currently, adds a space object of specified size to the solar system alpha centauri
                                             //one parameter is for debugging purposes
         {
             lock (countLock)
@@ -289,6 +289,26 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@size", size);
                     sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
                     sqlite_cmd.ExecuteNonQuery();
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
+        public bool RemoveSpaceObject(int targetID)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
+                    return true;
                 }
                 finally
                 {

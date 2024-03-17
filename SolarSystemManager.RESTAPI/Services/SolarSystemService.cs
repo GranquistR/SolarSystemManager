@@ -91,14 +91,16 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.GetSolarSystemByID(id);
         }
 
-        public void AddSpaceObject(int size) //non secure, for front end testing only
+        public bool AddSpaceObject(int size) //non secure, for front end testing only
         {
             _baseRepo.AddSpaceObject(size);
+            return true;
         }
 
-        public void RemoveSpaceObject(int id)
+        public bool RemoveSpaceObject(int id)
         {
-            _baseRepo.DeleteSpaceObject(id); //non secure, for front end testing only
+            _baseRepo.RemoveSpaceObject(id); //non secure, for front end testing only
+            return true;
         }
     }
 }

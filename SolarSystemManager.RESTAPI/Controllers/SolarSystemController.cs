@@ -202,5 +202,30 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 }
             }
         }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSolarSystemByID")]
+        public IActionResult GetSolarSystemByID(int id)
+        {
+             return Ok(_solarSystemService.GetSolarSystemByID(id));
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("AddSpaceObject")]
+        public IActionResult AddSpaceObject(int size, string type)
+        {
+            return Ok(_solarSystemService.AddSpaceObject(size, type));
+        }
+
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("RemoveSpaceObject")]
+        public IActionResult RemoveSpaceObject(int id)
+        {
+            return Ok(_solarSystemService.RemoveSpaceObject(id));
+        }
+
     }
 }

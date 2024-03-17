@@ -56,4 +56,18 @@ export default class SolarSystemService {
         console.error('Error in LoginService: ', error)
       })
   }
+
+  static async GetSolarSystemByID(id: number): Promise<any> {
+    return FetchAPIService.get(`/SolarSystem/GetSolarSystemByID?id=${id}`).then((data) => {
+       return JSON.parse(data)
+    })
+  }
+
+  static async AddSpaceObject(size: number, type: string): Promise<any> {
+      return FetchAPIService.get(`/SolarSystem/AddSpaceObject?size=${size}&type=${type}`)
+  }
+
+  static async RemoveSpaceObject(id: number): Promise<any> {
+      return FetchAPIService.get(`/SolarSystem/RemoveSpaceObject?id=${id}`)
+  }
 }

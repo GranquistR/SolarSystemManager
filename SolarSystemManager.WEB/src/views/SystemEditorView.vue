@@ -1,5 +1,4 @@
 <template>
-  <!--Formatting is ugly as sin but will fix next sprint-->
   <HeaderBar require-login></HeaderBar>
   <div>Editor</div>
   <div> Welcome to {{ currentSolarSystem.systemName }} </div>
@@ -9,11 +8,15 @@
       <template #content>
         <div>
           <p1>Name: Earth</p1><br>
-          <p1>Type: Planet</p1><br>
+          <p1>Type</p1><br>
+          <Dropdown v-model="objectType" :options="types" optionLabel="name" placeholder="Select space object type"></Dropdown><br>
           <p1>X coordinate: 000</p1><br>
           <p1>Y coordinate: 000</p1><br>
-          <label for="size">Size: </label>
-          <InputText variant="filled" id="size" v-model="objectSize" style="width: 245px" />
+          <label for="size">Size </label>
+          <div class="w-17rem">
+            <InputText variant="filled" id="size" v-model.number="objectSize" class="w-full mb-3"/>
+            <Slider v-model="objectSize" class="w-full"></Slider>
+          </div>
           <br><p1>Color: #5DE2E7</p1>
         </div>
         <Button @click="AddSpaceObject">Add Object</Button>
@@ -27,7 +30,7 @@
       <template #content>
         <div>
           <label for="removeID">Object ID: </label>
-          <TextInput variant="filled" id="removeID" v-model="deleteSpaceObject" style="width: 245px"/>
+          <InputText type=number variant="filled" id="removeID" v-model="deleteSpaceObject" style="width: 245px"/>
         </div>
         <Button @click="RemoveSpaceObject">Remove object</Button>
       </template>
@@ -61,17 +64,24 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
+import Slider from 'primevue/slider';
+import Dropdown from 'primevue/dropdown';
 
 const currentSolarSystem = ref<any>([])
 const objectSize = ref('')
 const deleteSpaceObject = ref('')
+const objectType = ref()
+const types = ref([
+  {name: 'Planet', code: 'planet'},
+  {name: 'Star', code: 'star'}
+])
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
   currentSolarSystem.value = response
 })
 
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(parseInt(objectSize.value))
+  SolarSystemService.AddSpaceObject(parseInt(objectSize.value), objectType.value.code)
 }
 
 function RemoveSpaceObject(){

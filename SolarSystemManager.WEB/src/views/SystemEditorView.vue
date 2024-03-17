@@ -13,7 +13,10 @@
           <p1>X coordinate: 000</p1><br>
           <p1>Y coordinate: 000</p1><br>
           <label for="size">Size: </label>
-          <InputText variant="filled" id="size" v-model="objectSize" style="width: 245px" />
+          <div class="w-14rem">
+            <InputText variant="filled" id="size" v-model.number="objectSize" class="w-full mb-3" style="width: 245px" />
+            <Slider v-model="objectSize" class="w-full"></Slider>
+          </div>
           <br><p1>Color: #5DE2E7</p1>
         </div>
         <Button @click="AddSpaceObject">Add Object</Button>
@@ -61,6 +64,7 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
+import Slider from 'primevue/slider'
 
 
 const currentSolarSystem = ref<any>([]);

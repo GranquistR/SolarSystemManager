@@ -7,17 +7,17 @@
       <template #title>Add an object to {{currentSolarSystem.systemName}}</template>
       <template #content>
         <div>
-          <p1>Name: Earth</p1><br>
-          <!--  <label for="type">Type</label>-->
-          <!--  <InputText variant="filled" id="type" v-model="objectType" class="w-full mb-3"></InputText>-->
-          <p1>X coordinate: 000</p1><br>
-          <p1>Y coordinate: 000</p1><br>
+          Name: Earth<br>
+          <label for="type">Object type: </label>
+          <Dropdown id="type" v-model="objectType" :options="types" placeholder="Select object type"></Dropdown><br>
+          X coordinate: 000<br>
+          Y coordinate: 000<br>
           <label for="size">Size: </label>
           <div class="w-14rem">
             <InputText variant="filled" id="size" v-model.number="objectSize" class="w-full mb-3" style="width: 245px" />
             <Slider v-model="objectSize" class="w-full"></Slider>
-          </div>
-          <br><p1>Color: #5DE2E7</p1>
+          </div><br>
+          Color: #5DE2E7
         </div>
         <Button @click="AddSpaceObject">Add Object</Button>
       </template>
@@ -65,19 +65,23 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Slider from 'primevue/slider'
+import Dropdown from 'primevue/dropdown'
 
 
 const currentSolarSystem = ref<any>([]);
 const objectSize = ref('');
 const deleteSpaceObject = ref('');
-const objectType = ref('')
+const objectType = ref('');
+const types = ref([
+  "Planet", "Star"
+]);
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
   currentSolarSystem.value = response
 })
 
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(parseInt(objectSize.value))
+  SolarSystemService.AddSpaceObject(parseInt(objectSize.value), objectType.value)
 }
 
 function RemoveSpaceObject(){

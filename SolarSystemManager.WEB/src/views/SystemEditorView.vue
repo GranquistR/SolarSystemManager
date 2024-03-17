@@ -26,8 +26,8 @@
       <template #title>Remove an object from {{currentSolarSystem.systemName}}</template>
       <template #content>
         <div>
-          <label for="size">Object ID: </label>
-          <InputText variant="filled" id="size" v-model="deleteSpaceObject" style="width: 245px" />
+          <label for="removeID">Object ID: </label>
+          <TextInput variant="filled" id="removeID" v-model="deleteSpaceObject" style="width: 245px"/>
         </div>
         <Button @click="RemoveSpaceObject">Remove object</Button>
       </template>

@@ -13,6 +13,17 @@ export default class LoginService {
       })
   }
 
+  static async LoginV2(user: User) {
+    return FetchAPIService.post('/User/LoginV2', user)
+      .then((data) => {
+        return JSON.parse(data)
+      })
+      .catch((error) => {
+        alert('Error in LoginService. Check console for details.')
+        console.error('Error in LoginService: ', error)
+      })
+  }
+
   static async GetUserSettings(user: User): Promise<any> {
     return FetchAPIService.post('/User/GetUserSettings', user)
       .then((data) => {

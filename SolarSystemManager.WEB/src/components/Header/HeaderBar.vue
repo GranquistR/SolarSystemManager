@@ -87,7 +87,8 @@ import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import SpaceBoxLogo from './SpaceBoxLogo.vue'
 import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin'
+import UserV2 from '@/Entities/UserV2'
+import { inject } from 'vue'
 
 const Props = defineProps<{
   noLinks?: boolean
@@ -96,28 +97,13 @@ const Props = defineProps<{
 }>()
 
 onMounted(() => {
-  //if username and password cookies exist
-  if (document.cookie.includes('username') && document.cookie.includes('password')) {
-    let user = document.cookie.split('username=')[1].split(';')[0]
-    let pass = document.cookie.split('password=')[1].split(';')[0]
-    LoginService.GetUserSettings(new User(user,pass)).then((response) => {
-      console.log(response)
-      if(response == null) {
-        isLoggedIn.value = false
-        window.location.href = '/login'
-      }else{
-        isLoggedIn.value = true
-        username.value = response.username
-        if(response.role == 1) {
-          isAdmin.value = true
-        }
-      }
-    })
-
+  let user: UserV2 | undefined = inject('currentUser')
+  if (user != undefined) {
+    username.value = user.username
+    isAdmin.value = user.role == 1 ? true : false
+    isLoggedIn.value = true
   } else {
-    if (Props.requireLogin) {
-      window.location.href = '/login'
-    }
+    isLoggedIn.value = false
   }
 })
 

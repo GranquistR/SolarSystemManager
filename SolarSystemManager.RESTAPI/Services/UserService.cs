@@ -53,5 +53,20 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             return _baseRepo.Count("User");
         }
+
+        public void ChangeUserName(Entities.LoginRequest cred, string username)
+        {
+            User? temp = ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+
+            if(temp != null)
+            {
+                temp.username = username;
+                _baseRepo.ModifyUser(temp);
+            }
+            else
+            {
+                throw new BadHttpRequestException("No user found with given credentials");
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SQLite;
 using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
+using static System.Data.Entity.Infrastructure.Design.Executor;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SolarSystemManager.RESTAPI.Repos
@@ -118,14 +119,32 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_conn.Close();
                 }
             }
+        }
+        public void ModifyUser(User newUserData)
+        {
 
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "UPDATE User SET Username = \'" + newUserData.username + "\', Password = \'" + newUserData.password + "\' WHERE UserID = " + newUserData.userID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
+                    return;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
         }
 
-        #endregion
+            #endregion
 
-        #region SolarSystemTable
+            #region SolarSystemTable
 
-        public List<SolarSystem> GetAllSolarSystems()
+            public List<SolarSystem> GetAllSolarSystems()
         {
             lock (countLock)
             {

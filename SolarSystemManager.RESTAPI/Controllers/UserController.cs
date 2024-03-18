@@ -98,5 +98,25 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
+
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("ChangeUsername")]
+        public IActionResult ChangeUsername([FromBody] LoginRequest cred, string newUN)
+        {
+            try
+            {
+                _userService.ChangeUserName(cred, newUN);
+                return Ok("Success!");
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+            }
+        }
     }
 }

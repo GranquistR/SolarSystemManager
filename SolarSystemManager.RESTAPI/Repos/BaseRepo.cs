@@ -267,9 +267,8 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #endregion
 
-
         #region SpaceObjectTable
-
+        
         public bool AddSpaceObject(int size, string type)
         {
             lock (countLock)
@@ -298,6 +297,55 @@ namespace SolarSystemManager.RESTAPI.Repos
                 }
             }
         }
+
+ 
+        public SpaceObject GetSpaceObjectByID(int spaceObjectID) //read method, retrieving a specific space object based on its ID.
+        {
+            SpaceObject spaceObject = null;
+
+            //open the database connection
+            try
+            {
+                sqlite_conn.Open();
+
+                //create a command to select the space object by ID
+                using (var sqlite_cmd = sqlite_conn.CreateCommand())
+                {
+                    sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color " +
+                                                "FROM SpaceObject WHERE SOID = @SpaceObjectID";
+
+                    //use parameterized queries to prevent SQL injection
+                    sqlite_cmd.Parameters.AddWithValue("@SpaceObjectID", spaceObjectID);
+
+                    //execute the command and use a datareader to fetch the results
+                    using (var sqlite_datareader = sqlite_cmd.ExecuteReader())
+                    {
+                        //if a row is found, read it and create a new SpaceObject
+                        if (sqlite_datareader.Read())
+                        {
+                            spaceObject = new SpaceObject(
+                                sqlite_datareader.GetInt32(sqlite_datareader.GetOrdinal("SOID")),
+                                sqlite_datareader.GetInt32(sqlite_datareader.GetOrdinal("SSID")),
+                                sqlite_datareader.GetString(sqlite_datareader.GetOrdinal("Name")),
+                                sqlite_datareader.GetString(sqlite_datareader.GetOrdinal("Type")),
+                                sqlite_datareader.GetInt32(sqlite_datareader.GetOrdinal("LocationX")),
+                                sqlite_datareader.GetInt32(sqlite_datareader.GetOrdinal("LocationY")),
+                                sqlite_datareader.GetInt32(sqlite_datareader.GetOrdinal("Size")),
+                                sqlite_datareader.GetString(sqlite_datareader.GetOrdinal("Color"))
+                            );
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                sqlite_conn.Close();
+            }
+
+            //return the found space object, or null if not found
+            return spaceObject;
+        }
+
 
         public bool RemoveSpaceObject(int targetID)
         {

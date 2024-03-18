@@ -1,6 +1,6 @@
 <template>
   <HeaderBar></HeaderBar>
-  <ErrorPage title="404" message="Page not Found"></ErrorPage>
+  <ErrorPage title="404: Not Found" message="Page not Found"></ErrorPage>
 </template>
 
 <script setup lang="ts">

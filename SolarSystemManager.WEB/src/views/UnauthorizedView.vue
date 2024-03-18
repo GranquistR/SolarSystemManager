@@ -1,6 +1,9 @@
 <template>
   <HeaderBar></HeaderBar>
-  <ErrorPage title="401" message="You are not authorized to view this page"></ErrorPage>
+  <ErrorPage
+    title="401: Unauthorized"
+    message="You are not authorized to view this page"
+  ></ErrorPage>
 </template>
 
 <script setup lang="ts">

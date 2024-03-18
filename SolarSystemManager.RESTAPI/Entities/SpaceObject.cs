@@ -17,7 +17,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         /// </summary>
         public string? objectName { get; set; }
         ///<summary>
-        /// Type of object
+        /// Type of object, star or planet
         ///</summary>
         public string? objectType { get; set; }
         /// <summary>

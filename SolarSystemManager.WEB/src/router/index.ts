@@ -44,6 +44,12 @@ const router = createRouter({
       component: () => import('../views/SystemEditorView.vue')
     },
     {
+      path: '/solarsystemviewer',
+      name: 'solarsystemviewer',
+      component: () => import('../views/SolarSystemViewerView.vue')
+    
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')

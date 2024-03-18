@@ -23,8 +23,17 @@ export default class SolarSystemService {
         console.error('Error in LoginService: ', error)
       })
   }
+  
+  static async GetSpaceObjects(): Promise<any> {
+      return FetchAPIService.get('/SolarSystem/GetSpaceObjects').then((data) => {
+          console.log('SolarSystemService: ', data)
+          return data
+      })
+  }
 
   static async GetPublicSolarSystems(): Promise<any> {
+   
+
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
       .then((data) => {
         return JSON.parse(data)
@@ -55,5 +64,19 @@ export default class SolarSystemService {
         alert('Error in SolarSystemService. Check console for details.')
         console.error('Error in LoginService: ', error)
       })
+  }
+
+  static async GetSolarSystemByID(id: number): Promise<any> {
+    return FetchAPIService.get(`/SolarSystem/GetSolarSystemByID?id=${id}`).then((data) => {
+       return JSON.parse(data)
+    })
+  }
+
+  static async AddSpaceObject(size: number, type: string): Promise<any> {
+      return FetchAPIService.get(`/SolarSystem/AddSpaceObject?size=${size}&type=${type}`)
+  }
+
+  static async RemoveSpaceObject(id: number): Promise<any> {
+      return FetchAPIService.get(`/SolarSystem/RemoveSpaceObject?id=${id}`)
   }
 }

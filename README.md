@@ -10,6 +10,14 @@
 
 [GIT](https://git-scm.com/downloads)
 
+## SQLite Download
+Link to download the SQLite: https://www.sqlite.org/download.html
+Scroll down and find "Precompiled Binaries for Windows" --> "sqlite-tools-win-x64-3450100.zip-(4.77 MiB)"
+Download DB Browser to manipulate tables.
+
+## DB Browser
+Link to download DB Browser: https://sqlitebrowser.org/dl/
+
 ## Setup for Local Development
 
 Pull the Repo and open SolarSystemManger.sln in Visual Studio

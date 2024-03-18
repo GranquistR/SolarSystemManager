@@ -73,19 +73,18 @@ async function Login() {
     const encryptedPassword = encrypt.encrypt(password.value, salt)
 
     // Attempt login asynchronously
-    const loginResponse = await LoginService.Login(new User(username.value, encryptedPassword))
-    const passResp = loginResponse.data
-
-    if (await passResp === "Success!") {
-      isLoading.value = false
-      const date = new Date()
-      date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
-      document.cookie = `username=${username.value}; expires=${date}`
-      document.cookie = `password=${password.value}; expires=${date}`
-      window.location.href = '/dashboard'
-    } else {
-      failedLogin()
-    }
+    await LoginService.Login(new User(username.value, encryptedPassword)).then((response) => {
+      if (response == 'Success!') {
+        isLoading.value = false
+        const date = new Date()
+        date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+        document.cookie = `username=${username.value}; expires=${date}`
+        document.cookie = `password=${password.value}; expires=${date}`
+        window.location.href = '/dashboard'
+      } else {
+        failedLogin()
+      }
+    })
   } catch (error) {
     console.error('Error in LoginService: ', error)
     alert('Error in LoginService. Check console for details.')

@@ -87,6 +87,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                             role = (Role)sqlite_datareader.GetInt32(3),
                         });
                     }
+                    sqlite_datareader.Close();
                     return users;
                 }
                 finally
@@ -142,21 +143,32 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
-                        solarSystems.Add(new SolarSystem(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), (Visibility)sqlite_datareader.GetInt32(3)));
+                        solarSystems.Add(new SolarSystem(sqlite_datareader.GetInt32(0), 
+                                                         sqlite_datareader.GetInt32(1), 
+                                                         sqlite_datareader.GetString(2), 
+                                                         (Visibility)sqlite_datareader.GetInt32(3)));
                     }
-
+                    sqlite_datareader.Close();
                     sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     while (sqlite_datareader.Read())
                     {
-                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), sqlite_datareader.GetInt32(1), sqlite_datareader.GetString(2), sqlite_datareader.GetString(3), sqlite_datareader.GetInt32(4), sqlite_datareader.GetInt32(5), sqlite_datareader.GetInt32(6), sqlite_datareader.GetString(7)));
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0), 
+                                                         sqlite_datareader.GetInt32(1), 
+                                                         sqlite_datareader.GetString(2), 
+                                                         sqlite_datareader.GetString(3), 
+                                                         sqlite_datareader.GetInt32(4), 
+                                                         sqlite_datareader.GetInt32(5), 
+                                                         sqlite_datareader.GetInt32(6), 
+                                                         sqlite_datareader.GetString(7)));
                     }
 
                     foreach (var solarSystem in solarSystems)
                     {
                         solarSystem.spaceObjects = spaceObjects.FindAll(s => s.solarSystemID == solarSystem.systemId);
                     }
+                    sqlite_datareader.Close();
                     return solarSystems;
                 }
                 finally
@@ -175,6 +187,8 @@ namespace SolarSystemManager.RESTAPI.Repos
                 {
                     sqlite_conn.Open();
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
                     sqlite_cmd.CommandText = "DELETE FROM SolarSystem WHERE SSID=" + targetID + ";";
                     sqlite_cmd.ExecuteNonQuery();
                     return true;
@@ -185,6 +199,125 @@ namespace SolarSystemManager.RESTAPI.Repos
                 }
             }
         }
+        public bool DeleteSpaceObject(int targetID)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+        public SolarSystem GetSolarSystemByID(int targetID)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+
+                    SQLiteDataReader sqlite_datareader;
+                    SQLiteCommand sqlite_cmd;
+                    sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "SELECT SSID, OwnerID, Name, Visibility from SolarSystem WHERE SSID=" + targetID + ";";
+                    sqlite_datareader = sqlite_cmd.ExecuteReader();
+                    sqlite_datareader.Read();
+                    SolarSystem dummySolarSystem = new SolarSystem(sqlite_datareader.GetInt32(0),
+                                                                    sqlite_datareader.GetInt32(1),
+                                                                    sqlite_datareader.GetString(2),
+                                                                    (Visibility)sqlite_datareader.GetInt32(3));
+                    sqlite_datareader.Close();
+                    sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject WHERE SSID=" + targetID + ";";
+                    sqlite_datareader = sqlite_cmd.ExecuteReader();
+
+
+                    var spaceObjects = new List<SpaceObject>();
+                    while (sqlite_datareader.Read())
+                    {
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0),
+                                                        sqlite_datareader.GetInt32(1),
+                                                        sqlite_datareader.GetString(2),
+                                                        sqlite_datareader.GetString(3),
+                                                        sqlite_datareader.GetInt32(4),
+                                                        sqlite_datareader.GetInt32(5),
+                                                        sqlite_datareader.GetInt32(6),
+                                                        sqlite_datareader.GetString(7)));
+                    }
+                    sqlite_datareader.Close();
+                    dummySolarSystem.spaceObjects = spaceObjects;
+                    return dummySolarSystem;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+
+            }
+        }
+
+        #endregion
+
+
+        #region SpaceObjectTable
+
+        public bool AddSpaceObject(int size, string type)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    Console.WriteLine("Add space object started");
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "INSERT INTO SpaceObject (SSID, Name, Type, LocationX, LocationY, Size, Color) VALUES " +
+                        "(@ssid, @name, @type, @xCoord, @yCoord, @size, @color);";
+                    sqlite_cmd.Parameters.AddWithValue("@ssid", 22);
+                    sqlite_cmd.Parameters.AddWithValue("@name", "Earth");
+                    sqlite_cmd.Parameters.AddWithValue("@type", type);
+                    sqlite_cmd.Parameters.AddWithValue("@xCoord", 000);
+                    sqlite_cmd.Parameters.AddWithValue("@yCoord", 000);
+                    sqlite_cmd.Parameters.AddWithValue("@size", size);
+                    sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
+                    sqlite_cmd.ExecuteNonQuery();
+                    Console.WriteLine("Add space object completed");
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
+        public bool RemoveSpaceObject(int targetID)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "DELETE FROM SpaceObject WHERE SOID=" + targetID + ";";
+                    sqlite_cmd.ExecuteNonQuery();
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
+
         #endregion
 
         #region DynamicSQL
@@ -205,6 +338,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     {
                         rowcount = sqlite_datareader.GetInt32(0);
                     }
+                    sqlite_datareader.Close();
                     return rowcount;
                 }
                 finally

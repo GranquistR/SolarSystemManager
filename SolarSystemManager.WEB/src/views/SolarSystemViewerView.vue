@@ -74,11 +74,26 @@ solarObjects.value.then((response) => {
     console.log(solarObjects.value[i].objectSize)
     console.log(solarObjects.value[i].objectColor)
 
+    if (solarObjects.value[i].objectType == "Star")
+    {
+      console.log('hit star')
+      //const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png');
+    }
+    else if (solarObjects.value[i].objectType == "Planet")
+    {
+      console.log('hit planet')
+      //const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/planet.png');
+    }
+    else
+    {
+      console.log('miss')
+    }
+
     const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png');
     sprite.anchor.set(0.5);
-    sprite.scale.set(solarObjects.value[i].objectSize *.2,solarObjects.value[i].objectSize * .2);
-    sprite.x = solarObjects.value[i].xCoord;
-    sprite.y = solarObjects.value[i].yCoord;
+    sprite.scale.set(solarObjects.value[i].objectSize *.4,solarObjects.value[i].objectSize * .4);
+    sprite.x = solarObjects.value[i].xCoord*6;
+    sprite.y = solarObjects.value[i].yCoord*6;
     console.log('color: '+solarObjects.value[i].objectColor)
     sprite.tint = solarObjects.value[i].objectColor;
     //sObj.blendMode = PIXI.BLEND_MODES.ADD()

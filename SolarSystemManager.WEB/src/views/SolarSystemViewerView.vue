@@ -1,18 +1,35 @@
 <template>
   <div>
+    <!-- header -->
     <HeaderBar require-login no-docking />
-    <div id="viewer"></div>
+
+    <!-- Ui -->
+    <div class="us" style="position: fixed; z-index: 100; top: 67px">
+      <Button label="Recenter" @click="recenter" />
+    </div>
+
+    <!-- PIXI APP -->
+    <div id="viewer" style="position: fixed"></div>
   </div>
 </template>
-<script setup lang="js">
-import { ref, onMounted } from 'vue'
-import * as PIXI from 'pixi.js'
-import SolarSystemService from '@/services/SolarSystemService'
+<script setup lang="ts">
+//components
+import Button from 'primevue/button'
 import HeaderBar from '@/components/Header/HeaderBar.vue'
+import SolarSystemService from '@/services/SolarSystemService'
+import { DrawSolarSystem } from '@/scripts/pixie/DrawSolarSystem'
+
+//vue stuff
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
+//pixi
+import * as PIXI from 'pixi.js'
+import { Viewport } from 'pixi-viewport'
+
+//get the id from the route
 const route = useRoute()
-const systemId = route.params.id
+const systemId = Number(route.params.id)
 
 //build the pixi app
 const app = new PIXI.Application({
@@ -20,52 +37,44 @@ const app = new PIXI.Application({
   resizeTo: window
 })
 
-//mounts pixie to vue template
-onMounted(() => {
-  document.getElementById('viewer').appendChild(app.view)
+// builds viewport for panning and zooming and adds it to the app
+const viewport = new Viewport({
+  screenWidth: window.innerWidth,
+  screenHeight: window.innerHeight,
+  worldWidth: 1000,
+  worldHeight: 1000,
+  events: app.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 })
+//viewport settings
+viewport.drag({}).decelerate({ friction: 0.95 }).pinch({}).wheel({})
 
-// set origin to the center of the screen
-const container = new PIXI.Container()
-container.x = 1000
-container.y = 1000
-app.stage.addChild(container)
+//add the viewport to the app
+app.stage.addChild(viewport)
 
-const solarSystem = ref(null)
-// Get the json data for the solar system based on the id
-SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
-  solarSystem.value = response
-  solarSystem.value.spaceObjects.forEach((element) => {
-    console.log(element)
+//origin
+const origin = PIXI.Sprite.from('/src/assets/Images/sprites/center.png')
+origin.anchor.set(0.5)
+origin.scale.set(0.3, 0.3)
+origin.position.set(0, 0)
+origin.tint = '0xFFFFFF'
 
-    if (element.objectType == 'Star') {
-      //const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png');
-    } else if (element.objectType == 'Planet') {
-      //const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/planet.png');
-    }
+viewport.addChild(origin)
 
-    const sprite = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png')
-    sprite.anchor.set(0.5)
-    sprite.scale.set(element.objectSize * 0.4, element.objectSize * 0.4)
-    sprite.x = element.xCoord
-    sprite.y = element.yCoord
-    sprite.tint = element.objectColor
-    //sObj.blendMode = PIXI.BLEND_MODES.ADD()
-    // app.stage.addChild(sObj);
-    container.addChild(sprite)
+onMounted(() => {
+  //mounts the pixi app
+  document.getElementById('viewer')?.appendChild(app.view as any)
+
+  // Gets and draws the solar system
+  const solarSystem = ref<any>(null)
+  SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
+    solarSystem.value = response
+    DrawSolarSystem(viewport, solarSystem)
   })
 })
 
-const center = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png')
-center.anchor.set(0.5)
-center.scale.set(0.5, 0.5)
-center.x = 0
-center.y = 0
-app.stage.addChild(center)
-const end = PIXI.Sprite.from('/src/assets/Images/V_E/sun.png')
-end.anchor.set(0.5)
-end.scale.set(0.5, 0.5)
-end.x = 1000
-end.y = 1000
-app.stage.addChild(end)
+function recenter() {
+  viewport.fit()
+  viewport.moveCenter(0, 0)
+}
+recenter()
 </script>

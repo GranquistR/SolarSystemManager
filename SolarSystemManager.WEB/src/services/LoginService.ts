@@ -3,7 +3,7 @@ import FetchAPIService from './FetchAPIService'
 
 export default class LoginService {
   static async Login(user: User) {
-    return FetchAPIService.post('/User/login', user)
+    return FetchAPIService.post('/User/Login', user)
       .then((data) => {
         return data
       })

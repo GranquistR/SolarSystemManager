@@ -49,6 +49,8 @@ const password = ref('')
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
+console.log(encrypt.encrypt('admin', '27q9P4ichBbnENlEOXlaANV0ODRmZ8Qv'))
+
 onMounted(() => {
   if (document.cookie.includes('username=')) {
     username.value = document.cookie.split('username=')[1].split(';')[0]
@@ -66,8 +68,11 @@ async function Login() {
 
   try {
     // Fetch salt asynchronously
-    const saltResponse = await LoginService.GetSalt(username.value)
-    const salt = saltResponse.data // Assuming salt is present in response
+    let salt = ''
+    await LoginService.GetSalt(username.value).then((response) => {
+      salt = response
+    })
+    // Assuming salt is present in response
 
     // Encrypt password using fetched salt
     const encryptedPassword = encrypt.encrypt(password.value, salt)
@@ -79,7 +84,7 @@ async function Login() {
         const date = new Date()
         date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
         document.cookie = `username=${username.value}; expires=${date}`
-        document.cookie = `password=${password.value}; expires=${date}`
+        document.cookie = `password=${encryptedPassword}; expires=${date}`
         window.location.href = '/dashboard'
       } else {
         failedLogin()

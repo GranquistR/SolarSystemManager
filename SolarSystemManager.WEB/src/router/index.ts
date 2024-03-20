@@ -1,9 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin';
-
-let isAdmin = false;
-let username = '';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,15 +49,14 @@ const router = createRouter({
       component: () => import('../views/SolarSystemViewerView.vue')
     },
     {
-      path: '/:catchAll(.*)',
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../views/AdminView.vue'),
-    },
-    {
       path: '/notfound',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue')
     },
     {
       path: '/:catchAll(.*)',

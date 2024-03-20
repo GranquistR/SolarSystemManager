@@ -7,7 +7,8 @@
       <template #title>Add an object to {{currentSolarSystem.systemName}}</template>
       <template #content>
         <div>
-          Name: Earth<br>
+          <label for="objectName">Object Name: </label>
+          <InputText variant="filled" id="objectName" v-model="objectName" style="width: 245px"/><br>
           <label for="type">Object type: </label>
           <Dropdown id="type" v-model="objectType" :options="types" placeholder="Select object type"></Dropdown><br>
           X coordinate: 000<br>
@@ -75,13 +76,14 @@ const objectType = ref('');
 const types = ref([
   "Planet", "Star"
 ]);
+const objectName = ref('');
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
   currentSolarSystem.value = response
 })
 
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(parseInt(objectSize.value), objectType.value)
+  SolarSystemService.AddSpaceObject(parseInt(objectSize.value), objectType.value, objectName.value)
 }
 
 function RemoveSpaceObject(){

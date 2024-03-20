@@ -37,18 +37,28 @@ namespace SolarSystemManager.RESTAPI.Services
                 {
                     return _baseRepo.GetAllSolarSystems();
                 }
-                else 
-                { 
+                else
+                {
                     throw new BadHttpRequestException("403");
                 }
             }
-            
-        }   
+
+        }
 
         public bool DeleteSolarSystem(Entities.LoginRequest cred, int id)
         {
             User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId) 
+            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
+            {
+                throw new BadHttpRequestException("403");
+            }
+            _baseRepo.DeleteSolarSystem(id);
+            return true;
+        }
+        public bool DeleteSolarSystemAdmin(Entities.LoginRequest cred, int id)
+        {
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            if (temp.role != Role.Admin)
             {
                 throw new BadHttpRequestException("403");
             }
@@ -56,6 +66,16 @@ namespace SolarSystemManager.RESTAPI.Services
             return true;
         }
 
+        public bool DeleteSpaceObject(Entities.LoginRequest cred, int id)
+        {
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
+            {
+                throw new BadHttpRequestException("403");
+            }
+            _baseRepo.DeleteSpaceObject(id);
+            return true;
+        }
         public int SolarSystemCount()
         {
             return _baseRepo.Count("SolarSystem");
@@ -64,6 +84,23 @@ namespace SolarSystemManager.RESTAPI.Services
         public int SpaceObjectCount()
         {
             return _baseRepo.Count("SpaceObject");
+        }
+
+        public SolarSystem GetSolarSystemByID(int id)
+        {
+            return _baseRepo.GetSolarSystemByID(id);
+        }
+
+        public bool AddSpaceObject(int size, string type) //non secure, for front end testing only
+        {
+            _baseRepo.AddSpaceObject(size, type);
+            return true;
+        }
+
+        public bool RemoveSpaceObject(int id)
+        {
+            _baseRepo.RemoveSpaceObject(id); //non secure, for front end testing only
+            return true;
         }
     }
 }

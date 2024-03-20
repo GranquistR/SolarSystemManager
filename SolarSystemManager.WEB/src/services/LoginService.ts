@@ -1,4 +1,4 @@
-import type User from '@/Entities/UserLogin'
+import User from '@/Entities/UserLogin'
 import FetchAPIService from './FetchAPIService'
 
 export default class LoginService {
@@ -43,6 +43,18 @@ export default class LoginService {
       .catch((error) => {
         alert('Error in LoginService. Check console for details.')
         console.error('Error in LoginService: ', error)
+      })
+  }
+
+  static async GetSalt(username: string) {
+    return FetchAPIService.post('/User/GetSalts', username)
+      .then((data) => {
+        console.log(data)
+        return data
+      })
+      .catch((error) => {
+        alert('Error in GetSaltService. Check console for details.')
+        console.error('Error in GetSaltService: ', error)
       })
   }
 }

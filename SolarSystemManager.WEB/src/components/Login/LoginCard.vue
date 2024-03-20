@@ -42,10 +42,10 @@ import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
+import encrypt from '@/services/encryption'
 
 const username = ref('')
 const password = ref('')
-
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
@@ -57,27 +57,39 @@ onMounted(() => {
   }
 })
 
-function Login() {
+async function Login() {
   isLoading.value = true
   if (username.value == '' || password.value == '') {
     failedLogin()
     return
   }
 
-  LoginService.Login(new User(username.value, password.value)).then((response) => {
-    if (response == 'Success!') {
-      isLoading.value = false
-      //save login to cookies
-      let date = new Date()
-      //set date to 1 day from now
-      date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
-      document.cookie = `username=${username.value}; expires=${date}`
-      document.cookie = `password=${password.value}; expires=${date}`
-      window.location.href = '/dashboard'
-    } else {
-      failedLogin()
-    }
-  })
+  try {
+    // Fetch salt asynchronously
+    const saltResponse = await LoginService.GetSalt(username.value)
+    const salt = saltResponse.data // Assuming salt is present in response
+
+    // Encrypt password using fetched salt
+    const encryptedPassword = encrypt.encrypt(password.value, salt)
+
+    // Attempt login asynchronously
+    await LoginService.Login(new User(username.value, encryptedPassword)).then((response) => {
+      if (response == 'Success!') {
+        isLoading.value = false
+        const date = new Date()
+        date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+        document.cookie = `username=${username.value}; expires=${date}`
+        document.cookie = `password=${password.value}; expires=${date}`
+        window.location.href = '/dashboard'
+      } else {
+        failedLogin()
+      }
+    })
+  } catch (error) {
+    console.error('Error in LoginService: ', error)
+    alert('Error in LoginService. Check console for details.')
+    failedLogin()
+  }
 }
 
 function failedLogin() {

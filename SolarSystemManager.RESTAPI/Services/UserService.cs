@@ -39,7 +39,8 @@ namespace SolarSystemManager.RESTAPI.Services
 
         public User? ValidateUser(Entities.LoginRequest cred)
         {
-            return _baseRepo.GetAllUsers().Find(p => (p.username == cred.username) && (p.password == cred.password));           
+            var users = _baseRepo.GetAllUsers();
+            return users.Find(p => (p.username == cred.username) && (p.password == cred.password));           
         }
         public User GetUserSettingsData(Entities.LoginRequest cred)
         {

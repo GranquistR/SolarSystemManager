@@ -49,7 +49,7 @@ const password = ref('')
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
-console.log(encrypt.encrypt('admin', '27q9P4ichBbnENlEOXlaANV0ODRmZ8Qv'))
+console.log(encrypt.encrypt('password', 'zXoj2CiRYuuJfDv3sGU8dgiOHr8JCsnc'))
 
 onMounted(() => {
   if (document.cookie.includes('username=')) {
@@ -67,19 +67,18 @@ async function Login() {
   }
 
   try {
-    // Fetch salt asynchronously
+    // Fetch salt
     let salt = ''
     await LoginService.GetSalt(username.value).then((response) => {
       salt = response
     })
-    // Assuming salt is present in response
 
     // Encrypt password using fetched salt
     const encryptedPassword = encrypt.encrypt(password.value, salt)
 
-    // Attempt login asynchronously
+    // Attempt login
     await LoginService.Login(new User(username.value, encryptedPassword)).then((response) => {
-      if (response == 'Success!') {
+      if (response.success) {
         isLoading.value = false
         const date = new Date()
         date.setTime(date.getTime() + 24 * 60 * 60 * 1000)

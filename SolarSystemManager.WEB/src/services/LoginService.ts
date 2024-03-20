@@ -5,7 +5,7 @@ export default class LoginService {
   static async Login(user: User) {
     return FetchAPIService.post('/User/Login', user)
       .then((data) => {
-        return data
+        return JSON.parse(data)
       })
       .catch((error) => {
         alert('Error in LoginService. Check console for details.')

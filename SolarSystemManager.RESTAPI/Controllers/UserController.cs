@@ -27,15 +27,16 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                if (_userService.ValidateUser(cred) != null)
+                var user = _userService.ValidateUser(cred);
+                if (user != null)
                 {
-                    return Ok("Success!");
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Logged in", data = user });
                 }
-                return Ok("Invalid username or password!");
+                return Ok(new Response { success = false, status = 401, message = "Failed to Login. Invalid credentials." });
             }
             catch
-            { 
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Login");
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
 

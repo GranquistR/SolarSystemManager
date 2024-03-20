@@ -17,7 +17,6 @@ const app = createApp(App)
 //dependency injection
 
 ///login dependency injection
-import { provide } from 'vue'
 import LoginService from './services/LoginService'
 import User from './Entities/UserLogin'
 import UserV2 from './Entities/UserV2'
@@ -25,8 +24,7 @@ import UserV2 from './Entities/UserV2'
 if (document.cookie.includes('username') && document.cookie.includes('password')) {
   const user = document.cookie.split('username=')[1].split(';')[0]
   const pass = document.cookie.split('password=')[1].split(';')[0]
-  LoginService.LoginV2(new User(user, pass)).then((response) => {
-    console.log(response)
+  LoginService.Login(new User(user, pass)).then((response) => {
     if (response.success) {
       app.provide(
         'currentUser',
@@ -37,6 +35,9 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
           response.data.role
         )
       )
+    } else {
+      document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
     }
   })
 }

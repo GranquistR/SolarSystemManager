@@ -6,6 +6,7 @@
     <!-- Ui -->
     <div class="us" style="position: fixed; z-index: 100; top: 67px">
       <Button label="Recenter" @click="recenter" />
+      <SpaceObjectPicker :solar-system="solarSystem" @select-id="Select" />
     </div>
 
     <!-- PIXI APP -->
@@ -18,6 +19,7 @@ import Button from 'primevue/button'
 import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import { DrawSolarSystem } from '@/scripts/pixie/DrawSolarSystem'
+import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
 
 //vue stuff
 import { ref, onMounted } from 'vue'
@@ -60,12 +62,11 @@ origin.tint = '0xFFFFFF'
 
 viewport.addChild(origin)
 
+const solarSystem = ref<any>()
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
-
   // Gets and draws the solar system
-  const solarSystem = ref<any>(null)
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
     solarSystem.value = response
     DrawSolarSystem(viewport, solarSystem)
@@ -77,4 +78,12 @@ function recenter() {
   viewport.moveCenter(0, 0)
 }
 recenter()
+
+function Select(id: number) {
+  solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
+    if (spaceObject.spaceObjectID == id) {
+      viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+    }
+  })
+}
 </script>

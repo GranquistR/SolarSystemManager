@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import Card from 'primevue/card'
 import HeaderBar from '@/components/Header/HeaderBar.vue'
 import DataTable from 'primevue/datatable'

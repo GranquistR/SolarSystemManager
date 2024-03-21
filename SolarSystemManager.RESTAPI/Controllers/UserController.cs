@@ -107,9 +107,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
         }
 
-
-
-
         [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetUserCount")]
@@ -148,25 +145,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
             }
         }
-
-        [HttpPost]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("LoginV2")]
-        public IActionResult LoginV2([FromBody] LoginRequest cred)
-        {
-            try
-            {
-                var user = _userService.ValidateUser(cred);
-                if (user != null)
-                {
-                    return Ok(new Response { success=true, status=200, message="Sucessfully Logged in", data=user});
-                }
-                return Ok(new Response { success = false, status = 401, message = "Failed to Login. Invalid credentials." });
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
-            }
-        }
+       
     }
 }

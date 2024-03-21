@@ -1,5 +1,3 @@
-import type UserV2 from '@/Entities/UserV2'
-import { inject } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({

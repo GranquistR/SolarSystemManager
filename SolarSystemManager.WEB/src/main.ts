@@ -18,17 +18,17 @@ const app = createApp(App)
 
 ///login dependency injection
 import LoginService from './services/LoginService'
-import User from './Entities/UserLogin'
-import UserV2 from './Entities/UserV2'
+import User from './Entities/User'
+import LoginRequest from './Entities/UserRequest'
 
 if (document.cookie.includes('username') && document.cookie.includes('password')) {
   const user = document.cookie.split('username=')[1].split(';')[0]
   const pass = document.cookie.split('password=')[1].split(';')[0]
-  LoginService.Login(new User(user, pass)).then((response) => {
+  LoginService.Login(new LoginRequest(user, pass)).then((response) => {
     if (response.success) {
       app.provide(
         'currentUser',
-        new UserV2(
+        new User(
           response.data.userID,
           response.data.username,
           response.data.password,

@@ -46,14 +46,9 @@ import Column from 'primevue/column'
 import SolarSystemService from '@/services/SolarSystemService'
 import { ref } from 'vue'
 import Button from 'primevue/button'
-
 import router from '@/router'
 
 const solarSystems = ref<any>([])
-
-console.log('code here')
-
-//const currentSolarSystem = ref<string>('')
 
 SolarSystemService.GetPublicSolarSystems().then((response) => {
   solarSystems.value = response

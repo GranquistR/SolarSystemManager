@@ -39,10 +39,10 @@ import Card from 'primevue/card'
 import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin'
-import encrypt from '@/services/encryption'
+import encrypt from '@/scripts/Encryption/encryption'
+import UserRequest from '@/Entities/UserRequest'
 
 const username = ref('')
 const password = ref('')
@@ -69,18 +69,20 @@ async function Login() {
     const encryptedPassword = encrypt.encrypt(password.value, salt)
 
     // Attempt login
-    await LoginService.Login(new User(username.value, encryptedPassword)).then((response) => {
-      if (response.success) {
-        isLoading.value = false
-        const date = new Date()
-        date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
-        document.cookie = `username=${username.value}; expires=${date}`
-        document.cookie = `password=${encryptedPassword}; expires=${date}`
-        window.location.href = '/dashboard'
-      } else {
-        failedLogin()
+    await LoginService.Login(new UserRequest(username.value, encryptedPassword)).then(
+      (response) => {
+        if (response.success) {
+          isLoading.value = false
+          const date = new Date()
+          date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+          document.cookie = `username=${username.value}; expires=${date}`
+          document.cookie = `password=${encryptedPassword}; expires=${date}`
+          window.location.href = '/dashboard'
+        } else {
+          failedLogin()
+        }
       }
-    })
+    )
   } catch (error) {
     console.error('Error in LoginService: ', error)
     alert('Error in LoginService. Check console for details.')

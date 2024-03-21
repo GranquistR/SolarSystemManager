@@ -39,7 +39,7 @@ import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin'
+import UserRequest from '@/Entities/UserRequest'
 
 const username = ref('')
 const password = ref('')
@@ -53,7 +53,7 @@ onMounted(() => {
 })
 
 function Signup() {
-  LoginService.CreateAccount(new User(username.value, password.value))
+  LoginService.CreateAccount(new UserRequest(username.value, password.value))
     .then((result) => {
       if (result == 'Success!') {
         isLoading.value = false
@@ -81,3 +81,4 @@ function failed() {
   }, 2000)
 }
 </script>
+@/Entities/User

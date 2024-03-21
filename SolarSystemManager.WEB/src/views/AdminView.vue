@@ -8,9 +8,8 @@
 <script setup lang="ts">
 import HeaderBar from '@/components/Header/HeaderBar.vue'
 import { inject, onBeforeMount, ref } from 'vue'
-import UserV2 from '@/Entities/UserV2'
+import UserV2 from '@/Entities/User'
 import router from '@/router'
-import ProgressSpinner from 'primevue/progressspinner'
 
 const isLoading = ref(true)
 onBeforeMount(() => {

@@ -1,8 +1,8 @@
-import User from '@/Entities/UserLogin'
+import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
 
 export default class LoginService {
-  static async Login(user: User) {
+  static async Login(user: UserRequest) {
     return FetchAPIService.post('/User/Login', user)
       .then((data) => {
         return JSON.parse(data)
@@ -13,18 +13,7 @@ export default class LoginService {
       })
   }
 
-  static async LoginV2(user: User) {
-    return FetchAPIService.post('/User/LoginV2', user)
-      .then((data) => {
-        return JSON.parse(data)
-      })
-      .catch((error) => {
-        alert('Error in LoginService. Check console for details.')
-        console.error('Error in LoginService: ', error)
-      })
-  }
-
-  static async GetUserSettings(user: User): Promise<any> {
+  static async GetUserSettings(user: UserRequest): Promise<any> {
     return FetchAPIService.post('/User/GetUserSettings', user)
       .then((data) => {
         return JSON.parse(data)
@@ -35,7 +24,7 @@ export default class LoginService {
       })
   }
 
-  static async CreateAccount(user: User): Promise<any> {
+  static async CreateAccount(user: UserRequest): Promise<any> {
     return FetchAPIService.post('/User/CreateAccount', user)
       .then((data) => {
         return data

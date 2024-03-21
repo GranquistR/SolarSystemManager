@@ -24,7 +24,6 @@ const props = defineProps({
 
 //computed is required to make the spaceObjects reactive
 const spaceObjects = computed(() => {
-  console.log('spaceObjects', props.solarSystem.spaceObjects)
   return props.solarSystem.spaceObjects
 })
 

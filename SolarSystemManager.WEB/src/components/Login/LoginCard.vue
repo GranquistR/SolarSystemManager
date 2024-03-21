@@ -51,14 +51,6 @@ const hasFailed = ref(false)
 
 console.log(encrypt.encrypt('password', 'zXoj2CiRYuuJfDv3sGU8dgiOHr8JCsnc'))
 
-onMounted(() => {
-  if (document.cookie.includes('username=')) {
-    username.value = document.cookie.split('username=')[1].split(';')[0]
-    password.value = document.cookie.split('password=')[1].split(';')[0]
-    Login()
-  }
-})
-
 async function Login() {
   isLoading.value = true
   if (username.value == '' || password.value == '') {

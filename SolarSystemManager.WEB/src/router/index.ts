@@ -1,3 +1,5 @@
+import type UserV2 from '@/Entities/UserV2'
+import { inject } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -52,6 +54,11 @@ const router = createRouter({
       path: '/notfound',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')
+    },
+    {
+      path: '/forbidden',
+      name: 'forbidden',
+      component: () => import('../views/ForbiddenView.vue')
     },
     {
       path: '/admin',

@@ -4,7 +4,7 @@
     <HeaderBar require-login no-docking />
 
     <!-- Ui -->
-    <div class="w-screen h-screen absolute z-25 p-2">
+    <div class="w-screen h-screen absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
       <Button label="Recenter" @click="recenter" />

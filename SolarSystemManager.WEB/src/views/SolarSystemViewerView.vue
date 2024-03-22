@@ -4,9 +4,10 @@
     <HeaderBar require-login no-docking />
 
     <!-- Ui -->
-    <div class="us" style="position: fixed; z-index: 100; top: 67px">
+    <div class="w-screen h-screen absolute z-25 p-2">
+      <div class="spacer"></div>
+      <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
       <Button label="Recenter" @click="recenter" />
-      <SpaceObjectPicker :solar-system="solarSystem" @select-id="Select" />
     </div>
 
     <!-- PIXI APP -->
@@ -22,7 +23,7 @@ import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
 
 //vue stuff
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 //pixi
@@ -32,15 +33,22 @@ import { Viewport } from 'pixi-viewport'
 //get the id from the route
 const route = useRoute()
 const systemId = Number(route.params.id)
-const selectedObject = ref<number>()
+const selectedObject = ref<any>()
 const solarSystem = ref<any>()
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
+  
   // Gets and draws the solar system
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
     solarSystem.value = response
     graphics.DrawSolarSystem(solarSystem)
+    console.log(solarSystem.value)
+  })
+
+  //resize the viewport when the window is resized
+  window.addEventListener('resize', () => {
+    viewport.resize(window.innerWidth, window.innerHeight)
   })
 })
 
@@ -72,18 +80,33 @@ viewport.moveCenter(0, 0)
 app.stage.addChild(viewport)
 const graphics = new Graphics(viewport)
 
-function Select(id: number) {
-  solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
-    if (spaceObject.spaceObjectID == id) {
-      selectedObject.value = id
-      viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
-    }
-  })
-  graphics.HighlightSpaceObject(id)
+function Select(selection: any) {
+  selectedObject.value = selection
 }
+
+watch(selectedObject, (newValue) => {
+  if (newValue != null) {
+    console.log(newValue.spaceObjectID)
+    solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
+      if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
+        viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+      }
+    })
+
+    graphics.HighlightSpaceObject(newValue.spaceObjectID)
+  } else {
+    graphics.RemoveHighlight()
+  }
+})
 
 function recenter() {
   viewport.fit()
   viewport.moveCenter(0, 0)
 }
 </script>
+<style scoped>
+.spacer {
+  height: 66px;
+  background-color: red;
+}
+</style>

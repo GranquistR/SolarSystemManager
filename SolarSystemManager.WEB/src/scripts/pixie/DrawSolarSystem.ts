@@ -73,8 +73,14 @@ export default class gGraphics {
           ...this.defaultFilters
         ]
       } else {
-        element.filters = element.filters.filter((filter: any) => !(filter instanceof GlowFilter))
+        element.filters = this.defaultFilters
       }
+    })
+  }
+
+  RemoveHighlight() {
+    this.viewport.children.forEach((element: any) => {
+      element.filters = this.defaultFilters
     })
   }
 }

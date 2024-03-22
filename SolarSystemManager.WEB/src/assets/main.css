@@ -20,3 +20,42 @@ body {
   text-decoration: none;
   color: inherit;
 }
+
+/* disables headers of vue prime data tables */
+.datatableNoHeader table thead tr {
+  display: none;
+}
+/* disables background of vue prime data tables */
+/* unselected color */
+.datatableNoBackground.p-datatable .p-datatable-tbody > tr {
+  background-color: transparent;
+}
+/* hover color */
+.datatableNoBackground.p-datatable .p-datatable-tbody > tr:not(.p-highlight):hover {
+  background-color: rgba(52, 211, 153, 0.08);
+}
+/* selected color */
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: rgba(52, 211, 153, 0.16);
+}
+
+/* scrollbar */
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a1a1aa;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}

@@ -86,8 +86,7 @@ import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import SpaceBoxLogo from './SpaceBoxLogo.vue'
-import LoginService from '@/services/LoginService'
-import UserV2 from '@/Entities/UserV2'
+import User from '@/Entities/User'
 import { inject } from 'vue'
 
 const Props = defineProps<{
@@ -97,7 +96,7 @@ const Props = defineProps<{
 }>()
 
 onMounted(() => {
-  let user: UserV2 | undefined = inject('currentUser')
+  let user: User | undefined = inject('currentUser')
   if (user != undefined) {
     username.value = user.username
     isAdmin.value = user.role == 1 ? true : false

@@ -1,20 +1,52 @@
 <template>
-  <div class="frosted p-4 flex flex-column">
-    <div
-      v-for="(spaceObject, index) in spaceObjects"
-      :key="index"
-      class="my-4 flex align-items-center"
-      @click="SelectId(spaceObject.spaceObjectID)"
-    >
-      <img src="../../assets/Images/spacebox-logo.png" height="40px" />
-      <div class="align-items-center ml-3">{{ spaceObject.objectName }}</div>
-    </div>
-  </div>
+  <DataTable
+    scrollable
+    scrollHeight="80vh"
+    class="datatableNoHeader datatableNoBackground frosted pt-1"
+    v-model:selection="selectedObject"
+    selectionMode="single"
+    :value="spaceObjects"
+  >
+    <Column>
+      <template #body> <img src="../../assets/Images/spacebox-logo.png" height="40px" /> </template
+    ></Column>
+    <Column field="objectName">
+      <template #body="slotProps">
+        <div>
+          {{ slotProps.data.objectName }}
+        </div>
+      </template>
+    </Column>
+    <Column>
+      <template #body>
+        <div class="flex">
+          <Button
+            outlined
+            severity="secondary"
+            icon="pi pi-pencil"
+            rounded
+            iconPos="right"
+          ></Button>
+          <Button
+            class="ml-2"
+            outlined
+            severity="secondary"
+            icon="pi pi-trash"
+            rounded
+            iconPos="right"
+          ></Button>
+        </div>
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
+import { computed, ref, watch } from 'vue'
+import Button from 'primevue/button'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import ScrollPanel from 'primevue/scrollpanel'
 const props = defineProps({
   solarSystem: {
     type: Object,
@@ -27,10 +59,16 @@ const spaceObjects = computed(() => {
   return props.solarSystem.spaceObjects
 })
 
+const selectedObject = ref<any>()
 const emit = defineEmits(['select-id'])
-function SelectId(id: number) {
-  emit('select-id', id)
-}
+
+watch(
+  selectedObject,
+  (newValue) => {
+    emit('select-id', newValue)
+  },
+  { immediate: true }
+)
 </script>
 <style scoped>
 .frosted {

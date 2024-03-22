@@ -210,7 +210,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystemByID")]
         public IActionResult GetSolarSystemByID(int id)
         {
-             return Ok(_solarSystemService.GetSolarSystemByID(id));
+            try
+            {
+                return Ok(_solarSystemService.GetSolarSystemByID(id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]

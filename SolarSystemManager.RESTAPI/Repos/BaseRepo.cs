@@ -1,6 +1,7 @@
 ﻿using SolarSystemManager.RESTAPI.Entities;
 using System.Data;
 using System.Data.SQLite;
+using System.Security.Cryptography.Xml;
 using static SolarSystemManager.RESTAPI.Entities.SolarSystem;
 using static System.Data.Entity.Infrastructure.Design.Executor;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -249,41 +250,44 @@ namespace SolarSystemManager.RESTAPI.Repos
 
                     SQLiteDataReader sqlite_datareader;
                     SQLiteCommand sqlite_cmd;
+                    
                     sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "SELECT SSID, OwnerID, Name, Visibility from SolarSystem WHERE SSID=" + targetID + ";";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
                     sqlite_datareader.Read();
                     SolarSystem dummySolarSystem = new SolarSystem(sqlite_datareader.GetInt32(0),
-                                                                    sqlite_datareader.GetInt32(1),
-                                                                    sqlite_datareader.GetString(2),
-                                                                    (Visibility)sqlite_datareader.GetInt32(3));
+                                                                   sqlite_datareader.GetInt32(1),
+                                                                   sqlite_datareader.GetString(2),
+                                                                   (Visibility)sqlite_datareader.GetInt32(3));
                     sqlite_datareader.Close();
                     sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject WHERE SSID=" + targetID + ";";
                     sqlite_datareader = sqlite_cmd.ExecuteReader();
 
-
                     var spaceObjects = new List<SpaceObject>();
                     while (sqlite_datareader.Read())
                     {
                         spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0),
-                                                        sqlite_datareader.GetInt32(1),
-                                                        sqlite_datareader.GetString(2),
-                                                        sqlite_datareader.GetString(3),
-                                                        sqlite_datareader.GetInt32(4),
-                                                        sqlite_datareader.GetInt32(5),
-                                                        sqlite_datareader.GetInt32(6),
-                                                        sqlite_datareader.GetString(7)));
+                                                         sqlite_datareader.GetInt32(1),
+                                                         sqlite_datareader.GetString(2),
+                                                         sqlite_datareader.GetString(3),
+                                                         sqlite_datareader.GetInt32(4),
+                                                         sqlite_datareader.GetInt32(5),
+                                                         sqlite_datareader.GetInt32(6),
+                                                         sqlite_datareader.GetString(7)));
                     }
                     sqlite_datareader.Close();
                     dummySolarSystem.spaceObjects = spaceObjects;
                     return dummySolarSystem;
                 }
+                catch
+                {
+                    throw new BadHttpRequestException("Solar System not found for ID: " + targetID);
+                }
                 finally
                 {
                     sqlite_conn.Close();
                 }
-
             }
         }
 

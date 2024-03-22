@@ -38,7 +38,7 @@ const solarSystem = ref<any>()
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
-  
+
   // Gets and draws the solar system
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
     solarSystem.value = response
@@ -84,6 +84,7 @@ function Select(selection: any) {
   selectedObject.value = selection
 }
 
+//updates the viewport when a new object is selected
 watch(selectedObject, (newValue) => {
   if (newValue != null) {
     console.log(newValue.spaceObjectID)
@@ -99,6 +100,14 @@ watch(selectedObject, (newValue) => {
   }
 })
 
+//updates graphics after every change to solarSystems
+watch(solarSystem.value, (newValue) => {
+  if (newValue != null) {
+    graphics.DrawSolarSystem(solarSystem)
+  }
+})
+
+//recenters
 function recenter() {
   viewport.fit()
   viewport.moveCenter(0, 0)
@@ -107,6 +116,5 @@ function recenter() {
 <style scoped>
 .spacer {
   height: 66px;
-  background-color: red;
 }
 </style>

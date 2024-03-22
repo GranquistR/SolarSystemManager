@@ -5,7 +5,11 @@
     class="datatableNoHeader datatableNoBackground frosted pt-1"
     v-model:selection="selectedObject"
     selectionMode="single"
-    :value="spaceObjects"
+    :value="
+      spaceObjects.sort((a, b) => {
+        return a.objectName.localeCompare(b.objectName)
+      })
+    "
   >
     <Column>
       <template #body> <img src="../../assets/Images/spacebox-logo.png" height="40px" /> </template

@@ -6,7 +6,7 @@
     v-model:selection="selectedObject"
     selectionMode="single"
     :value="
-      spaceObjects.sort((a, b) => {
+      spaceObjects.sort((a: any, b: any) => {
         return a.objectName.localeCompare(b.objectName)
       })
     "

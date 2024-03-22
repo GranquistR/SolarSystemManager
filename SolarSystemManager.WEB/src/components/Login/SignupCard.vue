@@ -55,7 +55,9 @@ onMounted(() => {
 })
 
 function Signup() {
-  LoginService.CreateAccount(new User(username.value, password.value))
+  const salt : string = encrypt.generateSalt(8);
+  const encrypted : string = encrypt.encrypt(password.value, salt)
+  LoginService.CreateAccount(new User(username.value, encrypted), salt)
     .then((result) => {
       if (result == 'Success!') {
         isLoading.value = false

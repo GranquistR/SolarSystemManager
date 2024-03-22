@@ -24,8 +24,9 @@ export default class LoginService {
       })
   }
 
-  static async CreateAccount(user: User): Promise<any> {
-    return FetchAPIService.post('/User/CreateAccount', user)
+  static async CreateAccount(user: User, salt: string): Promise<any> {
+    console.log({user, salt})
+    return FetchAPIService.post('/User/CreateAccount', {user, salt})
       .then((data) => {
         return data
       })

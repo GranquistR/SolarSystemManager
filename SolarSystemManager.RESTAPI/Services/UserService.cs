@@ -68,10 +68,10 @@ namespace SolarSystemManager.RESTAPI.Services
             }
             if(newAccount.password.Length < 7)
             {
-                throw new BadHttpRequestException("Password too short!");
+                throw new BadHttpRequestException("Password too short, needs at least 8 characters!");
             }
 
-            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member });
+            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member }, salt );
             
         }
 

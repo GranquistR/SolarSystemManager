@@ -20,10 +20,12 @@ namespace SolarSystemManager.RESTAPI.Entities
 
     public class LoginRequest
     {
+
         [JsonPropertyName("username")]
         public string username { get; set; }
 
         [JsonPropertyName("password")]
         public string password { get; set; }
+
     }
 }

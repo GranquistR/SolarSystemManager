@@ -42,11 +42,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] LoginRequest newAccount)
+        public IActionResult CreateAccount([FromBody] LoginRequest newAccount, [FromBody] string salt)
         {
             try
             {
-                _userService.CreateAccount(newAccount);
+                _userService.CreateAccount(newAccount, salt);
                 return Ok("Success!");
             }
             catch (BadHttpRequestException e)

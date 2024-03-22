@@ -100,7 +100,7 @@ namespace SolarSystemManager.RESTAPI.Repos
             }
         }
 
-        public void CreateUser(User newUser)
+        public void CreateUser(User newUser, string salt)
         {
 
             lock (countLock)
@@ -113,7 +113,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@username", newUser.username);
                     sqlite_cmd.Parameters.AddWithValue("@password", newUser.password);
                     sqlite_cmd.Parameters.AddWithValue("@role", (int)newUser.role);
-                    sqlite_cmd.Parameters.AddWithValue("@salt", newUser.salt);
+                    sqlite_cmd.Parameters.AddWithValue("@salt", salt);
                     sqlite_cmd.ExecuteNonQuery();
                     return;
                 }

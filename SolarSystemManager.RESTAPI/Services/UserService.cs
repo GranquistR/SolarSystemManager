@@ -11,9 +11,36 @@ namespace SolarSystemManager.RESTAPI.Services
     {
         
         BaseRepo _baseRepo = BaseRepo.Instance();
+        public string GetSalty(string username)
+        {
+            try
+            {
+                var users = _baseRepo.GetAllUsers();
+                var user = FindUserByUsername(users, username);
+                if (user != default)
+                {
+                    return user.salt;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("Invalid user!");
+                }
+            }
+            catch
+            {
+                return "Unable to connect to Database!";
+            }
+        }
+
+        private User FindUserByUsername(List<User> users, string username)
+        {
+            return users.Find(p => p.username == username);
+        }
+
         public User? ValidateUser(Entities.LoginRequest cred)
         {
-            return _baseRepo.GetAllUsers().Find(p => (p.username == cred.username) && (p.password == cred.password));           
+            var users = _baseRepo.GetAllUsers();
+            return users.Find(p => (p.username == cred.username) && (p.password == cred.password));           
         }
         public User GetUserSettingsData(Entities.LoginRequest cred)
         {
@@ -52,6 +79,21 @@ namespace SolarSystemManager.RESTAPI.Services
         public int UserCount()
         {
             return _baseRepo.Count("User");
+        }
+
+        public void ChangeUserName(Entities.LoginRequest cred, string username)
+        {
+            User? temp = ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+
+            if(temp != null)
+            {
+                temp.username = username;
+                _baseRepo.ModifyUser(temp);
+            }
+            else
+            {
+                throw new BadHttpRequestException("No user found with given credentials");
+            }
         }
     }
 }

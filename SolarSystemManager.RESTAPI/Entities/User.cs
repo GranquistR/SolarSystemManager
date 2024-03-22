@@ -9,6 +9,8 @@ namespace SolarSystemManager.RESTAPI.Entities
         public string username { get; set; }
         public string password { get; set; }
         public Role role { get; set; }
+
+        public string salt { get; set; }
     }
 
     public enum Role
@@ -24,5 +26,11 @@ namespace SolarSystemManager.RESTAPI.Entities
 
         [JsonPropertyName("password")]
         public string password { get; set; }
+
+        public LoginRequest(string username, string password)
+        {
+            this.username = username;
+            this.password = password;
+        }
     }
 }

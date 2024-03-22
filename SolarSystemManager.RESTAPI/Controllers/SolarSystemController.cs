@@ -1,3 +1,5 @@
+using System.Data;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
@@ -18,15 +20,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             _logger = logger;
             _solarSystemService = new SolarSystemService();
-        }
-
-        [HttpGet]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("TestGet")]
-        public IActionResult TestGet()
-        {
-            string test = "Reach the API!!";
-            return Ok(test);
         }
 
         [HttpPost]
@@ -208,7 +201,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystemByID")]
         public IActionResult GetSolarSystemByID(int id)
         {
-             return Ok(_solarSystemService.GetSolarSystemByID(id));
+            try
+            {
+                return Ok(_solarSystemService.GetSolarSystemByID(id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
@@ -225,6 +225,27 @@ namespace SolarSystemManager.RESTAPI.Controllers
         public IActionResult RemoveSpaceObject(int id)
         {
             return Ok(_solarSystemService.RemoveSpaceObject(id));
+        }
+
+        //dummy data for graphics testing
+        [HttpGet]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("GetSpaceObjects")]
+        public IActionResult GetSpaceObjects()
+        {
+            IEnumerable<SpaceObject> spaceObjects = new List<SpaceObject>
+            {
+              //space object template
+              //new SpaceObject(objID, systemId, objName, objType, x, y, objSize, objColor);
+                new SpaceObject(1, 1, "Sirius A", "Star", 5, 0, 10, "18D3BC"), //two stars
+                new SpaceObject(2, 1, "Sirius B", "Star", 0, 0, 7, "25BCD6"),
+
+                new SpaceObject(3, 1, "Thor", "Planet", 15, 0, 2, "E5E21C"), //three planets
+                new SpaceObject(4, 1, "Loki", "Planet", 20, 0, 1, "1CE556"),
+                new SpaceObject(5, 1, "Odin", "Planet", 25, 0, 3, "2F1CE5")
+            };
+
+            return Ok(spaceObjects);
         }
 
     }

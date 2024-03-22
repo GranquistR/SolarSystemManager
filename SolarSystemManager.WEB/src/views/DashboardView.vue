@@ -21,9 +21,13 @@
         <template #title> Check out our user-made Solar Systems! </template>
         <template #subtitle> Set your Solar Systems to public to be viewable here. </template>
         <template #content>
-          <DataTable :value="solarSystems">
+          <DataTable
+            selectionMode="single"
+            :value="solarSystems"
+            @row-click="(row) => ViewerGoTo(row.data.systemId)"
+          >
             <Column field="systemId" header="ID"></Column>
-            <column field="ownerId" header="Owner ID"></column>
+            <Column field="ownerId" header="Owner ID"></Column>
             <Column field="systemName" header="Name"></Column>
             <Column field="systemVisibility" header="Privacy"></Column>
           </DataTable>
@@ -42,12 +46,9 @@ import Column from 'primevue/column'
 import SolarSystemService from '@/services/SolarSystemService'
 import { ref } from 'vue'
 import Button from 'primevue/button'
+import router from '@/router'
 
 const solarSystems = ref<any>([])
-
-console.log('code here')
-
-//const currentSolarSystem = ref<string>('')
 
 SolarSystemService.GetPublicSolarSystems().then((response) => {
   solarSystems.value = response
@@ -55,4 +56,8 @@ SolarSystemService.GetPublicSolarSystems().then((response) => {
     solarSystem.systemVisibility = solarSystem.systemVisibility == 0 ? 'Public' : 'Private'
   })
 })
+
+function ViewerGoTo(systemId: number) {
+  router.push(`viewer/${systemId}`)
+}
 </script>

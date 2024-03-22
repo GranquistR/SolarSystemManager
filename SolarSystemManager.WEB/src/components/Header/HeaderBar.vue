@@ -41,6 +41,17 @@
 
       <!-- logged in links -->
       <div v-else class="icon-container">
+        <!-- admin page link -->
+        <RouterLink class="mr-2" to="/admin" v-if="isLoggedIn && isAdmin">
+          <Button
+            outlined
+            severity="secondary"
+            icon="pi pi-eye"
+            rounded
+            iconPos="right"
+            label="Admin"
+          ></Button>
+        </RouterLink>
         <!-- dashboard link -->
         <RouterLink class="mr-2" to="/dashboard" v-if="isLoggedIn">
           <Button
@@ -75,6 +86,8 @@ import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
 import { RouterLink } from 'vue-router'
 import SpaceBoxLogo from './SpaceBoxLogo.vue'
+import User from '@/Entities/User'
+import { inject } from 'vue'
 
 const Props = defineProps<{
   noLinks?: boolean
@@ -83,18 +96,18 @@ const Props = defineProps<{
 }>()
 
 onMounted(() => {
-  //if username and password cookies exist
-  if (document.cookie.includes('username') && document.cookie.includes('password')) {
+  let user: User | undefined = inject('currentUser')
+  if (user != undefined) {
+    username.value = user.username
+    isAdmin.value = user.role == 1 ? true : false
     isLoggedIn.value = true
-    username.value = document.cookie.split('username=')[1].split(';')[0]
   } else {
-    if (Props.requireLogin) {
-      window.location.href = '/login'
-    }
+    isLoggedIn.value = false
   }
 })
 
 const username = ref('')
+const isAdmin = ref(false)
 const isLoggedIn = ref(false)
 const scrollY = ref(0)
 

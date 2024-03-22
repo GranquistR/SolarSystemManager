@@ -4,7 +4,7 @@
     <HeaderBar require-login no-docking />
 
     <!-- Ui -->
-    <div class="w-screen h-screen absolute z-1 p-2">
+    <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
       <Button label="Recenter" @click="recenter" />
@@ -46,7 +46,7 @@ onMounted(() => {
     console.log(solarSystem.value)
   })
 
-  //resize the viewport when the window is resized
+  // resize the viewport when the window is resized
   window.addEventListener('resize', () => {
     viewport.resize(window.innerWidth, window.innerHeight)
   })

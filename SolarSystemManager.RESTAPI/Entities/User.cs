@@ -9,7 +9,6 @@ namespace SolarSystemManager.RESTAPI.Entities
         public string username { get; set; }
         public string password { get; set; }
         public Role role { get; set; }
-
         public string salt { get; set; }
     }
 

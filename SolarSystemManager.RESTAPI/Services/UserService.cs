@@ -66,7 +66,7 @@ namespace SolarSystemManager.RESTAPI.Services
                 throw new BadHttpRequestException("Username too short!");
 
             }
-            if(newAccount.password.Length < 1)
+            if(newAccount.password.Length < 7)
             {
                 throw new BadHttpRequestException("Password too short!");
             }

@@ -40,6 +40,8 @@ import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
+import encrypt from '@/services/encryption'
+
 
 const username = ref('')
 const password = ref('')

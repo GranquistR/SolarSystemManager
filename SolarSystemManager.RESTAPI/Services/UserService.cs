@@ -56,7 +56,7 @@ namespace SolarSystemManager.RESTAPI.Services
             }   
         }
 
-        public void CreateAccount(Entities.LoginRequest newAccount)
+        public void CreateAccount(Entities.User newAccount)
         {
             if (_baseRepo.GetAllUsers().Any(p => p.username == newAccount.username))
             {
@@ -72,7 +72,7 @@ namespace SolarSystemManager.RESTAPI.Services
                 throw new BadHttpRequestException("Password too short, needs at least 8 characters!");
             }
 
-            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member }, salt );
+            _baseRepo.CreateUser(new User { username = newAccount.username, password = newAccount.password, role = Role.Member, salt = newAccount.salt });
             
         }
 

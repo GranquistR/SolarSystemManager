@@ -33,4 +33,5 @@ namespace SolarSystemManager.RESTAPI.Entities
             this.password = password;
         }
     }
+
 }

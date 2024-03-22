@@ -40,7 +40,8 @@ import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
 import User from '@/Entities/UserLogin'
-import encrypt from '@/services/encryption'
+import CreateUserRequest from '@/Entities/CreateUserRequest'
+import encrypt from '@/scripts/Encryption/encryption'
 
 
 const username = ref('')
@@ -57,7 +58,7 @@ onMounted(() => {
 function Signup() {
   const salt : string = encrypt.generateSalt(8);
   const encrypted : string = encrypt.encrypt(password.value, salt)
-  LoginService.CreateAccount(new User(username.value, encrypted), salt)
+  LoginService.CreateAccount(new CreateUserRequest(username.value, encrypted, salt))
     .then((result) => {
       if (result == 'Success!') {
         isLoading.value = false

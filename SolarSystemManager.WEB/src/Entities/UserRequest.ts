@@ -1,5 +1,4 @@
-//export a class called UserLogin
-export default class User {
+export default class UserRequest {
   username: string
   password: string
 

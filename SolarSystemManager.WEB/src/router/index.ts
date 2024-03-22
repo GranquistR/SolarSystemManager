@@ -49,11 +49,24 @@ const router = createRouter({
       component: () => import('../views/SolarSystemViewerView.vue')
     },
     {
-      path: '/:catchAll(.*)',
+      path: '/notfound',
       name: 'notfound',
       component: () => import('../views/NotFoundView.vue')
+    },
+    {
+      path: '/forbidden',
+      name: 'forbidden',
+      component: () => import('../views/ForbiddenView.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/AdminView.vue')
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: '/notfound'
     }
   ]
 })
-
 export default router

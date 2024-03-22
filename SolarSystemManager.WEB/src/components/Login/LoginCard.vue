@@ -39,25 +39,17 @@ import Card from 'primevue/card'
 import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin'
-import encrypt from '@/services/encryption'
+import encrypt from '@/scripts/Encryption/encryption'
+import UserRequest from '@/Entities/UserRequest'
 
 const username = ref('')
 const password = ref('')
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
-console.log(encrypt.encrypt('admin', '27q9P4ichBbnENlEOXlaANV0ODRmZ8Qv'))
-
-onMounted(() => {
-  if (document.cookie.includes('username=')) {
-    username.value = document.cookie.split('username=')[1].split(';')[0]
-    password.value = document.cookie.split('password=')[1].split(';')[0]
-    Login()
-  }
-})
+console.log(encrypt.encrypt('password', 'zXoj2CiRYuuJfDv3sGU8dgiOHr8JCsnc'))
 
 async function Login() {
   isLoading.value = true
@@ -67,29 +59,30 @@ async function Login() {
   }
 
   try {
-    // Fetch salt asynchronously
+    // Fetch salt
     let salt = ''
     await LoginService.GetSalt(username.value).then((response) => {
       salt = response
     })
-    // Assuming salt is present in response
 
     // Encrypt password using fetched salt
     const encryptedPassword = encrypt.encrypt(password.value, salt)
 
-    // Attempt login asynchronously
-    await LoginService.Login(new User(username.value, encryptedPassword)).then((response) => {
-      if (response == 'Success!') {
-        isLoading.value = false
-        const date = new Date()
-        date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
-        document.cookie = `username=${username.value}; expires=${date}`
-        document.cookie = `password=${encryptedPassword}; expires=${date}`
-        window.location.href = '/dashboard'
-      } else {
-        failedLogin()
+    // Attempt login
+    await LoginService.Login(new UserRequest(username.value, encryptedPassword)).then(
+      (response) => {
+        if (response.success) {
+          isLoading.value = false
+          const date = new Date()
+          date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+          document.cookie = `username=${username.value}; expires=${date}`
+          document.cookie = `password=${encryptedPassword}; expires=${date}`
+          window.location.href = '/dashboard'
+        } else {
+          failedLogin()
+        }
       }
-    })
+    )
   } catch (error) {
     console.error('Error in LoginService: ', error)
     alert('Error in LoginService. Check console for details.')

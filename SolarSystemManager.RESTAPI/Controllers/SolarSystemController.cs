@@ -22,15 +22,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
             _solarSystemService = new SolarSystemService();
         }
 
-        [HttpGet]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("TestGet")]
-        public IActionResult TestGet()
-        {
-            string test = "Reach the API!!";
-            return Ok(test);
-        }
-
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("DeleteSolarSystem")]
@@ -210,7 +201,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("GetSolarSystemByID")]
         public IActionResult GetSolarSystemByID(int id)
         {
-             return Ok(_solarSystemService.GetSolarSystemByID(id));
+            try
+            {
+                return Ok(_solarSystemService.GetSolarSystemByID(id));
+            }
+            catch (BadHttpRequestException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]

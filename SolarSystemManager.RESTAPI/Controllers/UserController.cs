@@ -43,7 +43,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] LoginRequest newAccount)
+        public IActionResult CreateAccount([FromBody] User newAccount)
         {
             try
             {

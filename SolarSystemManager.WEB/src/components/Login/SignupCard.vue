@@ -39,7 +39,10 @@ import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import UserRequest from '@/Entities/UserRequest'
+import User from '@/Entities/UserLogin'
+import CreateUserRequest from '@/Entities/CreateUserRequest'
+import encrypt from '@/scripts/Encryption/encryption'
+
 
 const username = ref('')
 const password = ref('')
@@ -53,7 +56,9 @@ onMounted(() => {
 })
 
 function Signup() {
-  LoginService.CreateAccount(new UserRequest(username.value, password.value))
+  const salt : string = encrypt.generateSalt(8);
+  const encrypted : string = encrypt.encrypt(password.value, salt)
+  LoginService.CreateAccount(new CreateUserRequest(username.value, encrypted, salt))
     .then((result) => {
       if (result == 'Success!') {
         isLoading.value = false
@@ -81,4 +86,3 @@ function failed() {
   }, 2000)
 }
 </script>
-@/Entities/User

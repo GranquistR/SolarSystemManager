@@ -1,5 +1,6 @@
 import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
+import CreateUserRequest from '@/Entities/CreateUserRequest'
 
 export default class LoginService {
   static async Login(user: UserRequest) {
@@ -24,7 +25,7 @@ export default class LoginService {
       })
   }
 
-  static async CreateAccount(user: UserRequest): Promise<any> {
+  static async CreateAccount(user: CreateUserRequest): Promise<any> {
     return FetchAPIService.post('/User/CreateAccount', user)
       .then((data) => {
         return data

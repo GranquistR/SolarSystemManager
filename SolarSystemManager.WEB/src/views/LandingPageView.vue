@@ -118,7 +118,7 @@ onMounted(() => {
     solarSystemCount.value = response
   })
   LoginService.GetUserCount().then((response) => {
-    userCount.value = response
+    userCount.value = response.data
   })
 })
 

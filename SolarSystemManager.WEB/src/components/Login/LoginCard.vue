@@ -62,7 +62,8 @@ async function Login() {
     // Fetch salt
     let salt = ''
     await LoginService.GetSalt(username.value).then((response) => {
-      salt = response
+      alert(response.data)
+      salt = response.data
     })
 
     // Encrypt password using fetched salt

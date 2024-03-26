@@ -39,10 +39,8 @@ import ProgressBar from 'primevue/progressbar'
 import Message from 'primevue/message'
 import { onMounted, ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import User from '@/Entities/UserLogin'
 import CreateUserRequest from '@/Entities/CreateUserRequest'
 import encrypt from '@/scripts/Encryption/encryption'
-
 
 const username = ref('')
 const password = ref('')
@@ -56,16 +54,16 @@ onMounted(() => {
 })
 
 function Signup() {
-  const salt : string = encrypt.generateSalt(8);
-  const encrypted : string = encrypt.encrypt(password.value, salt)
+  const salt: string = encrypt.generateSalt(8)
+  const encrypted: string = encrypt.encrypt(password.value, salt)
   LoginService.CreateAccount(new CreateUserRequest(username.value, encrypted, salt))
     .then((result) => {
-      if (result == 'Success!') {
+      if (result.success) {
         isLoading.value = false
         let date = new Date()
         date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
         document.cookie = `username=${username.value}; expires=${date}`
-        document.cookie = `password=${password.value}; expires=${date}`
+        document.cookie = `password=${encrypted}; expires=${date}`
         window.location.href = '/dashboard'
       } else {
         errorMessages.value = result

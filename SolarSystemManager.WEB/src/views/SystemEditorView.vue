@@ -67,23 +67,29 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
 import Slider from 'primevue/slider'
 import Dropdown from 'primevue/dropdown'
+import SpaceObject from '@/Entities/SpaceObject'
 
 
 const currentSolarSystem = ref<any>([]);
-const objectSize = ref('');
 const deleteSpaceObject = ref('');
+
+const objectName = ref('');
 const objectType = ref('');
 const types = ref([
   "Planet", "Star"
 ]);
-const objectName = ref('');
+const objectXCoord = ref<number>(0);
+const objectYCoord = ref<number>(0);
+const objectSize = ref('');
+const objectColor = ref('')
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
   currentSolarSystem.value = response
 })
 
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(parseInt(objectSize.value), objectType.value, objectName.value)
+  SolarSystemService.AddSpaceObject(new SpaceObject(0, 22, objectName.value, objectType.value, 
+                            objectXCoord.value, objectYCoord.value, parseInt(objectSize.value), objectColor.value))
 }
 
 function RemoveSpaceObject(){

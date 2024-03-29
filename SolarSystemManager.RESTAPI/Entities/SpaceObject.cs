@@ -7,7 +7,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         /// <summary>
         /// Primary key of the space object within the database
         /// </summary>
-        public int spaceObjectID { get; set; }
+        public int? spaceObjectID { get; set; }
         /// <summary>
         /// Solar system foreign key, pulled from solar system when space object is created
         /// </summary>

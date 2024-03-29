@@ -1,4 +1,5 @@
 import FetchAPIService from './FetchAPIService'
+import SpaceObject from '@/Entities/SpaceObject'
 
 export default class SolarSystemService {
   static async GetSpaceObjects(): Promise<any> {
@@ -47,8 +48,8 @@ export default class SolarSystemService {
     })
   }
 
-  static async AddSpaceObject(size: number, type: string, name: string): Promise<any> {
-      return FetchAPIService.get(`/SolarSystem/AddSpaceObject?size=${size}&type=${type}&name=${name}`)
+  static async AddSpaceObject(object: SpaceObject): Promise<any> {
+      return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object)
   }
 
   static async RemoveSpaceObject(id: number): Promise<any> {

@@ -296,7 +296,7 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public bool AddSpaceObject(int size, string type, string name)
+        public bool AddSpaceObject(SpaceObject spaceObject)
         {
             lock (countLock)
             {
@@ -308,12 +308,12 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.CommandText = "INSERT INTO SpaceObject (SSID, Name, Type, LocationX, LocationY, Size, Color) VALUES " +
                         "(@ssid, @name, @type, @xCoord, @yCoord, @size, @color);";
                     sqlite_cmd.Parameters.AddWithValue("@ssid", 22);
-                    sqlite_cmd.Parameters.AddWithValue("@name", name);
-                    sqlite_cmd.Parameters.AddWithValue("@type", type);
-                    sqlite_cmd.Parameters.AddWithValue("@xCoord", 000);
-                    sqlite_cmd.Parameters.AddWithValue("@yCoord", 000);
-                    sqlite_cmd.Parameters.AddWithValue("@size", size);
-                    sqlite_cmd.Parameters.AddWithValue("@color", "#5DE2E7");
+                    sqlite_cmd.Parameters.AddWithValue("@name", spaceObject.objectName);
+                    sqlite_cmd.Parameters.AddWithValue("@type", spaceObject.objectType);
+                    sqlite_cmd.Parameters.AddWithValue("@xCoord", spaceObject.xCoord);
+                    sqlite_cmd.Parameters.AddWithValue("@yCoord", spaceObject.yCoord);
+                    sqlite_cmd.Parameters.AddWithValue("@size", spaceObject.objectSize);
+                    sqlite_cmd.Parameters.AddWithValue("@color", spaceObject.objectColor);
                     sqlite_cmd.ExecuteNonQuery();
                     Console.WriteLine("Add space object completed");
                     return true;

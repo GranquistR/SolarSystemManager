@@ -1,5 +1,7 @@
 using System.Data;
+using System.Drawing;
 using System.Security.Cryptography;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
@@ -29,17 +31,22 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.DeleteSolarSystem(cred, id));
+                var result = _solarSystemService.DeleteSolarSystem(cred, id);
+                if (result)
+                {
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Deleted Solar System", data = null });
+                }
+                return Ok(new Response { success = false, status = 400, message = "Failed to delete Solar System", data = null });
             }
             catch (BadHttpRequestException e)
             {
                 if (e.Message == "401")
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized);
+                    return Ok(new Response { success = false, status = 401, message = "Failed to delete Solar System", data = null });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    return Ok(new Response { success = false, status = 403, message = "Failed to delete Solar System", data = null });
                 }
             }
         }
@@ -51,17 +58,22 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.DeleteSolarSystemAdmin(cred, id));
+                var result = _solarSystemService.DeleteSolarSystemAdmin(cred, id);
+                if (result)
+                {
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Deleted Solar System", data = null });
+                }
+                return Ok(new Response { success = false, status = 400, message = "Failed to delete Solar System", data = null });
             }
             catch (BadHttpRequestException e)
             {
                 if (e.Message == "401")
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized);
+                    return Ok(new Response { success = false, status = 401, message = "Failed to delete Solar System", data = null });
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    return Ok(new Response { success = false, status = 403, message = "Failed to delete Solar System", data = null });
                 }
             }
         }
@@ -73,15 +85,16 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.GetAllPublicSolarSystems().Where(s => s.systemVisibility == Visibility.Public).OrderBy(x => x.systemName));
+                var solarSystems = _solarSystemService.GetAllPublicSolarSystems().Where(s => s.systemVisibility == Visibility.Public).OrderBy(x => x.systemName);
+                return Ok(new Response { success = true, status = 200, message = "Sucessfully Got Solar System", data = solarSystems });
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+                return Ok(new Response { success = false, status = 500, message ="Unknown Error in GetAllPublicSolarSystems", data = null });
             }
         }
 
@@ -92,19 +105,20 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.GetMySolarSystems(cred));
+                var solarSystems = _solarSystemService.GetMySolarSystems(cred);
+                return Ok(new Response { success = true, status = 200, message = "Successfully got your solar systems", data = solarSystems });
             }
             catch (BadHttpRequestException e)
             {
                 if (e.Message == "401")
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized, "Unable to validate credentials.");
+                    return Ok(new Response { success = false, status = 401, message = "Invalid credentials", data = null });
                 }
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+                return Ok(new Response { success = false, status = 500, message = "unknown Error in GetMySolarSYstems", data = null });
             }
         }
 
@@ -115,23 +129,24 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.GetAllSolarSystemsAdmin(cred));
+                var solarSystems = _solarSystemService.GetAllSolarSystemsAdmin(cred);
+                return Ok(new Response { success = true, status = 200, message = "Successfully got all solar systems", data = solarSystems });
             }
             catch (BadHttpRequestException e)
             {
                 if (e.Message == "401")
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized, "Unable to validate credentials.");
+                    return Ok(new Response { success = false, status = 401, message = "Invalid login credentials", data = null });
                 }
                 if (e.Message == "403")
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden, "You do not have access to this resource.");
+                    return Ok(new Response { success = false, status = 403, message = "You do not have access to this resource", data = null });
                 }
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in GetAllSolarSystemsAdmin", data = null });
             }
         }
 
@@ -143,15 +158,16 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.SolarSystemCount());
+                var count = _solarSystemService.SolarSystemCount();
+                return Ok(new Response { success = false, status = 200, message = "Successfully got solar system count", data = count });
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in GetSolarSystemCount", data = null });
             }
         }
 
@@ -162,15 +178,17 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.SpaceObjectCount());
+                var count = _solarSystemService.SpaceObjectCount();
+                return Ok(new Response { success = false, status = 200, message = "Successfully got space object count", data = count });
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
+
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in SolarSystemController");
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in GetSpaceObjectCount", data = null });
             }
         }
 
@@ -180,19 +198,25 @@ namespace SolarSystemManager.RESTAPI.Controllers
         public IActionResult DeleteSpaceObject([FromBody] LoginRequest cred, int id)
         {
             try
-            {
-                return Ok(_solarSystemService.DeleteSpaceObject(cred, id));
+            {   
+                var count = _solarSystemService.DeleteSpaceObject(cred, id);
+                return Ok(new Response { success = true, status = 200, message = "Successfully deleted space object", data = count });
             }
             catch (BadHttpRequestException e)
             {
                 if (e.Message == "401")
                 {
-                    return StatusCode(StatusCodes.Status401Unauthorized);
+                    return Ok(new Response { success = false, status = 401, message ="Invalid login credentials", data = null });
+
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status403Forbidden);
+                    return Ok(new Response { success = false, status = 403, message = "You are not authorized to delete space object with id: " + id, data = null });
                 }
+            }
+            catch
+            {
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in DeleteSpaceObject", data = null });
             }
         }
 
@@ -203,11 +227,16 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_solarSystemService.GetSolarSystemByID(id));
+                var solarSystem = _solarSystemService.GetSolarSystemByID(id);
+                return Ok(new Response { success = true, status = 200, message = "Successfully got solar system", data = solarSystem });
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
+            }
+            catch
+            {
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in GetSolarSystemByID", data = null });
             }
         }
 
@@ -216,7 +245,23 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("AddSpaceObject")]
         public IActionResult AddSpaceObject(int size, string type, string name)
         {
-            return Ok(_solarSystemService.AddSpaceObject(size, type, name));
+            try
+            {
+                var result = _solarSystemService.AddSpaceObject(size, type, name);
+                if (result)
+                {
+                    return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = null });
+                }
+                return Ok(new Response { success = false, status = 400, message = "Failed to add space object", data = null });
+            }
+            catch (BadHttpRequestException e)
+            {
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
+            }
+            catch
+            {
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in AddSpaceObject", data = null });
+            }
         }
 
         [HttpGet]
@@ -224,29 +269,23 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("RemoveSpaceObject")]
         public IActionResult RemoveSpaceObject(int id)
         {
-            return Ok(_solarSystemService.RemoveSpaceObject(id));
-        }
-
-        //dummy data for graphics testing
-        [HttpGet]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("GetSpaceObjects")]
-        public IActionResult GetSpaceObjects()
-        {
-            IEnumerable<SpaceObject> spaceObjects = new List<SpaceObject>
+            try
             {
-              //space object template
-              //new SpaceObject(objID, systemId, objName, objType, x, y, objSize, objColor);
-                new SpaceObject(1, 1, "Sirius A", "Star", 5, 0, 10, "18D3BC"), //two stars
-                new SpaceObject(2, 1, "Sirius B", "Star", 0, 0, 7, "25BCD6"),
-
-                new SpaceObject(3, 1, "Thor", "Planet", 15, 0, 2, "E5E21C"), //three planets
-                new SpaceObject(4, 1, "Loki", "Planet", 20, 0, 1, "1CE556"),
-                new SpaceObject(5, 1, "Odin", "Planet", 25, 0, 3, "2F1CE5")
-            };
-
-            return Ok(spaceObjects);
+                var result = _solarSystemService.RemoveSpaceObject(id);
+                if (result)
+                {
+                    return Ok(new Response { success = true, status = 200, message = "Successfully removed space object", data = null });
+                }
+                return Ok(new Response { success = false, status = 400, message = "Failed to remove space object", data = null });
+            }
+            catch (BadHttpRequestException e)
+            {
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
+            }
+            catch
+            {
+                return Ok(new Response { success = false, status = 500, message = "Unknown error in RemoveSpaceObject", data = null });
+            }
         }
-
     }
 }

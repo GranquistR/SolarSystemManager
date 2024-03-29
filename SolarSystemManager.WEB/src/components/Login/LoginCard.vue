@@ -62,7 +62,6 @@ async function Login() {
     // Fetch salt
     let salt = ''
     await LoginService.GetSalt(username.value).then((response) => {
-      alert(response.data)
       salt = response.data
     })
 

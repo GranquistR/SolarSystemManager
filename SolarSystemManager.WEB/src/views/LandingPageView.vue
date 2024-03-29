@@ -64,7 +64,10 @@
       :responsiveOptions="responsiveOptions"
     >
       <template #item="slotProps">
-        <div class="border-1 surface-border border-round m-2 p-3">
+        <div
+          class="border-1 surface-border border-round m-2 p-3"
+          @click="ViewerGoTo(slotProps.data.systemId)"
+        >
           <div>
             {{ slotProps.data.systemName }}
           </div>
@@ -89,6 +92,7 @@ import { ref, onMounted } from 'vue'
 import Carousel from 'primevue/carousel'
 import ProgressSpinner from 'primevue/progressspinner'
 import InlineMessage from 'primevue/inlinemessage'
+import router from '@/router'
 
 const allSolarSystems = ref<string>('')
 const isLoading = ref(false)
@@ -102,7 +106,10 @@ onMounted(() => {
   isLoading.value = true
   SolarSystemService.GetPublicSolarSystems()
     .then((response) => {
-      allSolarSystems.value = response
+      if (response.success === false) {
+        throw new Error('Failed to load solar systems')
+      }
+      allSolarSystems.value = response.data
       isLoading.value = false
     })
     .catch((error) => {
@@ -112,10 +119,10 @@ onMounted(() => {
     })
 
   SolarSystemService.GetSpaceObjectCount().then((response) => {
-    spaceObjectCount.value = response
+    spaceObjectCount.value = response.data
   })
   SolarSystemService.GetSolarSystemCount().then((response) => {
-    solarSystemCount.value = response
+    solarSystemCount.value = response.data
   })
   LoginService.GetUserCount().then((response) => {
     userCount.value = response.data
@@ -144,6 +151,10 @@ const responsiveOptions = ref([
     numScroll: 1
   }
 ])
+
+function ViewerGoTo(systemId: number) {
+  router.push(`viewer/${systemId}`)
+}
 </script>
 
 <style scoped>

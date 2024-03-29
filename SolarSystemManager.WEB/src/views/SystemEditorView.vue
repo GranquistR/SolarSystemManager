@@ -13,9 +13,8 @@
           <Dropdown id="type" v-model="objectType" :options="types" placeholder="Select object type"></Dropdown><br>
           X coordinate: 000<br>
           Y coordinate: 000<br>
-          <label for="size">Size: </label>
+          <label for="size">Size: {{ objectSize }}</label>
           <div class="w-14rem">
-            <InputText variant="filled" id="size" v-model.number="objectSize" class="w-full mb-3" style="width: 245px" />
             <Slider v-model="objectSize" class="w-full"></Slider>
           </div><br>
           Color: #5DE2E7
@@ -71,6 +70,7 @@ import SpaceObject from '@/Entities/SpaceObject'
 
 
 const currentSolarSystem = ref<any>([]);
+const objectSize = ref<number>(0);
 const deleteSpaceObject = ref('');
 
 const objectName = ref('');
@@ -80,7 +80,6 @@ const types = ref([
 ]);
 const objectXCoord = ref<number>(0);
 const objectYCoord = ref<number>(0);
-const objectSize = ref('');
 const objectColor = ref('')
 
 SolarSystemService.GetSolarSystemByID(22).then((response) => {
@@ -89,7 +88,7 @@ SolarSystemService.GetSolarSystemByID(22).then((response) => {
 
 function AddSpaceObject(){
   SolarSystemService.AddSpaceObject(new SpaceObject(0, 22, objectName.value, objectType.value, 
-                            objectXCoord.value, objectYCoord.value, parseInt(objectSize.value), objectColor.value))
+                            objectXCoord.value, objectYCoord.value, objectSize.value, objectColor.value))
 }
 
 function RemoveSpaceObject(){

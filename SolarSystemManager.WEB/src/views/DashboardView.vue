@@ -51,7 +51,7 @@ import router from '@/router'
 const solarSystems = ref<any>([])
 
 SolarSystemService.GetPublicSolarSystems().then((response) => {
-  solarSystems.value = response
+  solarSystems.value = response.data
   solarSystems.value.forEach((solarSystem: any) => {
     solarSystem.systemVisibility = solarSystem.systemVisibility == 0 ? 'Public' : 'Private'
   })

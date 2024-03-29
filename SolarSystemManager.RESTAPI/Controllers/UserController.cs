@@ -48,15 +48,15 @@ namespace SolarSystemManager.RESTAPI.Controllers
             try
             {
                 _userService.CreateAccount(newAccount);
-                return Ok("Success!");
+                return Ok(new Response { success = true, status = 200, message = "Sucessfully Created Account", data = null });
             }
             catch (BadHttpRequestException e)
             {
-                return Ok(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Creation");
+                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
         }
 
@@ -68,15 +68,17 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_userService.GetUserSettingsData(cred));
+                var settings = _userService.GetUserSettingsData(cred);
+                return Ok(new Response { success = true, status = 200, message = "Sucessfully Retrieved Settings", data = settings });
+
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Settings");
+                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
 
 
@@ -84,26 +86,29 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")]
         [Route("GetSalts")]
-        public string GetSalt([FromBody] string username)
+        public IActionResult GetSalt([FromBody] string username)
         {
             try
             {
                 string salt = _userService.GetSalty(username);
                 if (salt != null)
                 {
-                    return salt;
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Retrieved Salt", data = salt });
                 }
-                return "Invalid username or password!";
+                else
+                {
+                    throw new BadHttpRequestException("Invalid username!");
+                }
             }
             catch (BadHttpRequestException e)
             {
                 // Handle the exception if necessary
-                return e.Message;
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
-            catch (Exception ex)
+            catch
             {
                 // Handle other exceptions if necessary
-                return "An error occurred: " + ex.Message;
+                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
         }
 
@@ -114,15 +119,17 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                return Ok(_userService.UserCount());
+                var count = _userService.UserCount();
+                return Ok(new Response { success = true, status = 200, message = "Sucessfully Retrieved User Count", data = count });
+
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController Count");
+                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
         }
 
@@ -134,15 +141,15 @@ namespace SolarSystemManager.RESTAPI.Controllers
             try
             {
                 _userService.ChangeUserName(cred, newUN);
-                return Ok("Success!");
+                return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Username", data = null });
             }
             catch (BadHttpRequestException e)
             {
-                return BadRequest(e.Message);
+                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error in UserController");
+                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
         }
        

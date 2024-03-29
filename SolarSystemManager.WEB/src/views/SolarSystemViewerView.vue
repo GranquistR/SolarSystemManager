@@ -41,7 +41,7 @@ onMounted(() => {
 
   // Gets and draws the solar system
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
-    solarSystem.value = response
+    solarSystem.value = response.data
     graphics.DrawSolarSystem(solarSystem)
     console.log(solarSystem.value)
   })

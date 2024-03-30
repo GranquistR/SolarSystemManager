@@ -24,7 +24,7 @@ export default class gGraphics {
     //for every object in the solar system
     solarSystem.value.spaceObjects.forEach((element: any) => {
       //sets the sprite
-      const sprite = Sprite.from('/src/assets/Images/sprites/sun2.png')
+      const sprite = Sprite.from('/src/assets/Images/sprites/gasPlanet.png')
       //sets the sprite properties
       sprite.anchor.set(0.5)
       sprite.scale.set(element.objectSize * (1 / 512), element.objectSize * (1 / 512))

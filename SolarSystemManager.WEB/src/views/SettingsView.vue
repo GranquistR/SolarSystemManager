@@ -5,7 +5,13 @@
       <template #header> </template>
       <template #title>Hello, {{ username }} </template>
       <template #subtitle>User type: {{ userType }}</template>
-      <template #content> <Button label="Logout" class="mt-3" @click="logout"></Button> </template>
+      <template #content> 
+        <p>
+        <Button label="Logout" class="mt-3" @click="logout"></Button> 
+        <br />
+        <SettingsModel param-to-edit="username"></SettingsModel>
+        </p>
+      </template>
       <template #footer> </template>
     </Card>
   </div>
@@ -18,6 +24,7 @@ import UserRequest from '@/Entities/UserRequest'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import { ref, onMounted } from 'vue'
+import SettingsModel from '@/components/Settings/SettingsModel.vue'
 
 const username = ref<string>('')
 const userType = ref<string>('')

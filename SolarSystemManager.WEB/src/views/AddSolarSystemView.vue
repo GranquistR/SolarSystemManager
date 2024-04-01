@@ -35,13 +35,23 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import ToggleButton from 'primevue/togglebutton'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
+import SolarSystemService from '@/services/SolarSystemService'
+import type User from '@/Entities/User'
 
 const name = ref('')
 const isPrivate = ref(false)
 
+let user: User | undefined = inject('currentUser')
+
 function Create() {
-    
+  SolarSystemService.CreateSolarSystem(name.value, isPrivate.value, user)
+    .then(() => {
+      console.log('Solar System created')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
 }
 </script>
 <style scoped>

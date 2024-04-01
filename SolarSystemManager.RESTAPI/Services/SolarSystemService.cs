@@ -77,14 +77,15 @@ namespace SolarSystemManager.RESTAPI.Services
             return true;
         }
 
-        public bool CreateSolarSystem(NewSolarSystem newSystem,Entities.LoginRequest cred)
+        public int CreateSolarSystem(NewSolarSystem newSystem,Entities.LoginRequest cred)
         {
             User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
 
             SolarSystem solarSystem = new SolarSystem(-1, temp.userID, newSystem.systemName, newSystem.systemVisibility);
 
-            _baseRepo.AddSolarSystem(solarSystem);
-            return true;
+            var id = _baseRepo.AddSolarSystem(solarSystem);
+            return id;
+
         }
         public int SolarSystemCount()
         {

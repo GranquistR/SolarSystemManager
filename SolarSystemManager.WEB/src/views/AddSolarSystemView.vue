@@ -27,31 +27,57 @@
         </div>
       </div>
     </template>
+    <template #footer>
+      <transition-group name="p-message" tag="div">
+        <Message severity="error" :closable="false" v-if="hasFailed">
+          Failed to create solar system, Try again later!
+        </Message>
+      </transition-group>
+    </template>
   </Card>
 </template>
 <script setup lang="ts">
-import Button from 'primevue/button'
+//components
 import HeaderBar from '@/components/Header/HeaderBar.vue'
+import Button from 'primevue/button'
 import ToggleButton from 'primevue/togglebutton'
 import Card from 'primevue/card'
 import InputText from 'primevue/inputtext'
+import Message from 'primevue/message'
+//vue
 import { inject, ref } from 'vue'
+import router from '@/router'
+//services
 import SolarSystemService from '@/services/SolarSystemService'
+//types
 import type User from '@/Entities/User'
 
 const name = ref('')
 const isPrivate = ref(false)
+const hasFailed = ref(false)
 
 let user: User | undefined = inject('currentUser')
 
 function Create() {
-  SolarSystemService.CreateSolarSystem(name.value, isPrivate.value, user)
-    .then(() => {
-      console.log('Solar System created')
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+  if (user == undefined) {
+    router.push('/login')
+  } else {
+    SolarSystemService.CreateSolarSystem(name.value, isPrivate.value, user)
+      .then((response) => {
+        console.log(response)
+        if (response.success === false) {
+          hasFailed.value = true
+          setTimeout(() => {
+            hasFailed.value = false
+          }, 2000)
+        } else {
+          router.push('/viewer/' + response.data)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 }
 </script>
 <style scoped>

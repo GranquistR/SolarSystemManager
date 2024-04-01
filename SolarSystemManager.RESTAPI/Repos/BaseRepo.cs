@@ -291,7 +291,7 @@ namespace SolarSystemManager.RESTAPI.Repos
             }
         }
 
-        public bool AddSolarSystem(SolarSystem newSystem)
+        public int AddSolarSystem(SolarSystem newSystem)
         {
             lock (countLock)
             {
@@ -304,7 +304,11 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@name", newSystem.systemName);
                     sqlite_cmd.Parameters.AddWithValue("@visibility", (int)newSystem.systemVisibility);
                     sqlite_cmd.ExecuteNonQuery();
-                    return true;
+
+                    sqlite_cmd.CommandText = "SELECT last_insert_rowid();";
+                    int newId = Convert.ToInt32(sqlite_cmd.ExecuteScalar());
+
+                    return newId;
                 }
                 finally
                 {

@@ -86,9 +86,9 @@ namespace SolarSystemManager.RESTAPI.Controllers
             try
             {
                 var result = _solarSystemService.CreateSolarSystem(solarSystemRequest.solarSystem, solarSystemRequest.credentials);
-                if (result)
+                if (result != null)
                 {
-                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Created Solar System", data = null });
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Created Solar System", data = result });
                 }
                 return Ok(new Response { success = false, status = 400, message = "Failed to create Solar System", data = null });
             }

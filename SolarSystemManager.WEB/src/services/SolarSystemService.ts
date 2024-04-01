@@ -56,12 +56,12 @@ export default class SolarSystemService {
     })
   }
 
-  static async CreateSolarSystem(
-    systemName: string,
-    systemVisibility: number,
-    user: User
-  ): Promise<any> {
-    const data = new CreateSolarSystemRequest(systemName, systemVisibility, user)
+  static async CreateSolarSystem(systemName: string, isPrivate: boolean, user: User): Promise<any> {
+    let visibility = 0
+    if (isPrivate) {
+      visibility = 1
+    }
+    const data = new CreateSolarSystemRequest(systemName, visibility, user)
     return FetchAPIService.post('/SolarSystem/CreateSolarSystem', data).then((data) => {
       return JSON.parse(data)
     })

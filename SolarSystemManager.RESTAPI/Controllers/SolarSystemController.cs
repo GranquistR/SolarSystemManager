@@ -243,11 +243,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("AddSpaceObject")]
-        public IActionResult AddSpaceObject(SpaceObject spaceObject)
+        public IActionResult AddSpaceObject([FromBody] SpaceObject spaceObject)
         {
             try
             {
-                var result = _solarSystemService.AddSpaceObject(size, type, name);
+                var result = _solarSystemService.AddSpaceObject(spaceObject);
                 if (result)
                 {
                     return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = null });

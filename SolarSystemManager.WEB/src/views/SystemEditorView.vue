@@ -1,10 +1,10 @@
 <template>
   <HeaderBar require-login></HeaderBar>
   <div>Editor</div>
-  <div> Welcome to {{ currentSolarSystem.systemName }} </div>
+  <div> Welcome to {{ currentSolarSystem.data.systemName }} </div>
   <div class="flex-column flex w-9">
     <Card class="mb-4">
-      <template #title>Add an object to {{currentSolarSystem.systemName}}</template>
+      <template #title>Add an object to {{currentSolarSystem.data.systemName}}</template>
       <template #content>
         <div>
           <label for="objectName">Object Name: </label>
@@ -15,18 +15,18 @@
           Y coordinate: 000<br>
           <label for="size">Size: {{ objectSize }}</label>
           <div class="w-14rem">
-            <Slider v-model="objectSize" class="w-full"></Slider>
+            <Slider id="size" v-model="objectSize" class="w-full"></Slider>
           </div><br>
           Color: #5DE2E7
         </div>
         <Button @click="AddSpaceObject">Add Object</Button>
       </template>
     </Card>
-  </div>
+  </div>-->
 
   <div class="flex-column flex w-9">
     <Card class="mb-4">
-      <template #title>Remove an object from {{currentSolarSystem.systemName}}</template>
+      <template #title>Remove an object from {{currentSolarSystem.data.systemName}}</template>
       <template #content>
         <div>
           <label for="removeID">Object ID: </label>
@@ -41,7 +41,7 @@
     <Card class="mb-4">
       <template #title>Objects in this solar system</template>
       <template #content>
-        <DataTable :value="currentSolarSystem.spaceObjects">
+        <DataTable :value="currentSolarSystem.data.spaceObjects">
           <Column field="spaceObjectID" header="Database ID"></Column><!--For testing purposes only-->
           <Column field="objectName" header="Name"></Column>
           <Column field="objectType" header="Type"></Column>
@@ -70,8 +70,9 @@ import SpaceObject from '@/Entities/SpaceObject'
 
 
 const currentSolarSystem = ref<any>([]);
-const objectSize = ref<number>(0);
 const deleteSpaceObject = ref('');
+
+const objectSize = ref<number>(0);
 
 const objectName = ref('');
 const objectType = ref('');

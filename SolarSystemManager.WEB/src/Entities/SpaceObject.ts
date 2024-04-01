@@ -20,5 +20,6 @@ export default class SpaceObject {
         this.yCoord = yCoord;
         this.objectSize = objectSize;
         this.objectColor = objectColor;
+       
     }
 }

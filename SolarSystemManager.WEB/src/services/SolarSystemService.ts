@@ -42,7 +42,13 @@ export default class SolarSystemService {
   }
 
   static async AddSpaceObject(object: SpaceObject): Promise<any> {
-      return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object)
+      return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object).then((data) => {
+          return JSON.parse(data);
+      })
+      .catch((error) => {
+          alert('Error in AddSpaceObject. Check console for details.')
+          console.error('Error in AddSpaceObject: ', error)
+      })
   }
 
   static async RemoveSpaceObject(id: number): Promise<any> {

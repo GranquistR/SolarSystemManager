@@ -29,7 +29,12 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
     if (response.success) {
       app.provide(
         'currentUser',
-        new User(response.data.userID, response.data.username, response.data.role)
+        new User(
+          response.data.userID,
+          response.data.username,
+          response.data.role,
+          response.data.password
+        )
       )
     } else {
       document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`

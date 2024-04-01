@@ -136,21 +136,21 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangeUsername")]
-        public IActionResult ChangeUsername([FromBody] LoginRequest cred, string newUN)
+        public IActionResult ChangeUsername([FromBody] ChangeUsernameRequest cred)
         {
-            try
-            {
-                _userService.ChangeUserName(cred, newUN);
+            //try
+            //{
+                _userService.ChangeUserName(cred);
                 return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Username", data = null });
-            }
-            catch (BadHttpRequestException e)
-            {
-                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
-            }
-            catch
-            {
-                return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
-            }
+            //}
+            //catch (BadHttpRequestException e)
+            //{
+            //    return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
+            //}
+            //catch
+            //{
+            //    return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
+            //}
         }
        
     }

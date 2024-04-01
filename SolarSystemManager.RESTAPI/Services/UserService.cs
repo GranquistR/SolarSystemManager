@@ -81,13 +81,15 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.Count("User");
         }
 
-        public void ChangeUserName(Entities.LoginRequest cred, string username)
+        public void ChangeUserName(Entities.ChangeUsernameRequest ncred)
         {
-            User? temp = ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
+
+            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password)); //?? throw new BadHttpRequestException("401");
 
             if(temp != null)
             {
-                temp.username = username;
+                temp.username = ncred.newUsername;
                 _baseRepo.ModifyUser(temp);
             }
             else

@@ -66,4 +66,10 @@ export default class SolarSystemService {
       return JSON.parse(data)
     })
   }
+
+  static async GetAllSolarSystemsAdmin(user: User): Promise<any> {
+    return FetchAPIService.post('/SolarSystem/GetAllSolarSystemsAdmin', user).then((data) => {
+      return JSON.parse(data)
+    })
+  }
 }

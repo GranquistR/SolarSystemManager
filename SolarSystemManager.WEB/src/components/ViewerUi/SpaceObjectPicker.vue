@@ -12,7 +12,11 @@
     "
   >
     <Column>
-      <template #body> <img src="../../assets/Images/spacebox-logo.png" height="40px" /> </template
+      <template #body="slotProps"
+        ><SpaceObjectDisplay
+          :size="50"
+          :space-object="slotProps.data"
+        ></SpaceObjectDisplay> </template
     ></Column>
     <Column field="objectName">
       <template #body="slotProps">
@@ -50,7 +54,8 @@ import { computed, ref, watch } from 'vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import ScrollPanel from 'primevue/scrollpanel'
+import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
+
 const props = defineProps({
   solarSystem: {
     type: Object,

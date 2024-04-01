@@ -29,6 +29,7 @@ import { useRoute } from 'vue-router'
 //pixi
 import { Application, Sprite } from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
+import router from '@/router'
 
 //get the id from the route
 const route = useRoute()
@@ -41,9 +42,12 @@ onMounted(() => {
 
   // Gets and draws the solar system
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
-    solarSystem.value = response.data
-    graphics.DrawSolarSystem(solarSystem)
-    console.log(solarSystem.value)
+    if (response.success) {
+      solarSystem.value = response.data
+      graphics.DrawSolarSystem(solarSystem)
+    } else {
+      router.push('/notfound')
+    }
   })
 
   // resize the viewport when the window is resized
@@ -67,8 +71,8 @@ app.stage.addChild(backgroundSprite)
 const viewport = new Viewport({
   screenWidth: window.innerWidth,
   screenHeight: window.innerHeight,
-  worldWidth: 2000,
-  worldHeight: 2000,
+  worldWidth: 100,
+  worldHeight: 100,
   events: app.renderer.events // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 })
 //viewport settings

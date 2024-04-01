@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
 using SolarSystemManager.RESTAPI.Services;
 using System.Collections.Specialized;
+using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -152,6 +156,42 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return Ok(new Response { success = false, status = 500, message = "Unknown Server Error", data = null });
             }
         }
-       
+        [HttpPost]
+        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
+        [Route("Verify")]
+        public IActionResult VerificationProcess(uint encryptedMessage, uint publicKey, uint modulus)
+        {
+            // Decrypt the encrypted message using the public key
+            uint decryptedMessage = EncryptionModule.DecryptRSA(encryptedMessage, publicKey, modulus);
+
+            // Verify the decrypted message
+            bool verified = decryptedMessage == EncryptionModule.Encrypt256("Verification");
+
+            if (verified)
+            {
+                // Generate new key pair
+                (uint newPublicKey, uint newPrivateKey) = EncryptionModule.GenerateKeyPair(1024);
+
+                // Encrypt the new private key using the received public key and modulus
+                uint encryptedPrivateKey = EncryptionModule.EncryptRSA(newPrivateKey, publicKey, modulus);
+
+                // Prepare the response as a JSON string
+                var response = new
+                {
+                    publicKey = newPublicKey,
+                    encryptedPrivateKey = encryptedPrivateKey
+                };
+
+                // Convert the response to JSON string
+                string jsonResponse = JsonConvert.SerializeObject(response);
+
+                return jsonResponse;
+            }
+            else
+            {
+                return "Verification failed!";
+            }
+        
     }
-}
+    }
+    }

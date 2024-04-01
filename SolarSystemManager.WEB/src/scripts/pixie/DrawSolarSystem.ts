@@ -24,10 +24,10 @@ export default class gGraphics {
     //for every object in the solar system
     solarSystem.value.spaceObjects.forEach((element: any) => {
       //sets the sprite
-      const sprite = Sprite.from('/src/assets/Images/sprites/sun2.png')
+      const sprite = Sprite.from('/src/assets/Images/sprites/gasPlanet.png')
       //sets the sprite properties
       sprite.anchor.set(0.5)
-      sprite.scale.set(element.objectSize * 0.1, element.objectSize * 0.1)
+      sprite.scale.set(element.objectSize * (1 / 512), element.objectSize * (1 / 512))
       sprite.position.set(element.xCoord, element.yCoord)
       sprite.tint = element.objectColor
       sprite.filters = this.defaultFilters
@@ -46,7 +46,7 @@ export default class gGraphics {
     //origin
     const origin = Sprite.from('/src/assets/Images/sprites/center.png')
     origin.anchor.set(0.5)
-    origin.scale.set(0.3, 0.3)
+    origin.scale.set(10 / 360, 10 / 360)
     origin.position.set(0, 0)
     origin.tint = '0xFFFFFF'
     this.viewport.addChild(origin)

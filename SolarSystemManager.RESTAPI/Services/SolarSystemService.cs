@@ -76,6 +76,16 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.DeleteSpaceObject(id);
             return true;
         }
+
+        public bool CreateSolarSystem(NewSolarSystem newSystem,Entities.LoginRequest cred)
+        {
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+
+            SolarSystem solarSystem = new SolarSystem(-1, temp.userID, newSystem.systemName, newSystem.systemVisibility);
+
+            _baseRepo.AddSolarSystem(solarSystem);
+            return true;
+        }
         public int SolarSystemCount()
         {
             return _baseRepo.Count("SolarSystem");

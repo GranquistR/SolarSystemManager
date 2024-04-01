@@ -24,10 +24,18 @@
           understanding of our universe. Whether you're a budding astronomer or a seasoned space
           enthusiast, SpaceBox offers a unique, engaging, and educational experience. -->
       </p>
-      <RouterLink to="/login">
+      <RouterLink to="/login" v-if="user == undefined">
         <Button
           class="mt-4 text-700 border-300"
           label="Get Started"
+          outlined
+          severity="secondary"
+        ></Button>
+      </RouterLink>
+      <RouterLink to="/login" v-else>
+        <Button
+          class="mt-4 text-700 border-300"
+          label="Dashboard"
           outlined
           severity="secondary"
         ></Button>
@@ -118,8 +126,9 @@ import LoginService from '@/services/LoginService'
 
 //vue stuff
 import { RouterLink } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import router from '@/router'
+import type User from '@/Entities/User'
 
 const allSolarSystems = ref<string>('')
 const isLoading = ref(false)
@@ -129,14 +138,19 @@ const solarSystemCount = ref(0)
 const spaceObjectCount = ref(0)
 const userCount = ref(0)
 
+const user: User | undefined = inject('currentUser')
+
 onMounted(() => {
   isLoading.value = true
+
   SolarSystemService.GetPublicSolarSystems()
     .then((response) => {
       if (response.success === false) {
         throw new Error('Failed to load solar systems')
       }
-      allSolarSystems.value = response.data.slice(-12)
+      allSolarSystems.value = response.data
+        .filter((solarSystem: any) => solarSystem.spaceObjects.length > 3)
+        .slice(-12)
       isLoading.value = false
     })
     .catch((error) => {

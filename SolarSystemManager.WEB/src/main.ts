@@ -11,6 +11,7 @@ import PrimeVue from 'primevue/config'
 import 'primevue/resources/themes/aura-dark-green/theme.css'
 import '/node_modules/primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
+import Tooltip from 'primevue/tooltip'
 
 const app = createApp(App)
 
@@ -36,6 +37,9 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
     }
   })
 }
+
+//directives
+app.directive('tooltip', Tooltip)
 
 //begin app
 app.use(PrimeVue)

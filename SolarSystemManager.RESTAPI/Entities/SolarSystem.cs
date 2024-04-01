@@ -61,10 +61,25 @@ namespace SolarSystemManager.RESTAPI.Entities
             spaceObjects = spaceObjects.Where(s => s.spaceObjectID != objID);
         }
 
-        public enum Visibility
-        {
-            Public,
-            Private
-        }
+       
+    }
+
+    public class NewSolarSystemRequest
+    {
+       public NewSolarSystem solarSystem { get; set; }
+
+        public LoginRequest credentials { get; set; }
+    }
+
+    public class NewSolarSystem
+    {
+        public string systemName { get; set; }
+        public Visibility systemVisibility { get; set; }
+    }   
+
+    public enum Visibility
+    {
+        Public,
+        Private
     }
 }

@@ -146,9 +146,9 @@ namespace SolarSystemManager.RESTAPI.Repos
 
             #endregion
 
-            #region SolarSystemTable
+        #region SolarSystemTable
 
-            public List<SolarSystem> GetAllSolarSystems()
+        public List<SolarSystem> GetAllSolarSystems()
         {
             lock (countLock)
             {
@@ -290,6 +290,28 @@ namespace SolarSystemManager.RESTAPI.Repos
                 }
             }
         }
+
+        public bool AddSolarSystem(SolarSystem newSystem)
+        {
+            lock (countLock)
+            {
+                try
+                {
+                    sqlite_conn.Open();
+                    SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "INSERT INTO SolarSystem (OwnerID, Name, Visibility) VALUES (@ownerID, @name, @visibility);";
+                    sqlite_cmd.Parameters.AddWithValue("@ownerID", newSystem.ownerId);
+                    sqlite_cmd.Parameters.AddWithValue("@name", newSystem.systemName);
+                    sqlite_cmd.Parameters.AddWithValue("@visibility", (int)newSystem.systemVisibility);
+                    sqlite_cmd.ExecuteNonQuery();
+                    return true;
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }   
 
         #endregion
 

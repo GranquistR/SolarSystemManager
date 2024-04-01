@@ -12,7 +12,7 @@
         <template #title> Make your own Solar System</template>
         <template #subtitle> The universe is yours to explore </template>
         <template #content>
-          <RouterLink to="/editor">
+          <RouterLink to="/new">
             <Button> Create System </Button>
           </RouterLink>
         </template>

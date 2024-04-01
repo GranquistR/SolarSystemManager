@@ -21,7 +21,7 @@
 </template>
 <script setup lang="ts">
 import HeaderBar from '@/components/Header/HeaderBar.vue'
-import { inject, onBeforeMount, onMounted, ref } from 'vue'
+import { inject, onBeforeMount, ref } from 'vue'
 import User from '@/Entities/User'
 import router from '@/router'
 import SolarSystemService from '@/services/SolarSystemService'

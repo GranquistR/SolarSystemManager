@@ -1,7 +1,7 @@
 <template>
   <DataTable
     scrollable
-    scrollHeight="80vh"
+    scrollHeight="78vh"
     class="datatableNoHeader datatableNoBackground frosted pt-1"
     v-model:selection="selectedObject"
     selectionMode="single"
@@ -11,6 +11,16 @@
       })
     "
   >
+    <template #header>
+      <div class="flex flex-wrap align-items-center justify-content-between gap-2">
+        <span class="text-xl text-900 font-bold">
+          {{ solarSystem.systemName }}
+          <span style="color: rgba(0, 0, 0, 0); font-size: 70%">
+            {{ 'ID:' + solarSystem.systemId }}
+          </span>
+        </span>
+      </div>
+    </template>
     <Column>
       <template #body="slotProps"
         ><SpaceObjectDisplay

@@ -22,7 +22,7 @@ export default class gGraphics {
   DrawSolarSystem(solarSystem: any) {
     this.ClearSolarSystem()
     //for every object in the solar system
-    solarSystem.value.spaceObjects.forEach((element: any) => {
+    solarSystem.spaceObjects.forEach((element: any) => {
       //sets the sprite
       const sprite = Sprite.from('/src/assets/Images/sprites/gasPlanet.png')
       //sets the sprite properties

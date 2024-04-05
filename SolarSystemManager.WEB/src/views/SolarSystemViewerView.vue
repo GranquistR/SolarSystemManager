@@ -7,7 +7,11 @@
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
-      <AddSpaceObject :system="solarSystem"></AddSpaceObject>
+      <AddSpaceObject
+        ref="addSpaceObject"
+        :system="solarSystem"
+        :graphics="graphics"
+      ></AddSpaceObject>
       <br /><Button label="Recenter" @click="recenter" />
     </div>
 
@@ -38,6 +42,7 @@ const route = useRoute()
 const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
+const addSpaceObject = ref()
 
 onMounted(() => {
   //mounts the pixi app
@@ -47,7 +52,7 @@ onMounted(() => {
   SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
     if (response.success) {
       solarSystem.value = response.data
-      graphics.DrawSolarSystem(solarSystem)
+      graphics.DrawSolarSystem(solarSystem.value)
     } else {
       router.push('/notfound')
     }
@@ -83,6 +88,10 @@ viewport.drag({}).decelerate({ friction: 0.95 }).pinch({}).wheel({})
 viewport.fit()
 viewport.moveCenter(0, 0)
 
+viewport.on('clicked', function (e) {
+  addSpaceObject.value.selectPosition(e.world)
+})
+
 //add the viewport to the app
 app.stage.addChild(viewport)
 const graphics = new Graphics(viewport)
@@ -110,7 +119,7 @@ watch(selectedObject, (newValue) => {
 //updates graphics after every change to solarSystems
 watch(solarSystem.value, (newValue) => {
   if (newValue != null) {
-    graphics.DrawSolarSystem(solarSystem)
+    graphics.DrawSolarSystem(solarSystem.value)
   }
 })
 

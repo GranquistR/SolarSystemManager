@@ -14,10 +14,7 @@
   />
 </template>
 <script setup lang="ts">
-import { Application, Sprite } from 'pixi.js'
-import { onMounted } from 'vue'
-
-const props = defineProps<{
+defineProps<{
   spaceObject: any
   size: number
 }>()

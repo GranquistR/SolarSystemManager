@@ -27,6 +27,10 @@ body {
 }
 /* disables background of vue prime data tables */
 /* unselected color */
+
+.datatableNoBackground.p-datatable .p-datatable-header {
+  background-color: transparent;
+}
 .datatableNoBackground.p-datatable .p-datatable-tbody > tr {
   background-color: transparent;
 }

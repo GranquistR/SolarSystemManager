@@ -11,6 +11,7 @@ import PrimeVue from 'primevue/config'
 import 'primevue/resources/themes/aura-dark-green/theme.css'
 import '/node_modules/primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
+import Tooltip from 'primevue/tooltip'
 
 const app = createApp(App)
 
@@ -28,7 +29,12 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
     if (response.success) {
       app.provide(
         'currentUser',
-        new User(response.data.userID, response.data.username, response.data.role)
+        new User(
+          response.data.userID,
+          response.data.username,
+          response.data.role,
+          response.data.password
+        )
       )
     } else {
       document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
@@ -36,6 +42,9 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
     }
   })
 }
+
+//directives
+app.directive('tooltip', Tooltip)
 
 //begin app
 app.use(PrimeVue)

@@ -288,7 +288,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("RemoveSpaceObject")]
         public IActionResult RemoveSpaceObject(int id)

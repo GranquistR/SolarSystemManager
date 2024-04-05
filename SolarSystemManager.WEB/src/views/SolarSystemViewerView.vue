@@ -7,7 +7,8 @@
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
-      <Button label="Recenter" @click="recenter" />
+      <AddSpaceObject :system="solarSystem"></AddSpaceObject>
+      <br /><Button label="Recenter" @click="recenter" />
     </div>
 
     <!-- PIXI APP -->
@@ -21,6 +22,7 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
+import AddSpaceObject from '@/components/ViewerUi/AddSpaceObject.vue'
 
 //vue stuff
 import { ref, onMounted, watch } from 'vue'
@@ -36,6 +38,7 @@ const route = useRoute()
 const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
+
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)

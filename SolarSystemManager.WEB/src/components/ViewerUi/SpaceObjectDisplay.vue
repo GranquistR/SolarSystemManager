@@ -20,7 +20,4 @@ defineProps<{
 }>()
 </script>
 <style scoped>
-img {
-  filter: opacity(0.7) drop-shadow(0 0 0px #c60532) drop-shadow(0 0 0px #c60532) contrast(1.3);
-}
 </style>

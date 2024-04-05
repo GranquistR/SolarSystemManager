@@ -1,23 +1,23 @@
 <template>
-    <Button label="paramToEdit" class="mt-3" @click="visible = true"></Button>
+    <Button label={{paramToEdit}} class="mt-3" @click="visible = true">{{paramToEdit}}</Button>
 
     <Dialog v-model:visible="visible" modal header="Edit Profile" :style="{ width: '25rem' }">
         <span class="p-text-secondary block mb-5">Update your information.</span>
         <div class="flex align-items-center gap-3 mb-3">
             <label for="username" class="font-semibold w-6rem">Username</label>
-            <InputText variant="filled" id="username" style="width: 245px" v-model="oldUN"/>
+            <InputText id="username" class="flex-auto" autocomplete="off" v-model="oldUN"/>
         </div>
         <div class="flex align-items-center gap-3 mb-5">
             <label for="password" class="font-semibold w-6rem">Password</label>
             <InputText id="password" class="flex-auto" autocomplete="off" v-model="oldP" />
         </div>
-        <div class="flex align-items-center gap-3 mb-3">
+        <div class="flex align-items-center gap-3 mb-3" v-if:visible="!passVisible">
             <label for="new username" class="font-semibold w-6rem">New Username</label>
             <InputText id="username" class="flex-auto" autocomplete="off" v-model="newUN"/>
         </div>
-        <div class="flex align-items-center gap-3 mb-5">
+        <div class="flex align-items-center gap-3 mb-5" v-if:visible="passVisible">
             <label for="new password" class="font-semibold w-6rem">New Password</label>
-            <InputText id="new password" class="flex-auto" autocomplete="off" />
+            <InputText id="new password" class="flex-auto" autocomplete="off" v-model="newUN"/>
         </div>
         <div class="flex justify-content-end gap-2">
             <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, inject } from "vue";
+import { ref, onMounted } from "vue";
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import ChangeUsername from '@/services/LoginService'
@@ -41,27 +41,42 @@ const oldUN = ref('')
 const oldP = ref('')
 
 const visible = ref(false)
+let passVisible = false
 
-  const props = defineProps< {
+onMounted(() => {
+    passVisible = props.paramToEdit == "Change Password"
+})
+
+const props = defineProps< {
     paramToEdit: string
- }>()
+}>()
 
- async function changeParam(){
-    if (oldUN.value != '' && oldUN.value != '' && newUN.value != '') {
-        let salt = ''
-        await LoginService.GetSalt(oldUN.value).then((response) => {
-            salt = response.data
-        })
+async function changeParam(){
 
-        // Encrypt password using fetched salt
-        const encryptedPassword = encrypt.encrypt(oldP.value, salt)
-        console.log(encryptedPassword)
+if (oldUN.value != '' && oldUN.value != '' ) {
+    let salt = ''
+    await LoginService.GetSalt(oldUN.value).then((response) => {
+        salt = response.data
+    })
+
+    // Encrypt password using fetched salt
+    const encryptedPassword = encrypt.encrypt(oldP.value, salt)
+    console.log(encryptedPassword)
+    if(passVisible) {
+        const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
+        LoginService.ChangePassword( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newEncryptedPassword))
+    }
+    else {
         LoginService.ChangeUsername( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newUN.value))
     }
+    visible.value = false;
+}
     else {
         console.error('Error in LoginService: ', Error)
         alert('Error in LoginService. Check console for details.')
     }
- }
+}
+
+
 
 </script>

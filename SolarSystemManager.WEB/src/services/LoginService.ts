@@ -69,5 +69,16 @@ export default class LoginService {
         console.error('Error in ChangeUsername: ', error)
       })
   }
+
+  static async ChangePassword(userdata: ChangeUsernameRequest): Promise<any> {
+    return FetchAPIService.post('/User/ChangePassword', userdata)
+      .then((data) => {
+        return JSON.parse(data)
+      })
+      .catch((error) => {
+        alert('Error in LoginService. Check console for details.')
+        console.error('Error in ChangeUsername: ', error)
+      })
+  }
 }
 

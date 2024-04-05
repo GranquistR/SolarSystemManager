@@ -97,5 +97,22 @@ namespace SolarSystemManager.RESTAPI.Services
                 throw new BadHttpRequestException("No user found with given credentials");
             }
         }
+
+        public void ChangePassword(Entities.ChangeUsernameRequest ncred)
+        {
+            //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
+
+            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password)); //?? throw new BadHttpRequestException("401");
+
+            if (temp != null)
+            {
+                temp.password = ncred.newUsername;
+                _baseRepo.ModifyUser(temp);
+            }
+            else
+            {
+                throw new BadHttpRequestException("No user found with given credentials");
+            }
+        }
     }
 }

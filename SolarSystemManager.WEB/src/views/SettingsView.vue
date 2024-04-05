@@ -9,7 +9,9 @@
         <p>
         <Button label="Logout" class="mt-3" @click="logout"></Button> 
         <br />
-        <SettingsModel param-to-edit="username"></SettingsModel>
+        <SettingsModel :paramToEdit="'Change Username'"></SettingsModel>
+        <br />
+        <SettingsModel :paramToEdit="'Change Password'"></SettingsModel>
         </p>
       </template>
       <template #footer> </template>
@@ -25,24 +27,28 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import { ref, onMounted } from 'vue'
 import SettingsModel from '@/components/Settings/SettingsModel.vue'
+import User from '@/Entities/User'
+import { inject } from 'vue'
 
 const username = ref<string>('')
 const userType = ref<string>('')
 
 onMounted(() => {
-  if (document.cookie.includes('username=')) {
-    const _username = document.cookie.split('username=')[1].split(';')[0]
-    const _password = document.cookie.split('password=')[1].split(';')[0]
+  let user: User | undefined = inject('currentUser')
 
-    LoginService.GetUserSettings(new UserRequest(_username, _password))
-      .then((result) => {
-        username.value = result.username
-        userType.value = result.role === 1 ? 'Administrator' : 'Member'
-      })
-      .catch((error: any) => {
-        console.error('Error:', error)
-      })
+  if (user != undefined) {
+    username.value = user.username
+    userType.value = user.role == 1 ? 'Administrator' : 'Member'
   }
+    // LoginService.GetUserSettings(new UserRequest(_username, _password))
+    //   .then((result) => {
+    //     username.value = result.username
+    //     userType.value = result.role === 1 ? 'Administrator' : 'Member'
+    //   })
+    //   .catch((error: any) => {
+    //     console.error('Error:', error)
+    //   })
+  
 })
 
 function logout() {

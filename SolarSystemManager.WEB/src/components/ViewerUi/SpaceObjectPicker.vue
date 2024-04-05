@@ -52,6 +52,7 @@
             icon="pi pi-trash"
             rounded
             iconPos="right"
+            @click="RemoveSpaceObject"
           ></Button>
         </div>
       </template>
@@ -65,6 +66,7 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
+import SolarSystemService from '@/services/SolarSystemService'
 
 const props = defineProps({
   solarSystem: {
@@ -88,6 +90,10 @@ watch(
   },
   { immediate: true }
 )
+
+function RemoveSpaceObject(){ //only kind of works, deletes selected space object?
+  SolarSystemService.RemoveSpaceObject(selectedObject.value.spaceObjectID)
+}
 </script>
 <style scoped>
 .frosted {

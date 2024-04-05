@@ -1,5 +1,6 @@
 import CreateSolarSystemRequest from '@/Entities/CreateSolarSystemRequest'
 import FetchAPIService from './FetchAPIService'
+import SpaceObject from '@/Entities/SpaceObject'
 import type User from '@/Entities/User'
 
 export default class SolarSystemService {
@@ -42,16 +43,18 @@ export default class SolarSystemService {
     })
   }
 
-  static async AddSpaceObject(size: number, type: string, name: string): Promise<any> {
-    return FetchAPIService.get(
-      `/SolarSystem/AddSpaceObject?size=${size}&type=${type}&name=${name}`
-    ).then((data) => {
-      return JSON.parse(data)
-    })
+  static async AddSpaceObject(object: SpaceObject): Promise<any> {
+      return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object).then((data) => {
+          return JSON.parse(data);
+      })
+      .catch((error) => {
+          alert('Error in AddSpaceObject. Check console for details.')
+          console.error('Error in AddSpaceObject: ', error)
+      })
   }
 
   static async RemoveSpaceObject(id: number): Promise<any> {
-    return FetchAPIService.get(`/SolarSystem/RemoveSpaceObject?id=${id}`).then((data) => {
+    return FetchAPIService.post(`/SolarSystem/RemoveSpaceObject`, id).then((data) => {
       return JSON.parse(data)
     })
   }

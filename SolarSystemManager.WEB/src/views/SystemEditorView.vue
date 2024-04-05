@@ -11,18 +11,58 @@
           <InputText variant="filled" id="objectName" v-model="objectName" style="width: 245px"/><br>
           <label for="type">Object type: </label>
           <Dropdown id="type" v-model="objectType" :options="types" placeholder="Select object type"></Dropdown><br>
-          X coordinate: 000<br>
-          Y coordinate: 000<br>
+          <label for="xCoord">X coordinate: {{ objectXCoord }}</label>
+          <div class="w-14rem">
+            <Slider id="xCoord" v-model="objectXCoord" class="w-full"></Slider>
+          </div><br>
+          <label for="yCoord">Y coordinate: {{ objectYCoord }}</label>
+          <div class="w-14rem">
+            <Slider id="yCoord" v-model="objectYCoord" class="w-full"></Slider>
+          </div><br>
           <label for="size">Size: {{ objectSize }}</label>
           <div class="w-14rem">
             <Slider id="size" v-model="objectSize" class="w-full"></Slider>
           </div><br>
-          Color: #5DE2E7
+          <ColorPicker v-model="objectColor" />
+          {{ objectColor }}
         </div>
         <Button @click="AddSpaceObject">Add Object</Button>
       </template>
     </Card>
-  </div>-->
+  </div>
+
+  <Button @click="toggle">Create</Button>
+  <OverlayPanel ref="op">
+  <div class="p-2">
+        <h3>Add an object to {{currentSolarSystem.data.systemName}}</h3>
+        <div class="flex flex-column row-gap-2">
+
+          <label for="objectName">Name</label>
+          <InputText variant="filled" id="objectName" v-model="objectName" style="width: 245px"/>
+
+          <label for="type">Type</label>
+          <Dropdown id="type" v-model="objectType" :options="types" placeholder="Select..."></Dropdown>
+
+          <div class="flex flex-column w-14rem row-gap-4">
+            <label for="xCoord">X coordinate: {{ objectXCoord }}</label>
+            <Slider v-tooltip="'Why does tooltip hate me'" id="xCoord" v-model="objectXCoord" class="w-14rem"></Slider>
+
+            <label for="yCoord">Y coordinate: {{ objectYCoord }}</label>
+            <Slider id="yCoord" v-model="objectYCoord" class="w-14rem"></Slider>
+
+            <label for="size">Size: {{ objectSize }}</label>
+            <Slider id="size" v-model="objectSize" class="w-14rem"></Slider>
+      
+            <div>
+              <label for="color"> Color </label>
+              <ColorPicker id="color" v-model="objectColor" />
+            </div>
+          </div>
+          <Button label="Save" icon="pi pi-check" @click="AddSpaceObject"/>
+        </div>
+  </div>
+  </OverlayPanel>
+
 
   <div class="flex-column flex w-9">
     <Card class="mb-4">
@@ -67,13 +107,13 @@ import InputText from 'primevue/inputtext'
 import Slider from 'primevue/slider'
 import Dropdown from 'primevue/dropdown'
 import SpaceObject from '@/Entities/SpaceObject'
-
+import ColorPicker from 'primevue/colorpicker'
+import OverlayPanel from 'primevue/overlaypanel'
 
 const currentSolarSystem = ref<any>([]);
 const deleteSpaceObject = ref('');
 
 const objectSize = ref<number>(0);
-
 const objectName = ref('');
 const objectType = ref('');
 const types = ref([
@@ -81,18 +121,24 @@ const types = ref([
 ]);
 const objectXCoord = ref<number>(0);
 const objectYCoord = ref<number>(0);
-const objectColor = ref('')
+const objectColor = ref('ff0000');
 
-SolarSystemService.GetSolarSystemByID(22).then((response) => {
+const op = ref();
+
+SolarSystemService.GetSolarSystemByID(19).then((response) => {
   currentSolarSystem.value = response
 })
 
 function AddSpaceObject(){
-  SolarSystemService.AddSpaceObject(new SpaceObject(0, 22, objectName.value, objectType.value, 
+  SolarSystemService.AddSpaceObject(new SpaceObject(0, 19, objectName.value, objectType.value, 
                             objectXCoord.value, objectYCoord.value, objectSize.value, objectColor.value))
 }
 
 function RemoveSpaceObject(){
   SolarSystemService.RemoveSpaceObject(parseInt(deleteSpaceObject.value))
+}
+
+const toggle = (event: any) => {
+    op.value.toggle(event);
 }
 </script>

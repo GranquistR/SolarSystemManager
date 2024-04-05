@@ -307,7 +307,7 @@ namespace SolarSystemManager.RESTAPI.Repos
                     SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
                     sqlite_cmd.CommandText = "INSERT INTO SpaceObject (SSID, Name, Type, LocationX, LocationY, Size, Color) VALUES " +
                         "(@ssid, @name, @type, @xCoord, @yCoord, @size, @color);";
-                    sqlite_cmd.Parameters.AddWithValue("@ssid", 22);
+                    sqlite_cmd.Parameters.AddWithValue("@ssid", spaceObject.solarSystemID);
                     sqlite_cmd.Parameters.AddWithValue("@name", spaceObject.objectName);
                     sqlite_cmd.Parameters.AddWithValue("@type", spaceObject.objectType);
                     sqlite_cmd.Parameters.AddWithValue("@xCoord", spaceObject.xCoord);

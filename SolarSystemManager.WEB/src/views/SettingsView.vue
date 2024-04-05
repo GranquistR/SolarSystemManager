@@ -57,4 +57,3 @@ function logout() {
   window.location.href = '/'
 }
 </script>
-@/Entities/User

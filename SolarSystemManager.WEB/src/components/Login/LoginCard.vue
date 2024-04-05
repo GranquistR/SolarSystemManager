@@ -49,8 +49,6 @@ const password = ref('')
 const isLoading = ref(false)
 const hasFailed = ref(false)
 
-console.log(encrypt.encrypt('password', 'zXoj2CiRYuuJfDv3sGU8dgiOHr8JCsnc'))
-
 async function Login() {
   isLoading.value = true
   if (username.value == '' || password.value == '') {

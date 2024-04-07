@@ -30,7 +30,26 @@
             <Column field="ownerId" header="Owner ID"></Column>
             <Column field="systemName" header="Name"></Column>
             <Column field="systemVisibility" header="Privacy"></Column>
+
+            <!--Delete button-->
+            <Column header="Delete">
+            <template #body="slotProps">
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="confirmDelete(slotProps.data.systemId)" />
+            </template>
+            </Column>
+            <!--End Delete button-->
           </DataTable>
+
+          <!--Delete confirmation dialog-->
+          <Dialog v-model:visible="deleteDialogVisible" :closable="false">
+          <p>Are you sure you want to delete?</p>
+          <template #footer>
+          <Button label="Cancel" icon="pi pi-times" @click="deleteDialogVisible = false" />
+          <!--TODO: Add delete function//<Button label="Yes" icon="pi pi-check" @click="SolarSystemService.deleteSolarSystem" />//-->
+          </template>
+          </Dialog>
+
+
         </template>
       </Card>
     </div>
@@ -49,6 +68,13 @@ import Button from 'primevue/button'
 import router from '@/router'
 
 const solarSystems = ref<any>([])
+const deleteDialogVisible = ref(false)
+const systemIdToDelete = ref<number | null>(null);
+
+const confirmDelete = (systemId: number) => {
+  systemIdToDelete.value = systemId;
+  deleteDialogVisible.value = true;
+};
 
 SolarSystemService.GetPublicSolarSystems().then((response) => {
   solarSystems.value = response.data

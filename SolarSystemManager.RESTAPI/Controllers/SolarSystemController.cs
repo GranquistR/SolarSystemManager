@@ -53,33 +53,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("DeleteSolarSystemAdmin")]
-        public IActionResult DeleteSolarSystemAdmin([FromBody] LoginRequest cred, int id)
-        {
-            try
-            {
-                var result = _solarSystemService.DeleteSolarSystemAdmin(cred, id);
-                if (result)
-                {
-                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Deleted Solar System", data = null });
-                }
-                return Ok(new Response { success = false, status = 400, message = "Failed to delete Solar System", data = null });
-            }
-            catch (BadHttpRequestException e)
-            {
-                if (e.Message == "401")
-                {
-                    return Ok(new Response { success = false, status = 401, message = "Failed to delete Solar System", data = null });
-                }
-                else
-                {
-                    return Ok(new Response { success = false, status = 403, message = "Failed to delete Solar System", data = null });
-                }
-            }
-        }
-
-        [HttpPost]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateSolarSystem")]
         public IActionResult CreateSolarSystem([FromBody] NewSolarSystemRequest solarSystemRequest)
         {

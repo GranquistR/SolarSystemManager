@@ -52,31 +52,29 @@ const props = defineProps< {
 }>()
 
 async function changeParam(){
+    
+    if (oldUN.value != '' && oldUN.value != '' ) {
+        let salt = ''
+        await LoginService.GetSalt(oldUN.value).then((response) => {
+            salt = response.data
+        })
 
-if (oldUN.value != '' && oldUN.value != '' ) {
-    let salt = ''
-    await LoginService.GetSalt(oldUN.value).then((response) => {
-        salt = response.data
-    })
-
-    // Encrypt password using fetched salt
-    const encryptedPassword = encrypt.encrypt(oldP.value, salt)
-    console.log(encryptedPassword)
-    if(passVisible) {
-        const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
-        LoginService.ChangePassword( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newEncryptedPassword))
+        // Encrypt password using fetched salt
+        const encryptedPassword = encrypt.encrypt(oldP.value, salt)
+        console.log(encryptedPassword)
+        if(passVisible) {
+            const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
+            LoginService.ChangePassword( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newEncryptedPassword))
+        }
+        else {
+            LoginService.ChangeUsername( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newUN.value))
+        }
+        visible.value = false;
     }
-    else {
-        LoginService.ChangeUsername( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newUN.value))
-    }
-    visible.value = false;
-}
     else {
         console.error('Error in LoginService: ', Error)
         alert('Error in LoginService. Check console for details.')
     }
+    window.location.pathname = "/login"
 }
-
-
-
 </script>

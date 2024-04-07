@@ -216,7 +216,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("DeleteSpaceObject")]
         public IActionResult DeleteSpaceObject([FromBody] LoginRequest cred, int id)
@@ -287,8 +287,8 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return Ok(new Response { success = false, status = 500, message = "Unknown error in AddSpaceObject", data = null });
             }
         }
-
-        [HttpPost]
+        
+        [HttpGet]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("RemoveSpaceObject")]
         public IActionResult RemoveSpaceObject(int id)
@@ -311,5 +311,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return Ok(new Response { success = false, status = 500, message = "Unknown error in RemoveSpaceObject", data = null });
             }
         }
+        
     }
 }

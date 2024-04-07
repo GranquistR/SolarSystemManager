@@ -108,11 +108,12 @@ namespace SolarSystemManager.RESTAPI.Services
             _baseRepo.AddSpaceObject(spaceObject);
             return true;
         }
-
+        
         public bool RemoveSpaceObject(int id)
         {
             _baseRepo.RemoveSpaceObject(id); //non secure, for front end testing only
             return true;
         }
+        
     }
 }

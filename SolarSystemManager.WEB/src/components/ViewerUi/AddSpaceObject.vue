@@ -100,7 +100,7 @@ const types = ref([
   'Icy Planet',
   'Lava Planet',
   'Crater Planet',
-  'Earthlike PLanet',
+  'Earthlike Planet',
   'Water Ringed Planet',
   'Gas Ringed Planet',
   'Icy Ringed Planet',

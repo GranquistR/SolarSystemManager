@@ -91,7 +91,8 @@ watch(
   { immediate: true }
 )
 
-function RemoveSpaceObject(){ //only kind of works, deletes selected space object?
+function RemoveSpaceObject() {
+  //only kind of works, deletes selected space object?
   SolarSystemService.RemoveSpaceObject(selectedObject.value.spaceObjectID)
 }
 </script>

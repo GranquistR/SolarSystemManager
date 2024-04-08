@@ -129,7 +129,7 @@ function RemoveSpaceObject(id: number) {
       if (data.success) {
         message.value.ShowMessage('Successfully Deleted.')
         //remove object from array
-        const index = spaceObjects.value.findIndex((x) => x.spaceObjectID === id)
+        const index = spaceObjects.value.findIndex((x: any) => x.spaceObjectID === id)
         spaceObjects.value.splice(index, 1)
       } else {
         message.value.ShowMessage('Failed to delete.', 'error')

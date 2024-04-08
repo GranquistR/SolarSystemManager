@@ -45,10 +45,9 @@
           <p>Are you sure you want to delete?</p>
           <template #footer>
           <Button label="Cancel" icon="pi pi-times" @click="deleteDialogVisible = false" />
-          <!--TODO: Add delete function//<Button label="Yes" icon="pi pi-check" @click="SolarSystemService.deleteSolarSystem" />//-->
+          <Button label="Yes" icon="pi pi-check" @click="deleteSolarSystem" />
           </template>
           </Dialog>
-
 
         </template>
       </Card>
@@ -63,9 +62,14 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import SolarSystemService from '@/services/SolarSystemService'
-import { ref } from 'vue'
 import Button from 'primevue/button'
 import router from '@/router'
+import Dialog from 'primevue/dialog'
+import { inject, ref } from 'vue'
+import type SolarSystem from '@/Entities/SolarSystem'
+import type User from '@/Entities/User'
+
+const user = inject<User | null>('currentUser', null);
 
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
@@ -86,4 +90,45 @@ SolarSystemService.GetPublicSolarSystems().then((response) => {
 function ViewerGoTo(systemId: number) {
   router.push(`viewer/${systemId}`)
 }
+
+const deleteSolarSystem = () => {
+
+  //Check if user is logged in and systemIdToDelete is not null
+  if (systemIdToDelete.value !== null && user) {
+    const userCredentials = {
+      username: user.username,
+      password: user.password,
+    };
+
+    // Call the DeleteSolarSystem function in the SolarSystemService
+    SolarSystemService.DeleteSolarSystem(userCredentials, systemIdToDelete.value)
+    
+      //Handle the response
+      //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
+      .then(response => {
+        if (response.success) {
+          solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
+      
+          //Show success message
+          console.log('Solar system deleted successfully');
+
+        } else {
+          //Show error message
+          console.error('Failed to delete solar system:', response.message);
+        }
+      })
+      .catch(error => {
+        //Show error message
+        console.error('Error while deleting solar system:', error);
+      })
+      .finally(() => {
+        //Close the dialog
+        deleteDialogVisible.value = false;
+        systemIdToDelete.value = null;
+      });
+  }
+};
+
+console.log(SolarSystemService);
+
 </script>

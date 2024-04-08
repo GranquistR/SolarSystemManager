@@ -1,4 +1,5 @@
 <template>
+  <CustomMessage ref="message"></CustomMessage>
   <DataTable
     scrollable
     scrollHeight="78vh"
@@ -30,13 +31,11 @@
     ></Column>
     <Column field="objectName">
       <template #body="slotProps">
-        <div>
-          {{ slotProps.data.objectName }}
-        </div>
+        <div>{{ slotProps.data.objectName }}</div>
       </template>
     </Column>
     <Column>
-      <template #body>
+      <template #body="slotProps">
         <div class="flex">
           <Button
             outlined
@@ -52,8 +51,31 @@
             icon="pi pi-trash"
             rounded
             iconPos="right"
-            @click="RemoveSpaceObject"
+            @click="openDeleteDialogId = slotProps.data.spaceObjectID"
           ></Button>
+
+          <Dialog
+            v-model:visible="openSesame"
+            :closable="false"
+            v-if="(slotProps.data.spaceObjectID as number) == (openDeleteDialogId as number)"
+          >
+            <template #header>
+              Are you sure you want to delete {{ slotProps.data.objectName }}
+            </template>
+            <div class="flex justify-content-center">
+              <Button
+                class="mr-2"
+                label="Cancel"
+                icon="pi pi-times"
+                @click="openDeleteDialogId = null"
+              />
+              <Button
+                label="Confirm"
+                icon="pi pi-check"
+                @click="RemoveSpaceObject(slotProps.data.spaceObjectID as number)"
+              />
+            </div>
+          </Dialog>
         </div>
       </template>
     </Column>
@@ -61,12 +83,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, inject } from 'vue'
 import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
 import SolarSystemService from '@/services/SolarSystemService'
+import type User from '@/Entities/User'
+import CustomMessage from '../CustomMessage.vue'
+import Dialog from 'primevue/dialog'
+
+const message = ref()
+
+const user: User | undefined = inject('currentUser')
+const openDeleteDialogId = ref<number | null>(null)
+const openSesame = ref(true)
 
 const props = defineProps({
   solarSystem: {
@@ -91,9 +122,20 @@ watch(
   { immediate: true }
 )
 
-function RemoveSpaceObject() {
-  //only kind of works, deletes selected space object?
-  SolarSystemService.RemoveSpaceObject(selectedObject.value.spaceObjectID)
+function RemoveSpaceObject(id: number) {
+  if (user) {
+    SolarSystemService.RemoveSpaceObject(user, id).then((data) => {
+      console.log(data)
+      if (data.success) {
+        message.value.ShowMessage('Successfully Deleted.')
+        //remove object from array
+        const index = spaceObjects.value.findIndex((x) => x.spaceObjectID === id)
+        spaceObjects.value.splice(index, 1)
+      } else {
+        message.value.ShowMessage('Failed to delete.', 'error')
+      }
+    })
+  }
 }
 </script>
 <style scoped>
@@ -106,3 +148,5 @@ function RemoveSpaceObject() {
   z-index: 990;
 }
 </style>
+
+v-model:visible="isDialogVisible"

@@ -68,10 +68,31 @@
           class="border-1 surface-border border-round m-2 p-3"
           @click="ViewerGoTo(slotProps.data.systemId)"
         >
-          <div>
+          <h3>
             {{ slotProps.data.systemName }}
+          </h3>
+
+          <div class="grid">
+            <div class="col">
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[1]" :size="50" />
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[2]" :size="60" />
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[3]" :size="40" />
+            </div>
+            <div class="col">
+              <div>
+                <span>Celestial Objects:</span>
+                {{ slotProps.data.spaceObjects.length }}
+              </div>
+              <div>
+                <span> Largest Object:</span>
+                {{
+                  slotProps.data.spaceObjects.reduce((max: any, spaceObject: any) =>
+                    max.size > spaceObject.size ? max : spaceObject
+                  ).objectName
+                }}
+              </div>
+            </div>
           </div>
-          <img src="../assets/Images/among-us-twerk.gif" width="200px" />
         </div>
       </template>
     </Carousel>
@@ -83,15 +104,21 @@
 </template>
 
 <script setup lang="ts">
+//components
 import HeaderBar from '@/components/Header/HeaderBar.vue'
-import SolarSystemService from '@/services/SolarSystemService'
-import LoginService from '@/services/LoginService'
 import Button from 'primevue/button'
-import { RouterLink } from 'vue-router'
-import { ref, onMounted } from 'vue'
 import Carousel from 'primevue/carousel'
 import ProgressSpinner from 'primevue/progressspinner'
 import InlineMessage from 'primevue/inlinemessage'
+import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
+
+//services
+import SolarSystemService from '@/services/SolarSystemService'
+import LoginService from '@/services/LoginService'
+
+//vue stuff
+import { RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import router from '@/router'
 
 const allSolarSystems = ref<string>('')
@@ -109,7 +136,7 @@ onMounted(() => {
       if (response.success === false) {
         throw new Error('Failed to load solar systems')
       }
-      allSolarSystems.value = response.data
+      allSolarSystems.value = response.data.slice(-12)
       isLoading.value = false
     })
     .catch((error) => {
@@ -211,5 +238,8 @@ p {
   border-radius: 15px;
   margin-top: 1rem;
   margin-bottom: 1rem;
+}
+span {
+  color: gray;
 }
 </style>

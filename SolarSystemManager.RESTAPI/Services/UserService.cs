@@ -85,7 +85,7 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
 
-            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password)); //?? throw new BadHttpRequestException("401");
+            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password));
 
             if(temp != null)
             {
@@ -102,7 +102,7 @@ namespace SolarSystemManager.RESTAPI.Services
         {
             //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
 
-            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password)); //?? throw new BadHttpRequestException("401");
+            User? temp = ValidateUser(new Entities.LoginRequest(ncred.username, ncred.password)); 
 
             if (temp != null)
             {

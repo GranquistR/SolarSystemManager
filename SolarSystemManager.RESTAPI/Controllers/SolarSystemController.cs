@@ -53,33 +53,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
 
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("DeleteSolarSystemAdmin")]
-        public IActionResult DeleteSolarSystemAdmin([FromBody] LoginRequest cred, int id)
-        {
-            try
-            {
-                var result = _solarSystemService.DeleteSolarSystemAdmin(cred, id);
-                if (result)
-                {
-                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Deleted Solar System", data = null });
-                }
-                return Ok(new Response { success = false, status = 400, message = "Failed to delete Solar System", data = null });
-            }
-            catch (BadHttpRequestException e)
-            {
-                if (e.Message == "401")
-                {
-                    return Ok(new Response { success = false, status = 401, message = "Failed to delete Solar System", data = null });
-                }
-                else
-                {
-                    return Ok(new Response { success = false, status = 403, message = "Failed to delete Solar System", data = null });
-                }
-            }
-        }
-
-        [HttpPost]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateSolarSystem")]
         public IActionResult CreateSolarSystem([FromBody] NewSolarSystemRequest solarSystemRequest)
         {
@@ -216,7 +189,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("DeleteSpaceObject")]
         public IActionResult DeleteSpaceObject([FromBody] LoginRequest cred, int id)
@@ -287,30 +260,8 @@ namespace SolarSystemManager.RESTAPI.Controllers
                 return Ok(new Response { success = false, status = 500, message = "Unknown error in AddSpaceObject", data = null });
             }
         }
+      
         
-        [HttpGet]
-        [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
-        [Route("RemoveSpaceObject")]
-        public IActionResult RemoveSpaceObject(int id)
-        {
-            try
-            {
-                var result = _solarSystemService.RemoveSpaceObject(id);
-                if (result)
-                {
-                    return Ok(new Response { success = true, status = 200, message = "Successfully removed space object", data = null });
-                }
-                return Ok(new Response { success = false, status = 400, message = "Failed to remove space object", data = null });
-            }
-            catch (BadHttpRequestException e)
-            {
-                return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
-            }
-            catch
-            {
-                return Ok(new Response { success = false, status = 500, message = "Unknown error in RemoveSpaceObject", data = null });
-            }
-        }
         
     }
 }

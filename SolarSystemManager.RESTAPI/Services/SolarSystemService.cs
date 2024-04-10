@@ -49,17 +49,7 @@ namespace SolarSystemManager.RESTAPI.Services
         public bool DeleteSolarSystem(Entities.LoginRequest cred, int id)
         {
             User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
-            {
-                throw new BadHttpRequestException("403");
-            }
-            _baseRepo.DeleteSolarSystem(id);
-            return true;
-        }
-        public bool DeleteSolarSystemAdmin(Entities.LoginRequest cred, int id)
-        {
-            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            if (temp.role != Role.Admin)
+            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId || temp.role != Role.Admin)
             {
                 throw new BadHttpRequestException("403");
             }
@@ -69,13 +59,20 @@ namespace SolarSystemManager.RESTAPI.Services
 
         public bool DeleteSpaceObject(Entities.LoginRequest cred, int id)
         {
-            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId)
+            User? user = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+
+            SpaceObject spaceObject = _baseRepo.GetSpaceOBjectById(id) ?? throw new BadHttpRequestException("400");
+
+            SolarSystem system = _baseRepo.GetSolarSystemByID(spaceObject.solarSystemID) ?? throw new BadHttpRequestException("400");
+
+            int ownerId = system.ownerId;
+
+            if (user.userID == ownerId || user.role == Role.Admin)
             {
-                throw new BadHttpRequestException("403");
+                _baseRepo.DeleteSpaceObject(id);
+                return true;
             }
-            _baseRepo.DeleteSpaceObject(id);
-            return true;
+            throw new BadHttpRequestException("403");
         }
 
         public int CreateSolarSystem(NewSolarSystem newSystem,Entities.LoginRequest cred)

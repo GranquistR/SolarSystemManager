@@ -107,6 +107,7 @@ watch(selectedObject, (newValue) => {
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
         viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+        viewport.setZoom(60)
       }
     })
 

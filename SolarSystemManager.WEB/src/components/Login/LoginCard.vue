@@ -41,8 +41,9 @@ import Message from 'primevue/message'
 
 import { ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import encrypt from '@/scripts/Encryption/encryption'
+import EncryptionModule from '@/services/Encryption'
 import UserRequest from '@/Entities/UserRequest'
+import Keys from '@/Entities/Keys'
 
 const username = ref('')
 const password = ref('')
@@ -56,6 +57,11 @@ async function Login() {
     return
   }
 
+  // Generate key pair
+  const { publicKey, privateKey } = EncryptionModule.generateKeyPair(1024); // Adjust the number of bits as needed
+   
+// Create a Keys object
+const keys = new Keys(publicKey, privateKey);
   try {
     // Fetch salt
     let salt = ''
@@ -64,7 +70,7 @@ async function Login() {
     })
 
     // Encrypt password using fetched salt
-    const encryptedPassword = encrypt.encrypt(password.value, salt)
+    const encryptedPassword = EncryptionModule.encrypt(password.value, salt)
 
     // Attempt login
     await LoginService.Login(new UserRequest(username.value, encryptedPassword)).then(

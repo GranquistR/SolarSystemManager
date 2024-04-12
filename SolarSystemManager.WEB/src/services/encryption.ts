@@ -1,5 +1,6 @@
-
+import {Keys} from '../Entities/Keys';
 const EncryptionModule = (() => {
+
   function encrypt256(input: string): number {
     // SHA-256 constants
     const K: number[] = [
@@ -91,21 +92,22 @@ const EncryptionModule = (() => {
     const hexHash: string[] = Array.from(hash, n => n.toString(16).padStart(8, '0'));
     return Number(hexHash.join(''));
   }
-    function generateKeyPair(bits: number): { publicKey: number, privateKey: number } {
-        const p = generatePrimeNumber(bits);
-        const q = generatePrimeNumber(bits);
-        const n = p * q;
-        const phi = (p - 1) * (q - 1);
-        let e = 2;
-        while (e < phi) {
-            if (gcd(e, phi) === 1) {
-                break;
-            }
-            e++;
+  function generateKeyPair(bits: number): { publicKey: number, privateKey: number } {
+    const p = generatePrimeNumber(bits);
+    const q = generatePrimeNumber(bits);
+    const n = p * q;
+    const phi = (p - 1) * (q - 1);
+    let e = 2;
+    while (e < phi) {
+        if (gcd(e, phi) === 1) {
+            break;
         }
-        const d = modInverse(e, phi);
-        return { publicKey: n, privateKey: d };
+        e++;
     }
+    const d = modInverse(e, phi);
+    return { publicKey: n, privateKey: d };
+}
+
 
     function encryptRSA(message: number, publicKey: number, modulus: number): number {
         return modExp(message, publicKey, modulus);

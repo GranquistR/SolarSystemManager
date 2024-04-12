@@ -58,6 +58,16 @@ export default class LoginService {
         console.error('Error in GetSaltService: ', error)
       })
   }
+  static async getKey(key: string) {
+    return FetchAPIService.post('/User/GetKey', key)
+    .then((data) => {
+      return JSON.parse(data)
+    })
+    .catch((error) => {
+      alert('Error in GetKeyService. Check console for details.')
+      console.error('Error in GetKeyService: ', error)
+    })
+  }
 
   static async ChangeUsername(userdata: ChangeUsernameRequest): Promise<any> {
     return FetchAPIService.post('/User/ChangeUserName', userdata)

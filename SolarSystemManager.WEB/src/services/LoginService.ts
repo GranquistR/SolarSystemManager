@@ -1,7 +1,7 @@
 import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
 import CreateUserRequest from '@/Entities/CreateUserRequest'
-import ChangeUsernameRequest from '@/Entities/ChangeUsernameRequest'
+import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 
 export default class LoginService {
   static async Login(user: UserRequest) {
@@ -59,7 +59,7 @@ export default class LoginService {
       })
   }
 
-  static async ChangeUsername(userdata: ChangeUsernameRequest): Promise<any> {
+  static async ChangeUsername(userdata: ChangeCredRequest): Promise<any> {
     return FetchAPIService.post('/User/ChangeUserName', userdata)
       .then((data) => {
         return JSON.parse(data)
@@ -70,7 +70,7 @@ export default class LoginService {
       })
   }
 
-  static async ChangePassword(userdata: ChangeUsernameRequest): Promise<any> {
+  static async ChangePassword(userdata: ChangeCredRequest): Promise<any> {
     return FetchAPIService.post('/User/ChangePassword', userdata)
       .then((data) => {
         return JSON.parse(data)

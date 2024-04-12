@@ -34,7 +34,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         }
     }
 
-    public class ChangeUsernameRequest
+    public class ChangeCredRequest
     {
         [JsonPropertyName("username")]
         public string username { get; set; }
@@ -45,7 +45,7 @@ namespace SolarSystemManager.RESTAPI.Entities
         [JsonPropertyName("newUsername")]
         public string newUsername { get; set; }
 
-        public ChangeUsernameRequest(string username, string password, string newUsername)
+        public ChangeCredRequest(string username, string password, string newUsername)
         {
             this.username = username;
             this.password = password;

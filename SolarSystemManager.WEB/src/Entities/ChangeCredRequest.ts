@@ -1,4 +1,4 @@
-export default class UserRequest {
+export default class ChangeCredRequest {
     username: string
     password: string
     newUsername: string

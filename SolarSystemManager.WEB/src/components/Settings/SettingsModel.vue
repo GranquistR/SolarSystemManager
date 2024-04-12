@@ -1,27 +1,27 @@
 <template>
-    <Button label={{paramToEdit}} class="mt-3" @click="visible = true">{{paramToEdit}}</Button>
+    <Button type="button" icon = "pi pi-sliders-h" rounded outlined :label="paramToEdit" @click="visible = true"></Button>
 
     <Dialog v-model:visible="visible" modal header="Edit Profile" :style="{ width: '25rem' }">
         <span class="p-text-secondary block mb-5">Update your information.</span>
         <div class="flex align-items-center gap-3 mb-3">
             <label for="username" class="font-semibold w-6rem">Username</label>
-            <InputText id="username" class="flex-auto" autocomplete="off" v-model="oldUN"/>
+            <InputText id="username" variant="filled" autocomplete="off" v-model="oldUN"/>
         </div>
         <div class="flex align-items-center gap-3 mb-5">
             <label for="password" class="font-semibold w-6rem">Password</label>
-            <InputText id="password" class="flex-auto" autocomplete="off" v-model="oldP" />
+            <Password variant="filled" id="password" v-model="oldP" :feedback="false" />
         </div>
         <div class="flex align-items-center gap-3 mb-3" v-if:visible="!passVisible">
             <label for="new username" class="font-semibold w-6rem">New Username</label>
-            <InputText id="username" class="flex-auto" autocomplete="off" v-model="newUN"/>
+            <InputText id="username" variant="filled" autocomplete="off" v-model="newUN"/>
         </div>
         <div class="flex align-items-center gap-3 mb-5" v-if:visible="passVisible">
             <label for="new password" class="font-semibold w-6rem">New Password</label>
-            <InputText id="new password" class="flex-auto" autocomplete="off" v-model="newUN"/>
+            <Password variant="filled" id="password" v-model="newUN" :feedback="true" />
         </div>
         <div class="flex justify-content-end gap-2">
-            <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-            <Button type="button" label="Save" @click="changeParam"></Button>
+            <Button type="button" rounded outlined label="Cancel" severity="secondary" @click="visible = false"></Button>
+            <Button type="button" rounded outlined label="Save" @click="changeParam"></Button>
         </div>
     </Dialog>
 </template>
@@ -32,9 +32,10 @@ import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import ChangeUsername from '@/services/LoginService'
 import LoginService from "@/services/LoginService";
-import ChangeUsernameRequest from '@/Entities/ChangeUsernameRequest'
+import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import InputText from 'primevue/inputtext'
 import encrypt from '@/scripts/Encryption/encryption'
+import Password from 'primevue/password'
 
 const newUN = ref('')
 const oldUN = ref('')
@@ -64,10 +65,10 @@ async function changeParam(){
         console.log(encryptedPassword)
         if(passVisible) {
             const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
-            LoginService.ChangePassword( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newEncryptedPassword))
+            LoginService.ChangePassword( new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword))
         }
         else {
-            LoginService.ChangeUsername( new ChangeUsernameRequest(oldUN.value, encryptedPassword, newUN.value))
+            LoginService.ChangeUsername( new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value))
         }
         visible.value = false;
     }
@@ -77,4 +78,4 @@ async function changeParam(){
     }
     window.location.pathname = "/login"
 }
-</script>
+</script>@/Entities/ChangeCredRequest

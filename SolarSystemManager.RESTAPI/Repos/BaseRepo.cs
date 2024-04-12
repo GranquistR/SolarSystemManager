@@ -373,6 +373,44 @@ namespace SolarSystemManager.RESTAPI.Repos
                 }
             }
         }
+
+        public SpaceObject GetSpaceOBjectById(int spaceObjectId)
+        {
+            lock (countLock)
+            {
+                try
+                {
+
+
+                    SQLiteDataReader sqlite_datareader;
+                    SQLiteCommand sqlite_cmd;
+                    sqlite_conn.Open();
+
+                    sqlite_cmd = sqlite_conn.CreateCommand();
+                    sqlite_cmd.CommandText = "SELECT SOID, SSID, Name, Type, LocationX, LocationY, Size, Color  FROM SpaceObject WHERE SOID=" + spaceObjectId + ";";
+                    sqlite_datareader = sqlite_cmd.ExecuteReader();
+
+                    var spaceObjects = new List<SpaceObject>();
+                    while (sqlite_datareader.Read())
+                    {
+                        spaceObjects.Add(new SpaceObject(sqlite_datareader.GetInt32(0),
+                                                         sqlite_datareader.GetInt32(1),
+                                                         sqlite_datareader.GetString(2),
+                                                         sqlite_datareader.GetString(3),
+                                                         sqlite_datareader.GetInt32(4),
+                                                         sqlite_datareader.GetInt32(5),
+                                                         sqlite_datareader.GetInt32(6),
+                                                         sqlite_datareader.GetString(7)));
+                    }
+                    sqlite_datareader.Close();
+                    return spaceObjects[0];
+                }
+                finally
+                {
+                    sqlite_conn.Close();
+                }
+            }
+        }
         
         #endregion
 

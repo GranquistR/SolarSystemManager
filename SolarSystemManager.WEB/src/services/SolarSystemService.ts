@@ -4,7 +4,6 @@ import SpaceObject from '@/Entities/SpaceObject'
 import type User from '@/Entities/User'
 
 export default class SolarSystemService {
-
   static async GetPublicSolarSystems(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
       .then((data) => {
@@ -45,17 +44,18 @@ export default class SolarSystemService {
   }
 
   static async AddSpaceObject(object: SpaceObject): Promise<any> {
-      return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object).then((data) => {
-          return JSON.parse(data);
+    return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object)
+      .then((data) => {
+        return JSON.parse(data)
       })
       .catch((error) => {
-          alert('Error in AddSpaceObject. Check console for details.')
-          console.error('Error in AddSpaceObject: ', error)
+        alert('Error in AddSpaceObject. Check console for details.')
+        console.error('Error in AddSpaceObject: ', error)
       })
   }
 
-  static async RemoveSpaceObject(id: number): Promise<any> {
-    return FetchAPIService.post(`/SolarSystem/RemoveSpaceObject`, id).then((data) => {
+  static async RemoveSpaceObject(cred: User, id: number): Promise<any> {
+    return FetchAPIService.post(`/SolarSystem/DeleteSpaceObject?id=${id}`, cred).then((data) => {
       return JSON.parse(data)
     })
   }
@@ -76,15 +76,17 @@ export default class SolarSystemService {
       return JSON.parse(data)
     })
   }
-  
 
-  static async DeleteSolarSystem(credentials: { username: string, password: string }, systemId: number): Promise<any> {
+  static async DeleteSolarSystem(
+    credentials: { username: string; password: string },
+    systemId: number
+  ): Promise<any> {
     return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem/${systemId}`, credentials)
       .then((response) => {
-        return response.json();
+        return response.json()
       })
       .catch((error) => {
-        throw new Error(error);
-      });
-  } 
+        throw new Error(error)
+      })
+  }
 }

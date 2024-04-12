@@ -1,7 +1,5 @@
 <template>
-  <Message class="alertMessage" :severity="severity" :closable="false" v-if="message != ''">{{
-    message
-  }}</Message>
+  <CustomMessage ref="message"></CustomMessage>
   <Button label="Expand this Solar System" @click="open" class="w-22rem" />
   <OverlayPanel ref="op" :dismissable="false">
     <div class="p-2">
@@ -59,7 +57,7 @@ import Dropdown from 'primevue/dropdown'
 import SolarSystemService from '@/services/SolarSystemService'
 import Button from 'primevue/button'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
-import Message from 'primevue/message'
+import CustomMessage from '../CustomMessage.vue'
 
 const props = defineProps<{
   system: any
@@ -73,9 +71,8 @@ const solarSystem = computed(() => {
 })
 
 const op = ref()
+const message = ref()
 
-const message = ref('')
-const severity = ref('')
 const panelOpen = ref(false)
 
 const newObject = ref<SpaceObject>({
@@ -100,7 +97,7 @@ const types = ref([
   'Icy Planet',
   'Lava Planet',
   'Crater Planet',
-  'Earthlike PLanet',
+  'Earthlike Planet',
   'Water Ringed Planet',
   'Gas Ringed Planet',
   'Icy Ringed Planet',
@@ -162,12 +159,7 @@ function resetObject() {
 
 function failed() {
   alert('failed')
-  severity.value = 'error'
-  message.value = 'Failed to add!'
-  setTimeout(() => {
-    message.value = ''
-    severity.value = ''
-  }, 3000)
+  message.value.ShowMessage('Failed to add!', 'error')
 }
 
 function success() {
@@ -180,12 +172,7 @@ function success() {
   closePanel()
 
   //shows the success message
-  message.value = 'Successfully saved!'
-  severity.value = 'success'
-  setTimeout(() => {
-    message.value = ''
-    severity.value = ''
-  }, 3000)
+  message.value.ShowMessage('Successfully Saved!', 'success')
 }
 
 watch(newObject.value, (newValue) => {
@@ -207,14 +194,3 @@ function selectPosition(event: any) {
   newObject.value.yCoord = Math.round(event.y)
 }
 </script>
-
-<style scoped>
-.alertMessage {
-  /* appear in top middle of page fixed */
-  position: fixed;
-  top: 4rem;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: 1000;
-}
-</style>

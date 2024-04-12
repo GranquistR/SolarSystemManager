@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
+using SolarSystemManager.RESTAPI.Services;
 namespace SolarSystemManager.RESTAPI.Controllers
 {
 
 
-public static class EncryptionModule
+        public static class EncryptionController
 
     {
         private static uint[] SHA256Constants = new uint[] {

@@ -4,7 +4,6 @@ export default class SolarSystem {
     systemName: string;
     systemVisibility: string;
 
-    //!!! Check systemVisibility String or number
     constructor(systemId: number, ownerId: number, systemName: string, systemVisibility: string) {
       this.systemId = systemId
       this.ownerId = ownerId

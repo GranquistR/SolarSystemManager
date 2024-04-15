@@ -3,9 +3,6 @@ import FetchAPIService from './FetchAPIService'
 import SpaceObject from '@/Entities/SpaceObject'
 import type User from '@/Entities/User'
 import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
-//import SolarSystem from '@/Entities/SolarSystem'
-
-
 
 export default class SolarSystemService {
 

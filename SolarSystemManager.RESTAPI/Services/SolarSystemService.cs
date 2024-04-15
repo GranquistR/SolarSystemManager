@@ -63,33 +63,6 @@ namespace SolarSystemManager.RESTAPI.Services
             }
         }
 
-            //User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
-            /*
-            User? temp = ValidateUser(new Entities.LoginRequest(cred.username, cred.password));
-
-            if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId || temp.role != Role.Admin)
-            {
-                throw new BadHttpRequestException("403");
-            }
-            _baseRepo.DeleteSolarSystem(id);
-            return true;
-            */
-
-            //-----------------------------------------------------------------------------------------------------------
-
-            /*
-                User? temp = _userService.ValidateUser(dcred) ?? throw new BadHttpRequestException("401");
-                if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId || temp.role != Role.Admin)
-                {
-                    throw new BadHttpRequestException("403");
-                }
-                _baseRepo.DeleteSolarSystem(id);
-                return true;
-            */
-        
-
-        //------------------------------------------------------------------------------------------------------------
-
         public bool DeleteSpaceObject(Entities.LoginRequest cred, int id)
         {
             User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");

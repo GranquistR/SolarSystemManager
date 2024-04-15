@@ -7,16 +7,20 @@
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
-      <AddSpaceObject
-        ref="addSpaceObject"
-        :system="solarSystem"
-        :graphics="graphics"
-      ></AddSpaceObject>
-      <br /><Button label="Recenter" @click="recenter" />
     </div>
-
     <!-- PIXI APP -->
     <div id="viewer" style="position: fixed"></div>
+    <div class="spacer"></div>
+    <Card class="p-2 flex justify-content-end flex-wrap">
+      <div class="flex flex-column gap-2">
+        <AddSpaceObject
+          ref="addSpaceObject"
+          :system="solarSystem"
+          :graphics="graphics"
+        ></AddSpaceObject>
+        <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
+      </div>
+    </Card>
   </div>
 </template>
 <script setup lang="ts">
@@ -132,5 +136,13 @@ function recenter() {
 <style scoped>
 .spacer {
   height: 66px;
+}
+.tools {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid #27272a 1px;
+  color: #a1a1aa;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 990;
 }
 </style>

@@ -1,19 +1,14 @@
 <template>
   <CustomMessage ref="message"></CustomMessage>
-  <Button label="Expand this Solar System" @click="open" class="w-22rem" />
-  <OverlayPanel ref="op" :dismissable="false">
+  <Button icon="pi pi-plus" @click="visible = true" outlined rounded class="tools" />
+  <Dialog v-model:visible="visible" ref="op" :dismissable="false" class="tools" :position="'right'">
     <div class="p-2">
       <h3>Add an object to {{ solarSystem.systemName }}</h3>
       <div class="flex flex-column row-gap-2">
-        <label for="objectName">Name</label>
-        <InputText
-          variant="filled"
-          id="objectName"
-          v-model="newObject.objectName"
-          style="width: 245px"
-        />
+        <label for="objectName">Name:</label>
+        <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
 
-        <label for="type">Type</label>
+        <label for="type">Type:</label>
         <Dropdown
           id="type"
           v-model="newObject.objectType"
@@ -21,20 +16,16 @@
           placeholder="Select..."
         ></Dropdown>
 
-        <div class="flex flex-column w-14rem row-gap-4">
+        <div class="flex flex-column row-gap-4">
           <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
             Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
           </div>
-
-          <label for="size">Size: {{ newObject.objectSize }}</label>
-          <Slider
-            id="size"
-            v-model="newObject.objectSize"
-            class="w-14rem"
-            :min="1"
-            :max="100"
-          ></Slider>
-
+          <div>
+            Size:
+            <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
+          </div>
+          <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
+          <!--class="w-14rem"-->
           <div>
             <label for="color"> Color </label>
             <ColorPicker id="color" v-model="newObject.objectColor" />
@@ -44,7 +35,7 @@
         <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
       </div>
     </div>
-  </OverlayPanel>
+  </Dialog>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -58,6 +49,10 @@ import SolarSystemService from '@/services/SolarSystemService'
 import Button from 'primevue/button'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import CustomMessage from '../CustomMessage.vue'
+import InputNumber from 'primevue/inputnumber'
+import Dialog from 'primevue/dialog'
+
+const visible = ref<boolean>(false)
 
 const props = defineProps<{
   system: any
@@ -194,3 +189,13 @@ function selectPosition(event: any) {
   newObject.value.yCoord = Math.round(event.y)
 }
 </script>
+<style scoped>
+.tools {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid #27272a 1px;
+  color: #a1a1aa;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 990;
+}
+</style>

@@ -81,7 +81,7 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.Count("User");
         }
 
-        public void ChangeUserName(Entities.ChangeUsernameRequest ncred)
+        public void ChangeUserName(Entities.ChangeCredRequest ncred)
         {
             //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
 
@@ -98,7 +98,7 @@ namespace SolarSystemManager.RESTAPI.Services
             }
         }
 
-        public void ChangePassword(Entities.ChangeUsernameRequest ncred)
+        public void ChangePassword(Entities.ChangeCredRequest ncred)
         {
             //Entities.LoginRequest cred = new Entities.LoginRequest(ncred.username, ncred.password);
 

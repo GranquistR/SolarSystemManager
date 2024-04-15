@@ -93,6 +93,7 @@ function ViewerGoTo(systemId: number) {
 
 const deleteSolarSystem = () => {
 
+
 //Check if user is logged in and systemIdToDelete is not null
 if (systemIdToDelete.value !== null && user) {
 

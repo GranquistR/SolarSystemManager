@@ -6,23 +6,19 @@
       <template #title>Hello, {{ username }} </template>
       <template #subtitle>User type: {{ userType }}</template>
       <template #content> 
-        <p>
-        <Button label="Logout" class="mt-3" @click="logout"></Button> 
-        <br />
-        <SettingsModel :paramToEdit="'Change Username'"></SettingsModel>
-        <br />
-        <SettingsModel :paramToEdit="'Change Password'"></SettingsModel>
-        </p>
+        <div class="flex flex-column align-items-center gap-2">
+          <Button label="Logout" icon="pi pi-sign-out" rounded outlined class="mt-3" @click="logout"></Button> 
+          <SettingsModel :paramToEdit="'Change Username'"></SettingsModel>
+          <SettingsModel :paramToEdit="'Change Password'"></SettingsModel>
+        </div> 
       </template>
-      <template #footer> </template>
+      <template #footer></template>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
 import HeaderBar from '@/components/Header/HeaderBar.vue'
-import LoginService from '@/services/LoginService'
-import UserRequest from '@/Entities/UserRequest'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
 import { ref, onMounted } from 'vue'
@@ -39,16 +35,7 @@ onMounted(() => {
   if (user != undefined) {
     username.value = user.username
     userType.value = user.role == 1 ? 'Administrator' : 'Member'
-  }
-    // LoginService.GetUserSettings(new UserRequest(_username, _password))
-    //   .then((result) => {
-    //     username.value = result.username
-    //     userType.value = result.role === 1 ? 'Administrator' : 'Member'
-    //   })
-    //   .catch((error: any) => {
-    //     console.error('Error:', error)
-    //   })
-  
+  } 
 })
 
 function logout() {

@@ -136,7 +136,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangeUsername")]
-        public IActionResult ChangeUsername([FromBody] ChangeUsernameRequest cred)
+        public IActionResult ChangeUsername([FromBody] ChangeCredRequest cred)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangePassword")]
-        public IActionResult ChangePassword([FromBody] ChangeUsernameRequest cred)
+        public IActionResult ChangePassword([FromBody] ChangeCredRequest cred)
         {
             try
             {

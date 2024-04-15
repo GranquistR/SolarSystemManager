@@ -21,6 +21,7 @@
         <template #title> Check out our user-made Solar Systems! </template>
         <template #subtitle> Set your Solar Systems to public to be viewable here. </template>
         <template #content>
+          <CustomMessage ref="message"></CustomMessage>
           <DataTable
             selectionMode="single"
             :value="solarSystems"
@@ -69,11 +70,15 @@ import Dialog from 'primevue/dialog'
 import { inject, ref } from 'vue'
 import User from '@/Entities/User'
 import SolarSystem from '@/Entities/SolarSystem'
+import CustomMessage from '@/components/CustomMessage.vue'
+
+//import SpaceObjectPicker from '@ViewerUi/SpaceObjectPicker'
 
 const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null);
+const message = ref()
 
 const confirmDelete = (systemId: number) => {
   systemIdToDelete.value = systemId;
@@ -92,8 +97,6 @@ function ViewerGoTo(systemId: number) {
 }
 
 const deleteSolarSystem = () => {
-
-
 //Check if user is logged in and systemIdToDelete is not null
 if (systemIdToDelete.value !== null && user) {
 
@@ -110,13 +113,16 @@ if (systemIdToDelete.value !== null && user) {
     //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
     .then(response => {
       if (response.success) {
+        
+        //Show success message
+        message.value.ShowMessage('Successfully Deleted.')
         solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
-    
         //Show success message
         console.log('Solar system deleted successfully');
 
       } else {
         //Show error message
+        message.value.ShowMessage('Failed to delete.', 'error')
         console.error('Failed to delete solar system:', response.message);
       }
     })
@@ -132,5 +138,4 @@ if (systemIdToDelete.value !== null && user) {
   }
 };
 
-console.log(SolarSystemService);
 </script>

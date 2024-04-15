@@ -44,6 +44,7 @@ import LoginService from '@/services/LoginService'
 import EncryptionModule from '@/services/Encryption'
 import UserRequest from '@/Entities/UserRequest'
 import Keys from '@/Entities/Keys'
+import EncryptedMessage from '@/Entities/EncryptedMessage'
 
 const username = ref('')
 const password = ref('')
@@ -56,16 +57,20 @@ async function Login() {
     failedLogin()
     return
   }
+  // Generate RSA key pair
+  const { publicKey, privateKey } = EncryptionModule.generateKeyPair(1024);
+  const rsaKeys = new Keys(publicKey, privateKey);
 
-  // Generate key pair
-  const { publicKey, privateKey } = EncryptionModule.generateKeyPair(1024); // Adjust the number of bits as needed
-   
-// Create a Keys object
-const keys = new Keys(publicKey, privateKey);
+  // Generate AES key
+  const aesKey = EncryptionModule.generateAESKey();
+
+  // Encrypt username and password with AES
+  const encryptedUsername = EncryptionModule.encryptAES(username.value, aesKey);
+
   try {
     // Fetch salt
     let salt = ''
-    await LoginService.GetSalt(username.value).then((response) => {
+    await LoginService.GetSalt(encryptedUsername).then((response) => {
       salt = response.data
     })
 

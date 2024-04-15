@@ -62,15 +62,18 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import SolarSystemService from '@/services/SolarSystemService'
+import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
+//import SolarSystemRequest from '@/Entities/SolarSystemRequest'
 import Button from 'primevue/button'
 import router from '@/router'
 import Dialog from 'primevue/dialog'
 import { inject, ref } from 'vue'
-import type SolarSystem from '@/Entities/SolarSystem'
-import type User from '@/Entities/User'
+//import type SolarSystem from '@/Entities/SolarSystem'
+import User from '@/Entities/User'
+import SolarSystem from '@/Entities/SolarSystem'
 
-const user = inject<User | null>('currentUser', null);
 
+const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null);
@@ -93,6 +96,46 @@ function ViewerGoTo(systemId: number) {
 
 const deleteSolarSystem = () => {
 
+//Check if user is logged in and systemIdToDelete is not null
+if (systemIdToDelete.value !== null && user) {
+
+  //Create user credentials object properties taken from the user object.
+  const userCredentials = {
+    username: user.username,
+    password: user.password,
+  };
+
+  //Call the DeleteSolarSystem function in the SolarSystemService
+  SolarSystemService.DeleteSolarSystem(new DeleteSolarSystemRequest(userCredentials.username, userCredentials.password, systemIdToDelete.value))
+  
+    //Handle the response
+    //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
+    .then(response => {
+      if (response.success) {
+        solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
+    
+        //Show success message
+        console.log('Solar system deleted successfully');
+
+      } else {
+        //Show error message
+        console.error('Failed to delete solar system:', response.message);
+      }
+    })
+    .catch(error => {
+      //Show error message
+      console.error('Error while deleting solar system:', error);
+    })
+    .finally(() => {
+      //Close the dialog
+      deleteDialogVisible.value = false;
+      systemIdToDelete.value = null;
+    });
+}
+};
+/*
+const deleteSolarSystem = () => {
+
   //Check if user is logged in and systemIdToDelete is not null
   if (systemIdToDelete.value !== null && user) {
     const userCredentials = {
@@ -100,7 +143,7 @@ const deleteSolarSystem = () => {
       password: user.password,
     };
 
-    // Call the DeleteSolarSystem function in the SolarSystemService
+    //Call the DeleteSolarSystem function in the SolarSystemService
     SolarSystemService.DeleteSolarSystem(userCredentials, systemIdToDelete.value)
     
       //Handle the response
@@ -128,6 +171,7 @@ const deleteSolarSystem = () => {
       });
   }
 };
+*/
 
 console.log(SolarSystemService);
 </script>

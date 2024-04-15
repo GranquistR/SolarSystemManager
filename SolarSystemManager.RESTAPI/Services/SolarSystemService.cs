@@ -46,16 +46,49 @@ namespace SolarSystemManager.RESTAPI.Services
 
         }
 
-        public bool DeleteSolarSystem(Entities.LoginRequest cred, int id)
+        //------------------------------------------------------------------------------------------------------------
+        public bool DeleteSolarSystem(Entities.DleteSolarSystemRequest dcred)
         {
-            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            User? temp = _userService.ValidateUser(new Entities.LoginRequest(dcred.username, dcred.password));
+
+            if (temp != null)
+            {
+                //temp.dSolaySystemID = dcred.dSolarSystemID;
+                _baseRepo.DeleteSolarSystem(dcred.dSolarSystemID);
+                return true;
+            }
+            else
+            {
+                throw new BadHttpRequestException("No Solar System Found");
+            }
+        }
+
+            //User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            /*
+            User? temp = ValidateUser(new Entities.LoginRequest(cred.username, cred.password));
+
             if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId || temp.role != Role.Admin)
             {
                 throw new BadHttpRequestException("403");
             }
             _baseRepo.DeleteSolarSystem(id);
             return true;
-        }
+            */
+
+            //-----------------------------------------------------------------------------------------------------------
+
+            /*
+                User? temp = _userService.ValidateUser(dcred) ?? throw new BadHttpRequestException("401");
+                if (temp.userID != _baseRepo.GetSolarSystemByID(id).ownerId || temp.role != Role.Admin)
+                {
+                    throw new BadHttpRequestException("403");
+                }
+                _baseRepo.DeleteSolarSystem(id);
+                return true;
+            */
+        
+
+        //------------------------------------------------------------------------------------------------------------
 
         public bool DeleteSpaceObject(Entities.LoginRequest cred, int id)
         {

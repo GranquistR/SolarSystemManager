@@ -37,13 +37,18 @@
     <Column>
       <template #body="slotProps">
         <div class="flex">
-          <Button
+          <!-- <Button
             outlined
             severity="secondary"
             icon="pi pi-pencil"
             rounded
             iconPos="right"
-          ></Button>
+          ></Button> -->
+          <EditSpaceObject
+            ref="addSpaceObject"
+            :system="solarSystem"
+            :graphics="graphics"
+          ></EditSpaceObject>
           <Button
             class="ml-2"
             outlined
@@ -92,6 +97,8 @@ import SolarSystemService from '@/services/SolarSystemService'
 import type User from '@/Entities/User'
 import CustomMessage from '../CustomMessage.vue'
 import Dialog from 'primevue/dialog'
+import Graphics from '@/scripts/pixie/DrawSolarSystem'
+import EditSpaceObject from './EditSpaceObject.vue'
 
 const message = ref()
 
@@ -103,7 +110,8 @@ const props = defineProps({
   solarSystem: {
     type: Object,
     default: () => ({ spaceObjects: [] })
-  }
+  },
+  graphics: Graphics
 })
 
 //computed is required to make the spaceObjects reactive

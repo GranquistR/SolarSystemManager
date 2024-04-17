@@ -13,11 +13,7 @@
     <div class="spacer"></div>
     <Card class="p-2 flex justify-content-end flex-wrap">
       <div class="flex flex-column gap-2">
-        <AddSpaceObject
-          ref="addSpaceObject"
-          :system="solarSystem"
-          :graphics="graphics"
-        ></AddSpaceObject>
+        <RealAddSpaceObject ref="addSpaceObject" :system="solarSystem" :graphics="graphics" />
         <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
       </div>
     </Card>
@@ -30,8 +26,7 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
-import AddSpaceObject from '@/components/ViewerUi/AddSpaceObject.vue'
-
+import RealAddSpaceObject from '@/components/ViewerUi/RealAddSpaceObject.vue'
 //vue stuff
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'

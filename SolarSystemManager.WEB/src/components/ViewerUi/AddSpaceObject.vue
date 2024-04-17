@@ -67,6 +67,7 @@ const visible = ref<boolean>(false)
 const props = defineProps<{
   system: any
   graphics: Graphics
+  submit: Function
 }>()
 
 defineExpose({ selectPosition })
@@ -142,13 +143,7 @@ function AddSpaceObject() {
     newObject.value.objectColor = '#' + newObject.value.objectColor
   }
   newObject.value.solarSystemID = solarSystem.value.systemId
-  SolarSystemService.AddSpaceObject(newObject.value).then((data) => {
-    if (data.success) {
-      success()
-    } else {
-      failed()
-    }
-  })
+  props.submit(newObject.value, success, failed)
 }
 
 function resetObject() {

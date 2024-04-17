@@ -1,6 +1,6 @@
 <template>
   <CustomMessage ref="message"></CustomMessage>
-  <Button icon="pi pi-plus" @click="visible = true" outlined rounded class="tools" />
+  <Button icon="pi pi-plus" @click="open" outlined rounded class="tools" />
   <Dialog
     v-model:visible="visible"
     :dismissable="false"
@@ -26,7 +26,6 @@
             :options="types"
             placeholder="Select..."
           ></Dropdown>
-
           <div class="flex flex-column row-gap-4">
             <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
               Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
@@ -119,6 +118,7 @@ const open = (event: any) => {
   if (!panelOpen.value) {
     //op.value.toggle(event)
     panelOpen.value = true
+    visible.value = true
   }
   resetObject()
   redrawWithFake()

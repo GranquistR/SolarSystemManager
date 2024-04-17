@@ -156,6 +156,7 @@ SolarSystemService.GetSolarSystemByID(19).then((response) => {
 })
 
 function AddSpaceObject() {
+  console.log("Hit 0")
   SolarSystemService.AddSpaceObject(
     new SpaceObject(
       0,

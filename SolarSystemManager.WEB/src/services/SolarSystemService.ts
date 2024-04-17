@@ -2,8 +2,10 @@ import CreateSolarSystemRequest from '@/Entities/CreateSolarSystemRequest'
 import FetchAPIService from './FetchAPIService'
 import SpaceObject from '@/Entities/SpaceObject'
 import type User from '@/Entities/User'
+import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
 
 export default class SolarSystemService {
+
   static async GetPublicSolarSystems(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
       .then((data) => {
@@ -77,16 +79,13 @@ export default class SolarSystemService {
     })
   }
 
-  static async DeleteSolarSystem(
-    credentials: { username: string; password: string },
-    systemId: number
-  ): Promise<any> {
-    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem/${systemId}`, credentials)
-      .then((response) => {
-        return response.json()
+  static async DeleteSolarSystem(userdata: DeleteSolarSystemRequest): Promise<any> {
+    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, userdata)
+      .then((data) => {
+        return JSON.parse(data);
       })
       .catch((error) => {
-        throw new Error(error)
-      })
+        console.error('Error in DeleteSolarSystem: ', error)
+      });
   }
 }

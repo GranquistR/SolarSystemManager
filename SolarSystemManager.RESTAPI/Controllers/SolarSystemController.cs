@@ -27,11 +27,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("DeleteSolarSystem")]
-        public IActionResult DeleteSolarSystem([FromBody] LoginRequest cred, int id)
+        public IActionResult DeleteSolarSystem([FromBody] DleteSolarSystemRequest cred)
         {
             try
             {
-                var result = _solarSystemService.DeleteSolarSystem(cred, id);
+                var result = _solarSystemService.DeleteSolarSystem(cred);
                 if (result)
                 {
                     return Ok(new Response { success = true, status = 200, message = "Sucessfully Deleted Solar System", data = null });

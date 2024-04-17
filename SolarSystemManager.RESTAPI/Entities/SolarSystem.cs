@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.Json.Serialization;
 using SolarSystemManager.RESTAPI.Repos;
 
 namespace SolarSystemManager.RESTAPI.Entities
@@ -60,8 +61,6 @@ namespace SolarSystemManager.RESTAPI.Entities
         {
             spaceObjects = spaceObjects.Where(s => s.spaceObjectID != objID);
         }
-
-       
     }
 
     public class NewSolarSystemRequest
@@ -82,4 +81,25 @@ namespace SolarSystemManager.RESTAPI.Entities
         Public,
         Private
     }
+
+    //-----------------------------------------------------------------------------------------------------------
+    public class DleteSolarSystemRequest
+    {
+        [JsonPropertyName("username")]
+        public String username { get; set; }
+
+        [JsonPropertyName("password")]
+        public String password { get; set; }
+
+        [JsonPropertyName("dSolarSystemID")]
+        public int dSolarSystemID { get; set; }
+
+        public DleteSolarSystemRequest(String username, String password, int dSolarSystemID)
+        {
+            this.username = username;
+            this.password = password;
+            this.dSolarSystemID = dSolarSystemID;
+        }
+    }
+
 }

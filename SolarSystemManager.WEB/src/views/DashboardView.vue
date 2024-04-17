@@ -21,6 +21,7 @@
         <template #title> Check out our user-made Solar Systems! </template>
         <template #subtitle> Set your Solar Systems to public to be viewable here. </template>
         <template #content>
+          <CustomMessage ref="message"></CustomMessage>
           <DataTable
             selectionMode="single"
             :value="solarSystems"
@@ -62,18 +63,22 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import SolarSystemService from '@/services/SolarSystemService'
+import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
 import Button from 'primevue/button'
 import router from '@/router'
 import Dialog from 'primevue/dialog'
 import { inject, ref } from 'vue'
-import type SolarSystem from '@/Entities/SolarSystem'
-import type User from '@/Entities/User'
+import User from '@/Entities/User'
+import SolarSystem from '@/Entities/SolarSystem'
+import CustomMessage from '@/components/CustomMessage.vue'
 
-const user = inject<User | null>('currentUser', null);
+//import SpaceObjectPicker from '@ViewerUi/SpaceObjectPicker'
 
+const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null);
+const message = ref()
 
 const confirmDelete = (systemId: number) => {
   systemIdToDelete.value = systemId;
@@ -92,42 +97,44 @@ function ViewerGoTo(systemId: number) {
 }
 
 const deleteSolarSystem = () => {
+//Check if user is logged in and systemIdToDelete is not null
+if (systemIdToDelete.value !== null && user) {
 
-  //Check if user is logged in and systemIdToDelete is not null
-  if (systemIdToDelete.value !== null && user) {
-    const userCredentials = {
-      username: user.username,
-      password: user.password,
-    };
+  //Create user credentials object properties taken from the user object.
+  const userCredentials = {
+    username: user.username,
+    password: user.password,
+  };
 
-    // Call the DeleteSolarSystem function in the SolarSystemService
-    SolarSystemService.DeleteSolarSystem(userCredentials, systemIdToDelete.value)
-    
-      //Handle the response
-      //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
-      .then(response => {
-        if (response.success) {
-          solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
-      
-          //Show success message
-          console.log('Solar system deleted successfully');
+  //Call the DeleteSolarSystem function in the SolarSystemService
+  SolarSystemService.DeleteSolarSystem(new DeleteSolarSystemRequest(userCredentials.username, userCredentials.password, systemIdToDelete.value))
+  
+    //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
+    .then(response => {
+      if (response.success) {
+        
+        //Show success message
+        message.value.ShowMessage('Successfully Deleted.')
+        solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
+        //Show success message
+        console.log('Solar system deleted successfully');
 
-        } else {
-          //Show error message
-          console.error('Failed to delete solar system:', response.message);
-        }
-      })
-      .catch(error => {
+      } else {
         //Show error message
-        console.error('Error while deleting solar system:', error);
-      })
-      .finally(() => {
-        //Close the dialog
-        deleteDialogVisible.value = false;
-        systemIdToDelete.value = null;
-      });
+        message.value.ShowMessage('Failed to delete.', 'error')
+        console.error('Failed to delete solar system:', response.message);
+      }
+    })
+    .catch(error => {
+      //Show error message
+      console.error('Error while deleting solar system:', error);
+    })
+    .finally(() => {
+      //Close the dialog
+      deleteDialogVisible.value = false;
+      systemIdToDelete.value = null;
+    });
   }
 };
 
-console.log(SolarSystemService);
 </script>

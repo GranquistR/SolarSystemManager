@@ -43,6 +43,7 @@ const selectedObject = ref<any>()
 const solarSystem = ref<any>()
 const addSpaceObject = ref()
 
+
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
@@ -105,14 +106,34 @@ watch(selectedObject, (newValue) => {
     console.log(newValue.spaceObjectID)
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
+        console.log("x"+spaceObject.xCoord+" y"+spaceObject.yCoord)
+        
+        if(newValue.objectSize<=40)
+        {
+          viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+          viewport.setZoom(30)
+
+          
+        }
+        else if(newValue.objectSize>40||50>newValue.objectSize)
+        {
+          viewport.setZoom(10)
+          
+        }
+        else
+        {
+          
+          viewport.setZoom(8)
+          
+        }
         viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
-        viewport.setZoom(60)
       }
     })
 
     graphics.HighlightSpaceObject(newValue.spaceObjectID)
   } else {
     graphics.RemoveHighlight()
+    
   }
 })
 

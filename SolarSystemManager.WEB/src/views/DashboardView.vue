@@ -109,7 +109,6 @@ if (systemIdToDelete.value !== null && user) {
   //Call the DeleteSolarSystem function in the SolarSystemService
   SolarSystemService.DeleteSolarSystem(new DeleteSolarSystemRequest(userCredentials.username, userCredentials.password, systemIdToDelete.value))
   
-    //Handle the response
     //If the deletion is successful, it updates the list of solar systems displayed in the UI or state management library.
     .then(response => {
       if (response.success) {

@@ -1,47 +1,58 @@
 <template>
   <CustomMessage ref="message"></CustomMessage>
   <Button icon="pi pi-plus" @click="visible = true" outlined rounded class="tools" />
-  <Dialog v-model:visible="visible" ref="op" :dismissable="false" class="tools" :position="'right'">
-    <div class="p-2">
-      <h3>Add an object to {{ solarSystem.systemName }}</h3>
-      <div class="flex flex-column row-gap-2">
-        <label for="objectName">Name:</label>
-        <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
+  <Dialog
+    v-model:visible="visible"
+    :dismissable="false"
+    :position="'right'"
+    :draggable="true"
+    :pt="{
+      root: 'border-none',
+      background: 'none'
+      //note to self: trying to get ride of dialog box background so that its actual transparent
+    }"
+  >
+    <template #container>
+      <div class="p-3 addBox">
+        <h3>Add an object to {{ solarSystem.systemName }}</h3>
+        <div class="flex flex-column row-gap-2">
+          <label for="objectName">Name:</label>
+          <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
 
-        <label for="type">Type:</label>
-        <Dropdown
-          id="type"
-          v-model="newObject.objectType"
-          :options="types"
-          placeholder="Select..."
-        ></Dropdown>
+          <label for="type">Type:</label>
+          <Dropdown
+            id="type"
+            v-model="newObject.objectType"
+            :options="types"
+            placeholder="Select..."
+          ></Dropdown>
 
-        <div class="flex flex-column row-gap-4">
-          <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
-            Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
+          <div class="flex flex-column row-gap-4">
+            <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
+              Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
+            </div>
+            <div>
+              Size:
+              <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
+            </div>
+            <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
+            <!--class="w-14rem"-->
+            <div>
+              <label for="color"> Color </label>
+              <ColorPicker id="color" v-model="newObject.objectColor" />
+            </div>
           </div>
-          <div>
-            Size:
-            <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
-          </div>
-          <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
-          <!--class="w-14rem"-->
-          <div>
-            <label for="color"> Color </label>
-            <ColorPicker id="color" v-model="newObject.objectColor" />
-          </div>
+          <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
+          <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
         </div>
-        <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
-        <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
       </div>
-    </div>
+    </template>
   </Dialog>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import SpaceObject from '@/Entities/SpaceObject'
 import ColorPicker from 'primevue/colorpicker'
-import OverlayPanel from 'primevue/overlaypanel'
 import InputText from 'primevue/inputtext'
 import Slider from 'primevue/slider'
 import Dropdown from 'primevue/dropdown'
@@ -65,7 +76,6 @@ const solarSystem = computed(() => {
   return props.system
 })
 
-const op = ref()
 const message = ref()
 
 const panelOpen = ref(false)
@@ -107,7 +117,7 @@ const types = ref([
 
 const open = (event: any) => {
   if (!panelOpen.value) {
-    op.value.toggle(event)
+    //op.value.toggle(event)
     panelOpen.value = true
   }
   resetObject()
@@ -116,8 +126,8 @@ const open = (event: any) => {
 
 function closePanel() {
   //hides the panel
-  op.value.hide()
   panelOpen.value = false
+  visible.value = false
   //redraws the solar system without the fake object
   props.graphics.DrawSolarSystem(solarSystem.value)
   resetObject()
@@ -197,5 +207,11 @@ function selectPosition(event: any) {
   color: #a1a1aa;
   transition: opacity 0.3s ease-in-out;
   z-index: 990;
+}
+.addBox {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid #27272a 1px;
+  border-radius: 10px;
 }
 </style>

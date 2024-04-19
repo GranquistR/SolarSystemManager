@@ -7,16 +7,16 @@
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
-      <AddSpaceObject
-        ref="addSpaceObject"
-        :system="solarSystem"
-        :graphics="graphics"
-      ></AddSpaceObject>
-      <br /><Button label="Recenter" @click="recenter" />
     </div>
-
     <!-- PIXI APP -->
     <div id="viewer" style="position: fixed"></div>
+    <div class="spacer"></div>
+    <Card class="p-2 flex justify-content-end flex-wrap">
+      <div class="flex flex-column gap-2">
+        <RealAddSpaceObject ref="addSpaceObject" :system="solarSystem" :graphics="graphics" />
+        <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
+      </div>
+    </Card>
   </div>
 </template>
 <script setup lang="ts">
@@ -26,8 +26,7 @@ import HeaderBar from '@/components/Header/HeaderBar.vue'
 import SolarSystemService from '@/services/SolarSystemService'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
-import AddSpaceObject from '@/components/ViewerUi/AddSpaceObject.vue'
-
+import RealAddSpaceObject from '@/components/ViewerUi/RealAddSpaceObject.vue'
 //vue stuff
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -43,6 +42,7 @@ const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
 const addSpaceObject = ref()
+
 
 onMounted(() => {
   //mounts the pixi app
@@ -106,14 +106,34 @@ watch(selectedObject, (newValue) => {
     console.log(newValue.spaceObjectID)
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
+        console.log("x"+spaceObject.xCoord+" y"+spaceObject.yCoord)
+        
+        if(newValue.objectSize<=40)
+        {
+          viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+          viewport.setZoom(30)
+
+          
+        }
+        else if(newValue.objectSize>40||50>newValue.objectSize)
+        {
+          viewport.setZoom(10)
+          
+        }
+        else
+        {
+          
+          viewport.setZoom(8)
+          
+        }
         viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
-        viewport.setZoom(60)
       }
     })
 
     graphics.HighlightSpaceObject(newValue.spaceObjectID)
   } else {
     graphics.RemoveHighlight()
+    
   }
 })
 
@@ -133,5 +153,13 @@ function recenter() {
 <style scoped>
 .spacer {
   height: 66px;
+}
+.tools {
+  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: solid #27272a 1px;
+  color: #a1a1aa;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 990;
 }
 </style>

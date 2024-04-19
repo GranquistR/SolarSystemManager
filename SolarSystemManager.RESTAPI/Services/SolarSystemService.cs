@@ -43,10 +43,8 @@ namespace SolarSystemManager.RESTAPI.Services
                     throw new BadHttpRequestException("403");
                 }
             }
-
         }
 
-        //------------------------------------------------------------------------------------------------------------
         public bool DeleteSolarSystem(Entities.DleteSolarSystemRequest dcred)
         {
             User? temp = _userService.ValidateUser(new Entities.LoginRequest(dcred.username, dcred.password));

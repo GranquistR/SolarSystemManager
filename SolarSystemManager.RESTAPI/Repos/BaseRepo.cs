@@ -324,7 +324,7 @@ namespace SolarSystemManager.RESTAPI.Repos
 
         #region SpaceObjectTable
 
-        public bool AddSpaceObject(SpaceObject spaceObject)
+        public int AddSpaceObject(SpaceObject spaceObject)
         {
             lock (countLock)
             {
@@ -344,7 +344,11 @@ namespace SolarSystemManager.RESTAPI.Repos
                     sqlite_cmd.Parameters.AddWithValue("@color", spaceObject.objectColor);
                     sqlite_cmd.ExecuteNonQuery();
                     //Console.WriteLine("Add space object completed");
-                    return true;
+
+                    sqlite_cmd.CommandText = "SELECT last_insert_rowid();";
+                    int newId = Convert.ToInt32(sqlite_cmd.ExecuteScalar());
+
+                    return newId;
                 }
                 finally
                 {

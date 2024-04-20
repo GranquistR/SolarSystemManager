@@ -244,12 +244,9 @@ namespace SolarSystemManager.RESTAPI.Controllers
         {
             try
             {
-                var result = _solarSystemService.AddSpaceObject(spaceObject);
-                if (result)
-                {
-                    return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = null });
-                }
-                return Ok(new Response { success = false, status = 400, message = "Failed to add space object", data = null });
+                int id = _solarSystemService.AddSpaceObject(spaceObject);
+                return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = id });
+                
             }
             catch (BadHttpRequestException e)
             {

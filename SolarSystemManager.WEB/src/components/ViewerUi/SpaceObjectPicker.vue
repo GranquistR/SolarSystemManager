@@ -37,18 +37,12 @@
     <Column>
       <template #body="slotProps">
         <div class="flex">
-          <!-- <Button
-            outlined
-            severity="secondary"
-            icon="pi pi-pencil"
-            rounded
-            iconPos="right"
-          ></Button> -->
-          <EditSpaceObject
-            ref="addSpaceObject"
+          <AddSpaceObject
             :system="solarSystem"
             :graphics="graphics"
-          ></EditSpaceObject>
+            :space-object-to-edit="slotProps.data"
+            :click-position="clickPosition"
+          ></AddSpaceObject>
           <Button
             class="ml-2"
             outlined
@@ -97,8 +91,8 @@ import SolarSystemService from '@/services/SolarSystemService'
 import type User from '@/Entities/User'
 import CustomMessage from '../CustomMessage.vue'
 import Dialog from 'primevue/dialog'
+import AddSpaceObject from './AddSpaceObject.vue'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
-import EditSpaceObject from './EditSpaceObject.vue'
 
 const message = ref()
 
@@ -113,6 +107,12 @@ const props = defineProps({
   },
   graphics: Graphics
 })
+
+const clickPosition = ref<any>()
+defineExpose({ selectPosition })
+function selectPosition(event: any) {
+  clickPosition.value = event
+}
 
 //computed is required to make the spaceObjects reactive
 const spaceObjects = computed(() => {
@@ -139,6 +139,9 @@ function RemoveSpaceObject(id: number) {
         //remove object from array
         const index = spaceObjects.value.findIndex((x: any) => x.spaceObjectID === id)
         spaceObjects.value.splice(index, 1)
+        if (props.graphics) {
+          props.graphics.DrawSolarSystem(props.solarSystem)
+        }
       } else {
         message.value.ShowMessage('Failed to delete.', 'error')
       }

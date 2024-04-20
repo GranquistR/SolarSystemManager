@@ -6,7 +6,13 @@
     <!-- Ui -->
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
-      <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
+      <SpaceObjectPicker
+        ref="editSpaceObject"
+        class="w-22rem"
+        :solar-system="solarSystem"
+        @select-id="Select"
+        :graphics="graphics"
+      />
     </div>
     <!-- PIXI APP -->
     <div id="viewer" style="position: fixed"></div>
@@ -42,7 +48,7 @@ const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
 const addSpaceObject = ref()
-
+const editSpaceObject = ref()
 
 onMounted(() => {
   //mounts the pixi app
@@ -88,8 +94,10 @@ viewport.drag({}).decelerate({ friction: 0.95 }).pinch({}).wheel({})
 viewport.fit()
 viewport.moveCenter(0, 0)
 
+const clickPosition = ref<any>()
 viewport.on('clicked', function (e) {
   addSpaceObject.value.selectPosition(e.world)
+  editSpaceObject.value.selectPosition(e.world)
 })
 
 //add the viewport to the app
@@ -106,25 +114,15 @@ watch(selectedObject, (newValue) => {
     console.log(newValue.spaceObjectID)
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
-        console.log("x"+spaceObject.xCoord+" y"+spaceObject.yCoord)
-        
-        if(newValue.objectSize<=40)
-        {
+        console.log('x' + spaceObject.xCoord + ' y' + spaceObject.yCoord)
+
+        if (newValue.objectSize <= 40) {
           viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
           viewport.setZoom(30)
-
-          
-        }
-        else if(newValue.objectSize>40||50>newValue.objectSize)
-        {
+        } else if (newValue.objectSize > 40 || 50 > newValue.objectSize) {
           viewport.setZoom(10)
-          
-        }
-        else
-        {
-          
+        } else {
           viewport.setZoom(8)
-          
         }
         viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
       }
@@ -133,7 +131,6 @@ watch(selectedObject, (newValue) => {
     graphics.HighlightSpaceObject(newValue.spaceObjectID)
   } else {
     graphics.RemoveHighlight()
-    
   }
 })
 

@@ -46,7 +46,6 @@ namespace SolarSystemManager.RESTAPI.Services
 
         }
 
-        //------------------------------------------------------------------------------------------------------------
         public bool DeleteSolarSystem(Entities.DleteSolarSystemRequest dcred)
         {
             User? temp = _userService.ValidateUser(new Entities.LoginRequest(dcred.username, dcred.password));

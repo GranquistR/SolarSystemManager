@@ -82,7 +82,6 @@ namespace SolarSystemManager.RESTAPI.Entities
         Private
     }
 
-    //-----------------------------------------------------------------------------------------------------------
     public class DleteSolarSystemRequest
     {
         [JsonPropertyName("username")]
@@ -101,5 +100,4 @@ namespace SolarSystemManager.RESTAPI.Entities
             this.dSolarSystemID = dSolarSystemID;
         }
     }
-
 }

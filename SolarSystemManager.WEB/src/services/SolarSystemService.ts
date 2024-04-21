@@ -17,6 +17,18 @@ export default class SolarSystemService {
       })
   }
 
+  static async GetUserSolarSystems(user: User): Promise<any> {
+
+    return FetchAPIService.post('/SolarSystem/GetMySolarSystems', user)
+      .then((data) => {
+        return JSON.parse(data)
+      })
+      .catch((error) => {
+        alert('Error in SolarSystemService. Check console for details.')
+        console.error('Error in LoginService: ', error)
+      })
+  }
+  
   static async GetSolarSystemCount(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetSolarSystemCount')
       .then((data) => {

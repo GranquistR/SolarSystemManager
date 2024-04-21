@@ -72,8 +72,6 @@ import User from '@/Entities/User'
 import SolarSystem from '@/Entities/SolarSystem'
 import CustomMessage from '@/components/CustomMessage.vue'
 
-//import SpaceObjectPicker from '@ViewerUi/SpaceObjectPicker'
-
 const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
@@ -85,12 +83,16 @@ const confirmDelete = (systemId: number) => {
   deleteDialogVisible.value = true;
 };
 
-SolarSystemService.GetPublicSolarSystems().then((response) => {
-  solarSystems.value = response.data
-  solarSystems.value.forEach((solarSystem: any) => {
-    solarSystem.systemVisibility = solarSystem.systemVisibility == 0 ? 'Public' : 'Private'
-  })
-})
+//Shows user owned solar systems
+if (user){
+SolarSystemService.GetUserSolarSystems(user)
+    .then((response) => {
+      if (response.success === false) {
+        throw new Error('Failed to load solar systems')
+      }
+      solarSystems.value = response.data
+    })
+  };
 
 function ViewerGoTo(systemId: number) {
   router.push(`viewer/${systemId}`)

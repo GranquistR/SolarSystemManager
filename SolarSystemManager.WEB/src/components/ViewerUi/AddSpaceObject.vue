@@ -2,10 +2,12 @@
   <CustomMessage ref="message"></CustomMessage>
   <Button
     :icon="spaceObjectToEdit ? 'pi pi-pencil' : 'pi pi-plus'"
-    @click="open"
+    @click="openPanel"
     outlined
     rounded
     class="tools"
+    severity="secondary"
+    :disabled="isDisabled"
   />
   <Dialog
     v-model:visible="visible"
@@ -70,25 +72,20 @@ import InputNumber from 'primevue/inputnumber'
 import Dialog from 'primevue/dialog'
 import type User from '@/Entities/User'
 
-const visible = ref<boolean>(false)
-const user: User | undefined = inject('currentUser')
-
+//props
 const props = defineProps<{
   system: any
   graphics: Graphics
   spaceObjectToEdit?: any
+  disabled?: boolean
 }>()
 
-defineExpose({ selectPosition })
-
-const solarSystem = computed(() => {
-  return props.system
-})
-
+//refs
+const user: User | undefined = inject('currentUser')
+const visible = ref<boolean>(false)
+const emit = defineEmits(['opened', 'closed'])
 const message = ref()
-
 const panelOpen = ref(false)
-
 const newObject = ref<SpaceObject>({
   spaceObjectID: 0,
   solarSystemID: -1, //solarSystem.value.systemId,
@@ -99,7 +96,6 @@ const newObject = ref<SpaceObject>({
   objectSize: 5,
   objectColor: '#FFFFFF'
 })
-
 const types = ref([
   'Star',
   'Neutron Star',
@@ -124,7 +120,34 @@ const types = ref([
   'Creater Asteroid'
 ])
 
-const open = (event: any) => {
+//expose
+defineExpose({ selectPosition })
+function selectPosition(event: any) {
+  if (panelOpen.value) {
+    newObject.value.xCoord = Math.round(event.x)
+    newObject.value.yCoord = Math.round(event.y)
+  }
+}
+
+//computed
+const solarSystem = computed(() => {
+  return props.system
+})
+const isDisabled = computed(() => {
+  return props.disabled
+})
+
+//watchers
+watch(newObject.value, () => {
+  if (panelOpen.value) {
+    console.log(newObject.value)
+    redrawWithFake()
+  }
+})
+
+//methods
+//opens the panel and begins the drawing of the edits
+function openPanel(event: any) {
   if (!panelOpen.value) {
     //op.value.toggle(event)
     panelOpen.value = true
@@ -132,8 +155,10 @@ const open = (event: any) => {
   }
   resetObject()
   redrawWithFake()
+  emit('opened')
 }
 
+//resets everything on close
 function closePanel() {
   //hides the panel
   panelOpen.value = false
@@ -141,6 +166,7 @@ function closePanel() {
   //redraws the solar system without the fake object
   props.graphics.DrawSolarSystem(solarSystem.value)
   resetObject()
+  emit('closed')
 }
 
 function AddSpaceObject() {
@@ -221,36 +247,21 @@ function success(id: number) {
   message.value.ShowMessage('Successfully Saved!', 'success')
 }
 
-watch(newObject.value, (newValue) => {
-  if (panelOpen.value) {
-    console.log(newObject.value)
-    redrawWithFake()
-  }
-})
-
 function redrawWithFake() {
   //deep clones to avoid reference issues
   let tempSolar = JSON.parse(JSON.stringify(solarSystem.value))
-  tempSolar.spaceObjects.splice(solarSystem.value.spaceObjects.indexOf(props.spaceObjectToEdit), 1)
+  if (props.spaceObjectToEdit) {
+    tempSolar.spaceObjects.splice(
+      solarSystem.value.spaceObjects.indexOf(props.spaceObjectToEdit),
+      1
+    )
+  }
   let tempObj = JSON.parse(JSON.stringify(newObject.value))
   tempSolar.spaceObjects.push(tempObj)
   props.graphics.DrawSolarSystem(tempSolar)
 }
-
-function selectPosition(event: any) {
-  newObject.value.xCoord = Math.round(event.x)
-  newObject.value.yCoord = Math.round(event.y)
-}
 </script>
 <style scoped>
-.tools {
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: solid #27272a 1px;
-  color: #a1a1aa;
-  transition: opacity 0.3s ease-in-out;
-  z-index: 990;
-}
 .addBox {
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.5);

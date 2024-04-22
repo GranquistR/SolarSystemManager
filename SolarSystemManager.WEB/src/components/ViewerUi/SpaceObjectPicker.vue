@@ -38,10 +38,14 @@
       <template #body="slotProps">
         <div class="flex">
           <AddSpaceObject
+            v-if="graphics"
+            :ref="(x) => AddSpaceObjectRefs.push(x)"
             :system="solarSystem"
             :graphics="graphics"
             :space-object-to-edit="slotProps.data"
-            :click-position="clickPosition"
+            @opened="emit('opened')"
+            @closed="emit('closed')"
+            :disabled="editingDisabled"
           ></AddSpaceObject>
           <Button
             class="ml-2"
@@ -93,35 +97,39 @@ import CustomMessage from '../CustomMessage.vue'
 import Dialog from 'primevue/dialog'
 import AddSpaceObject from './AddSpaceObject.vue'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
-
-const message = ref()
-
-const user: User | undefined = inject('currentUser')
-const openDeleteDialogId = ref<number | null>(null)
-const openSesame = ref(true)
-
+//props
 const props = defineProps({
   solarSystem: {
     type: Object,
     default: () => ({ spaceObjects: [] })
   },
-  graphics: Graphics
+  graphics: Graphics,
+  editingDisabled: Boolean
 })
 
-const clickPosition = ref<any>()
+//refs
+const message = ref()
+const user: User | undefined = inject('currentUser')
+const openDeleteDialogId = ref<number | null>(null)
+const openSesame = ref(true)
+const AddSpaceObjectRefs = ref<any[]>([])
+const selectedObject = ref<any>()
+
+//expose
 defineExpose({ selectPosition })
 function selectPosition(event: any) {
-  clickPosition.value = event
+  AddSpaceObjectRefs.value.forEach((x) => {
+    x.selectPosition(event)
+  })
 }
 
-//computed is required to make the spaceObjects reactive
+//computed
 const spaceObjects = computed(() => {
   return props.solarSystem.spaceObjects
 })
 
-const selectedObject = ref<any>()
-const emit = defineEmits(['select-id'])
-
+//emits
+const emit = defineEmits(['select-id', 'opened', 'closed'])
 watch(
   selectedObject,
   (newValue) => {
@@ -133,7 +141,6 @@ watch(
 function RemoveSpaceObject(id: number) {
   if (user) {
     SolarSystemService.RemoveSpaceObject(user, id).then((data) => {
-      console.log(data)
       if (data.success) {
         message.value.ShowMessage('Successfully Deleted.')
         //remove object from array

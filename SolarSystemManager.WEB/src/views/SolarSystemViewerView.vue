@@ -12,6 +12,9 @@
         :solar-system="solarSystem"
         @select-id="Select"
         :graphics="graphics"
+        :editing-disabled="isEditing"
+        @opened="isEditing = true"
+        @closed="isEditing = false"
       />
     </div>
     <!-- PIXI APP -->
@@ -23,6 +26,9 @@
           ref="addSpaceObject"
           :system="solarSystem"
           :graphics="graphics"
+          :disabled="isEditing"
+          @opened="isEditing = true"
+          @closed="isEditing = false"
         ></AddSpaceObject>
         <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
       </div>
@@ -52,8 +58,10 @@ const route = useRoute()
 const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
-const addSpaceObject = ref()
 const editSpaceObject = ref()
+const addSpaceObject = ref()
+
+const isEditing = ref(false)
 
 onMounted(() => {
   //mounts the pixi app
@@ -99,10 +107,10 @@ viewport.drag({}).decelerate({ friction: 0.95 }).pinch({}).wheel({})
 viewport.fit()
 viewport.moveCenter(0, 0)
 
-const clickPosition = ref<any>()
+//viewport click position handling
 viewport.on('clicked', function (e) {
-  addSpaceObject.value.selectPosition(e.world)
   editSpaceObject.value.selectPosition(e.world)
+  addSpaceObject.value.selectPosition(e.world)
 })
 
 //add the viewport to the app

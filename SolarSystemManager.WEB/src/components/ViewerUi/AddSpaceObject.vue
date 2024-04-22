@@ -197,7 +197,7 @@ function AddSpaceObject() {
       )
     }
 
-    SolarSystemService.AddSpaceObject(newObject.value).then((result) => {
+    SolarSystemService.AddSpaceObject(newObject.value, user).then((result) => {
       if (result.success) {
         success(result.data)
       } else {

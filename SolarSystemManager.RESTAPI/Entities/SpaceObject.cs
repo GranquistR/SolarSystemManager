@@ -64,4 +64,12 @@ namespace SolarSystemManager.RESTAPI.Entities
         }
 
     }
+
+    public class AddSpaceObjectRequest
+    {
+        public SpaceObject spaceObject { get; set; }
+
+        public LoginRequest credentials { get; set; }
+
+    }
 }

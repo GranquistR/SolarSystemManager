@@ -34,13 +34,27 @@
               </template>
             </Column>
 
+            <!--New Column: Total bodies in each system.-->
+            <Column header="# of Objects">
+              <template #body="slotProps">
+                <div>
+                <span>Celestial Objects:</span>
+                {{ slotProps.data.spaceObjects.length }}
+              </div>
+              </template>
+            </Column>
+
             <Column header="Privacy">
               <template #body="slotProps">
-                <span v-if="slotProps.data.systemVisibility === 1" class="privacy-icon private">
-                  <i class="pi pi-lock" style="color: #f44336;"></i>
+                <span 
+                  v-tooltip.top="'Private'"
+                  v-if="slotProps.data.systemVisibility === 1" class="privacy-icon private">
+                  <i class="pi pi-lock"></i>
                 </span>
-                <span v-else class="privacy-icon public">
-                  <i class="pi pi-globe"></i>
+                <span 
+                  v-tooltip.top="'Public'"
+                  v-else class="privacy-icon public">
+                  <i class="pi pi-globe" ></i>
                 </span>
               </template>
             </Column>
@@ -56,8 +70,8 @@
 
           <!--Delete system dialog-->
           <Dialog v-model:visible="deleteDialogVisible" :closable="false">
-          <p>Are you sure you want to delete "<strong style="color: #f44336; font-size: 1.3em;">
-            {{ systemNameToDelete }}</strong>" ?</p>
+          <p>Are you sure you want to delete <strong style="color: #f44336; font-size: 1.3em;">
+            {{ systemNameToDelete }}</strong> ?</p>
             <template #footer>
               <Button label="Cancel" icon="pi pi-times" @click="deleteDialogVisible = false" />
               <Button label="Yes" icon="pi pi-check" @click="deleteSolarSystem" />

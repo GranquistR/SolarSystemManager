@@ -45,13 +45,14 @@ import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
 import AddSpaceObject from '@/components/ViewerUi/AddSpaceObject.vue'
 
 //vue stuff
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 //pixi
 import { Application, Sprite } from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
 import router from '@/router'
+import type User from '@/Entities/User'
 
 //get the id from the route
 const route = useRoute()
@@ -60,19 +61,27 @@ const selectedObject = ref<any>()
 const solarSystem = ref<any>()
 const editSpaceObject = ref()
 const addSpaceObject = ref()
-
 const isEditing = ref(false)
+const user: User | undefined = inject('currentUser')
 
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
 
   // Gets and draws the solar system
-  SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
+  SolarSystemService.GetSolarSystemByID(systemId, user).then((response) => {
     if (response.success) {
       solarSystem.value = response.data
       graphics.DrawSolarSystem(solarSystem.value)
     } else {
+      if (response.status === 401) {
+        router.push('/unauthorized')
+        return
+      }
+      if (response.status === 403) {
+        router.push('/forbidden')
+        return
+      }
       router.push('/notfound')
     }
   })

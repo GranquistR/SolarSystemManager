@@ -1,9 +1,10 @@
 import CreateSolarSystemRequest from '@/Entities/CreateSolarSystemRequest'
 import FetchAPIService from './FetchAPIService'
 import SpaceObject from '@/Entities/SpaceObject'
-import type User from '@/Entities/User'
+import User from '@/Entities/User'
 import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
 import AddSpaceObjectRequest from '@/Entities/AddSpaceObjectRequest'
+import GetSolarSystemByIdRequest from '@/Entities/GetSolarSystemByIdRequest'
 
 export default class SolarSystemService {
   static async GetPublicSolarSystems(): Promise<any> {
@@ -50,8 +51,16 @@ export default class SolarSystemService {
       })
   }
 
-  static async GetSolarSystemByID(id: number): Promise<any> {
-    return FetchAPIService.get(`/SolarSystem/GetSolarSystemByID?id=${id}`).then((data) => {
+  static async GetSolarSystemByID(
+    solarSystemID: number,
+    credentials: User | undefined
+  ): Promise<any> {
+    if (!credentials) {
+      credentials = new User(0, '', 0, '')
+    }
+
+    const request = new GetSolarSystemByIdRequest(solarSystemID, credentials)
+    return FetchAPIService.post(`/SolarSystem/GetSolarSystemByID`, request).then((data) => {
       return JSON.parse(data)
     })
   }

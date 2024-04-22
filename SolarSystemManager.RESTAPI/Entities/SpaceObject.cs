@@ -72,4 +72,11 @@ namespace SolarSystemManager.RESTAPI.Entities
         public LoginRequest credentials { get; set; }
 
     }
+
+    public class GetSolarSystemRequest
+    {
+        public int solarSystemID { get; set; }
+
+        public LoginRequest credentials { get; set; }
+    }
 }

@@ -140,7 +140,6 @@ const isDisabled = computed(() => {
 //watchers
 watch(newObject.value, () => {
   if (panelOpen.value) {
-    console.log(newObject.value)
     redrawWithFake()
   }
 })
@@ -164,8 +163,10 @@ function closePanel() {
   panelOpen.value = false
   visible.value = false
   //redraws the solar system without the fake object
-  props.graphics.DrawSolarSystem(solarSystem.value)
   resetObject()
+  //returns to proper solar system
+  props.graphics.DrawSolarSystem(solarSystem.value)
+  //unlocks all edit/add buttons
   emit('closed')
 }
 
@@ -183,13 +184,7 @@ function AddSpaceObject() {
     if (props.spaceObjectToEdit) {
       SolarSystemService.RemoveSpaceObject(user, props.spaceObjectToEdit.spaceObjectID).then(
         (data) => {
-          if (data.success) {
-            // eslint-disable-next-line vue/no-mutating-props
-            solarSystem.value.spaceObjects.splice(
-              solarSystem.value.spaceObjects.indexOf(props.spaceObjectToEdit),
-              1
-            )
-          } else {
+          if (!data.success) {
             failed()
             return
           }
@@ -238,13 +233,17 @@ function success(id: number) {
   //adds the object to the solar system list
   const finalObject = JSON.parse(JSON.stringify(newObject.value))
   solarSystem.value.spaceObjects.push(finalObject)
-  //redraws
-  props.graphics.DrawSolarSystem(solarSystem.value)
-  //hides the add object panel
-  closePanel()
-
+  //removes the old space object if editing
+  if (props.spaceObjectToEdit) {
+    solarSystem.value.spaceObjects.splice(
+      solarSystem.value.spaceObjects.indexOf(props.spaceObjectToEdit),
+      1
+    )
+  }
   //shows the success message
   message.value.ShowMessage('Successfully Saved!', 'success')
+  //hides the add object panel
+  closePanel()
 }
 
 function redrawWithFake() {

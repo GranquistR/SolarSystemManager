@@ -45,8 +45,8 @@
         <template #body="slotProps">
           <div class="flex">
             <AddSpaceObject
-              v-if="graphics"
-              :ref="(x) => AddSpaceObjectRefs.push(x)"
+              v-if="graphics && isAuthorized"
+              :ref="(ref) => AddSpaceObjectRefs.push(ref)"
               :system="solarSystem"
               :graphics="graphics"
               :space-object-to-edit="slotProps.data"
@@ -55,6 +55,7 @@
               :disabled="editingDisabled"
             ></AddSpaceObject>
             <Button
+              v-if="isAuthorized"
               class="ml-2"
               outlined
               severity="secondary"
@@ -116,7 +117,7 @@ import CustomMessage from '../CustomMessage.vue'
 import Dialog from 'primevue/dialog'
 import AddSpaceObject from './AddSpaceObject.vue'
 import Graphics from '@/scripts/pixie/DrawSolarSystem'
-import type { transform } from 'typescript'
+
 //props
 const props = defineProps({
   solarSystem: {
@@ -124,7 +125,8 @@ const props = defineProps({
     default: () => ({ spaceObjects: [] })
   },
   graphics: Graphics,
-  editingDisabled: Boolean
+  editingDisabled: Boolean,
+  isAuthorized: Boolean
 })
 
 //refs
@@ -139,8 +141,8 @@ const collapsed = ref(false)
 //expose
 defineExpose({ selectPosition })
 function selectPosition(event: any) {
-  AddSpaceObjectRefs.value.forEach((x) => {
-    x.selectPosition(event)
+  AddSpaceObjectRefs.value?.forEach((element) => {
+    element.selectPosition(event)
   })
 }
 
@@ -190,5 +192,3 @@ collapse-animate {
   transition: width 0.3s ease-in-out;
 }
 </style>
-
-v-model:visible="isDialogVisible"

@@ -21,7 +21,7 @@ const app = createApp(App)
 import LoginService from './services/LoginService'
 import User from './Entities/User'
 import LoginRequest from './Entities/UserRequest'
-
+console.log(document.cookie)
 if (document.cookie.includes('username') && document.cookie.includes('password')) {
   const user = document.cookie.split('username=')[1].split(';')[0]
   const pass = document.cookie.split('password=')[1].split(';')[0]
@@ -41,6 +41,9 @@ if (document.cookie.includes('username') && document.cookie.includes('password')
       document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
     }
   })
+} else {
+  document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
 }
 
 //directives

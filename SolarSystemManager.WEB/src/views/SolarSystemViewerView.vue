@@ -3,7 +3,7 @@
     <!-- header -->
     <HeaderBar require-login no-docking />
 
-    <!-- Ui -->
+    <!-- Ui left-->
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
       <SpaceObjectPicker
@@ -15,15 +15,19 @@
         :editing-disabled="isEditing"
         @opened="isEditing = true"
         @closed="isEditing = false"
+        :is-authorized="isAuthorized"
       />
     </div>
     <!-- PIXI APP -->
     <div id="viewer" style="position: fixed"></div>
+
+    <!-- Ui Right -->
     <div class="spacer"></div>
-    <Card class="p-2 flex justify-content-end flex-wrap">
+    <div class="p-2 flex justify-content-end flex-wrap">
       <div class="flex flex-column gap-2">
         <AddSpaceObject
           ref="addSpaceObject"
+          v-if="isAuthorized"
           :system="solarSystem"
           :graphics="graphics"
           :disabled="isEditing"
@@ -32,7 +36,7 @@
         ></AddSpaceObject>
         <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
       </div>
-    </Card>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -63,6 +67,7 @@ const editSpaceObject = ref()
 const addSpaceObject = ref()
 const isEditing = ref(false)
 const user: User | undefined = inject('currentUser')
+const isAuthorized = ref(false)
 
 onMounted(() => {
   //mounts the pixi app
@@ -73,6 +78,9 @@ onMounted(() => {
     if (response.success) {
       solarSystem.value = response.data
       graphics.DrawSolarSystem(solarSystem.value)
+      if (user?.role == 1 || user?.userID == solarSystem.value.ownerId) {
+        isAuthorized.value = true
+      }
     } else {
       if (response.status === 401) {
         router.push('/unauthorized')
@@ -133,11 +141,8 @@ function Select(selection: any) {
 //updates the viewport when a new object is selected
 watch(selectedObject, (newValue) => {
   if (newValue != null) {
-    console.log(newValue.spaceObjectID)
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
-        console.log('x' + spaceObject.xCoord + ' y' + spaceObject.yCoord)
-
         if (newValue.objectSize <= 40) {
           viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
           viewport.setZoom(30)
@@ -157,7 +162,7 @@ watch(selectedObject, (newValue) => {
 })
 
 //updates graphics after every change to solarSystems
-watch(solarSystem.value, (newValue) => {
+watch(solarSystem, (newValue) => {
   if (newValue != null) {
     graphics.DrawSolarSystem(solarSystem.value)
   }

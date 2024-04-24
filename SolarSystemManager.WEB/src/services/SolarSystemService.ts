@@ -1,11 +1,12 @@
 import CreateSolarSystemRequest from '@/Entities/CreateSolarSystemRequest'
 import FetchAPIService from './FetchAPIService'
 import SpaceObject from '@/Entities/SpaceObject'
-import type User from '@/Entities/User'
+import User from '@/Entities/User'
 import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
+import AddSpaceObjectRequest from '@/Entities/AddSpaceObjectRequest'
+import GetSolarSystemByIdRequest from '@/Entities/GetSolarSystemByIdRequest'
 
 export default class SolarSystemService {
-
   static async GetPublicSolarSystems(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
       .then((data) => {
@@ -18,7 +19,6 @@ export default class SolarSystemService {
   }
 
   static async GetUserSolarSystems(user: User): Promise<any> {
-
     return FetchAPIService.post('/SolarSystem/GetMySolarSystems', user)
       .then((data) => {
         return JSON.parse(data)
@@ -28,7 +28,7 @@ export default class SolarSystemService {
         console.error('Error in LoginService: ', error)
       })
   }
-  
+
   static async GetSolarSystemCount(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetSolarSystemCount')
       .then((data) => {
@@ -51,14 +51,23 @@ export default class SolarSystemService {
       })
   }
 
-  static async GetSolarSystemByID(id: number): Promise<any> {
-    return FetchAPIService.get(`/SolarSystem/GetSolarSystemByID?id=${id}`).then((data) => {
+  static async GetSolarSystemByID(
+    solarSystemID: number,
+    credentials: User | undefined
+  ): Promise<any> {
+    if (!credentials) {
+      credentials = new User(0, '', 0, '')
+    }
+
+    const request = new GetSolarSystemByIdRequest(solarSystemID, credentials)
+    return FetchAPIService.post(`/SolarSystem/GetSolarSystemByID`, request).then((data) => {
       return JSON.parse(data)
     })
   }
 
-  static async AddSpaceObject(object: SpaceObject): Promise<any> {
-    return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, object)
+  static async AddSpaceObject(object: SpaceObject, user: User): Promise<any> {
+    const request = new AddSpaceObjectRequest(user, object)
+    return FetchAPIService.post(`/SolarSystem/AddSpaceObject`, request)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -94,10 +103,10 @@ export default class SolarSystemService {
   static async DeleteSolarSystem(userdata: DeleteSolarSystemRequest): Promise<any> {
     return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, userdata)
       .then((data) => {
-        return JSON.parse(data);
+        return JSON.parse(data)
       })
       .catch((error) => {
         console.error('Error in DeleteSolarSystem: ', error)
-      });
+      })
   }
 }

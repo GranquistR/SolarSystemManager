@@ -73,8 +73,8 @@ async function Login() {
           isLoading.value = false
           const date = new Date()
           date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
-          document.cookie = `username=${username.value}; expires=${date}`
-          document.cookie = `password=${encryptedPassword}; expires=${date}`
+          document.cookie = `username=${username.value}; expires=${date}; path=/;`
+          document.cookie = `password=${encryptedPassword}; expires=${date}; path=/;`
           window.location.href = '/dashboard'
         } else {
           failedLogin()

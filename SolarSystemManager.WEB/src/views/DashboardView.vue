@@ -22,16 +22,34 @@
         <template #subtitle> Expand or shrink your universe </template>
         <template #content>
           <CustomMessage ref="message"></CustomMessage>
+
           <DataTable
-            selectionMode="single"
+            selectionMode="single" headerStyle="width: 3rem"
             :value="solarSystems"
-            @row-click="(row) => ViewerGoTo(row.data.systemId)">
+            @row-click="(row) => ViewerGoTo(row.data.systemId)"
+            v-model:selection="selectedSystems" dataKey="systemId"
+            >
           
+            <!--Group Delete button-->
+
+            <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
 
             <Column header="Name">
               <template #body="slotProps">
                 <span class="highlight-name">{{ slotProps.data.systemName }}</span>
               </template>
+            </Column>
+
+            <Column header="Preview">
+            <template #body="slotProps">
+            <div class="col">
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[1]" :size="30" />
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[2]" :size="30" />
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[3]" :size="30" />
+              <SpaceObjectDisplay :spaceObject="slotProps.data.spaceObjects[4]" :size="30" />
+            </div>
+            </template>
+
             </Column>
 
             <!--New Column: Total bodies in each system.-->
@@ -122,6 +140,10 @@ import { inject, ref } from 'vue'
 import User from '@/Entities/User'
 import SolarSystem from '@/Entities/SolarSystem'
 import CustomMessage from '@/components/CustomMessage.vue'
+import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
+//import ToggleButton from 'primevue/togglebutton';
+
+
 
 const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
@@ -129,6 +151,7 @@ const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null);
 const message = ref()
 const systemNameToDelete = ref('');
+const selectedSystems = ref('');
 
 
 const confirmDelete = (systemId: number) => {

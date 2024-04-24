@@ -5,22 +5,23 @@
     @click="openPanel"
     outlined
     rounded
-    class="tools"
-    severity="secondary"
+    class="ml-2 mt-2"
+    severity="contrast"
     :disabled="isDisabled"
   />
   <Dialog
     v-model:visible="visible"
+    :draggable="true"
     :dismissable="false"
     :position="'right'"
-    :draggable="true"
     :pt="{
       root: 'border-none',
       background: 'none'
       //note to self: trying to get ride of dialog box background so that its actual transparent
     }"
+    class="addSpaceObjectDialog"
   >
-    <template #container>
+    <template #header>
       <div class="p-3 addBox">
         <h3 v-if="!spaceObjectToEdit">Add an object to {{ solarSystem.systemName }}</h3>
         <h3 v-else>Edit {{ spaceObjectToEdit.objectName }}</h3>
@@ -97,8 +98,6 @@ import Dialog from 'primevue/dialog'
 import Checkbox from 'primevue/checkbox'
 import type User from '@/Entities/User'
 
-const visible = ref<boolean>(false)
-
 //props
 const props = defineProps<{
   system: any
@@ -111,12 +110,6 @@ const props = defineProps<{
 const user: User | undefined = inject('currentUser')
 const visible = ref<boolean>(false)
 const emit = defineEmits(['opened', 'closed'])
-defineExpose({ selectPosition })
-
-const solarSystem = computed(() => {
-  return props.system
-})
-
 const message = ref()
 const panelOpen = ref(false)
 
@@ -153,7 +146,11 @@ watch(objectMainType, () => {
 })
 watch(objectSubType, () => {
   //watching for changes in subtype
-  newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+  if (objectRinged.value) {
+    newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
+  } else {
+    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+  }
 })
 watch(objectRinged, () => {
   if (objectRinged.value) {

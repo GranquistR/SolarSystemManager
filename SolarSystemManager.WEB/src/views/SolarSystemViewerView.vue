@@ -34,7 +34,14 @@
           @opened="isEditing = true"
           @closed="isEditing = false"
         ></AddSpaceObject>
-        <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
+        <Button
+          icon="pi pi-sun"
+          @click="recenter"
+          outlined
+          rounded
+          class="ml-2 mt-2 buttons"
+          severity="contrast"
+        />
       </div>
     </div>
   </div>
@@ -177,13 +184,5 @@ function recenter() {
 <style scoped>
 .spacer {
   height: 66px;
-}
-.tools {
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: solid #27272a 1px;
-  color: #a1a1aa;
-  transition: opacity 0.3s ease-in-out;
-  z-index: 990;
 }
 </style>

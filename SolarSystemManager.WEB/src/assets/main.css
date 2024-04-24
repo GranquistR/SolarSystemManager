@@ -63,3 +63,14 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
 }
+/*removing "background" dialog box*/
+.p-dialog .p-dialog-header {
+  background: transparent;
+  padding: 0px;
+}
+.p-dialog .p-dialog-header-icons {
+  display: none;
+}
+.p-dialog .p-dialog-content {
+  padding: 0px;
+}

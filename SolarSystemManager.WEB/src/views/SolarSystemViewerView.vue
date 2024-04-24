@@ -3,24 +3,40 @@
     <!-- header -->
     <HeaderBar require-login no-docking />
 
-    <!-- Ui -->
+    <!-- Ui left-->
     <div class="absolute z-1 p-2">
       <div class="spacer"></div>
-      <SpaceObjectPicker class="w-22rem" :solar-system="solarSystem" @select-id="Select" />
+      <SpaceObjectPicker
+        ref="editSpaceObject"
+        class="w-22rem"
+        :solar-system="solarSystem"
+        @select-id="Select"
+        :graphics="graphics"
+        :editing-disabled="isEditing"
+        @opened="isEditing = true"
+        @closed="isEditing = false"
+        :is-authorized="isAuthorized"
+      />
     </div>
     <!-- PIXI APP -->
     <div id="viewer" style="position: fixed"></div>
+
+    <!-- Ui Right -->
     <div class="spacer"></div>
-    <Card class="p-2 flex justify-content-end flex-wrap">
+    <div class="p-2 flex justify-content-end flex-wrap">
       <div class="flex flex-column gap-2">
         <AddSpaceObject
           ref="addSpaceObject"
+          v-if="isAuthorized"
           :system="solarSystem"
           :graphics="graphics"
+          :disabled="isEditing"
+          @opened="isEditing = true"
+          @closed="isEditing = false"
         ></AddSpaceObject>
         <Button icon="pi pi-sun" @click="recenter" outlined rounded class="tools" />
       </div>
-    </Card>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -33,31 +49,47 @@ import SpaceObjectPicker from '@/components/ViewerUi/SpaceObjectPicker.vue'
 import AddSpaceObject from '@/components/ViewerUi/AddSpaceObject.vue'
 
 //vue stuff
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 
 //pixi
 import { Application, Sprite } from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
 import router from '@/router'
+import type User from '@/Entities/User'
 
 //get the id from the route
 const route = useRoute()
 const systemId = Number(route.params.id)
 const selectedObject = ref<any>()
 const solarSystem = ref<any>()
+const editSpaceObject = ref()
 const addSpaceObject = ref()
+const isEditing = ref(false)
+const user: User | undefined = inject('currentUser')
+const isAuthorized = ref(false)
 
 onMounted(() => {
   //mounts the pixi app
   document.getElementById('viewer')?.appendChild(app.view as any)
 
   // Gets and draws the solar system
-  SolarSystemService.GetSolarSystemByID(systemId).then((response) => {
+  SolarSystemService.GetSolarSystemByID(systemId, user).then((response) => {
     if (response.success) {
       solarSystem.value = response.data
       graphics.DrawSolarSystem(solarSystem.value)
+      if (user?.role == 1 || user?.userID == solarSystem.value.ownerId) {
+        isAuthorized.value = true
+      }
     } else {
+      if (response.status === 401) {
+        router.push('/unauthorized')
+        return
+      }
+      if (response.status === 403) {
+        router.push('/forbidden')
+        return
+      }
       router.push('/notfound')
     }
   })
@@ -92,7 +124,9 @@ viewport.drag({}).decelerate({ friction: 0.95 }).pinch({}).wheel({})
 viewport.fit()
 viewport.moveCenter(0, 0)
 
+//viewport click position handling
 viewport.on('clicked', function (e) {
+  editSpaceObject.value.selectPosition(e.world)
   addSpaceObject.value.selectPosition(e.world)
 })
 
@@ -107,11 +141,17 @@ function Select(selection: any) {
 //updates the viewport when a new object is selected
 watch(selectedObject, (newValue) => {
   if (newValue != null) {
-    console.log(newValue.spaceObjectID)
     solarSystem.value.spaceObjects.forEach((spaceObject: any) => {
       if (spaceObject.spaceObjectID === selectedObject.value.spaceObjectID) {
+        if (newValue.objectSize <= 40) {
+          viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
+          viewport.setZoom(30)
+        } else if (newValue.objectSize > 40 || 50 > newValue.objectSize) {
+          viewport.setZoom(10)
+        } else {
+          viewport.setZoom(8)
+        }
         viewport.moveCenter(spaceObject.xCoord, spaceObject.yCoord)
-        viewport.setZoom(60)
       }
     })
 
@@ -122,7 +162,7 @@ watch(selectedObject, (newValue) => {
 })
 
 //updates graphics after every change to solarSystems
-watch(solarSystem.value, (newValue) => {
+watch(solarSystem, (newValue) => {
   if (newValue != null) {
     graphics.DrawSolarSystem(solarSystem.value)
   }

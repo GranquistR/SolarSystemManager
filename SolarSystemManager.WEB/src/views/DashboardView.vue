@@ -18,19 +18,46 @@
         </template>
       </Card>
       <Card>
-        <template #title> Check out our user-made Solar Systems! </template>
-        <template #subtitle> Set your Solar Systems to public to be viewable here. </template>
+        <template #title> Select Your Cosmic Celestial !</template>
+        <template #subtitle> Expand or shrink your universe </template>
         <template #content>
           <CustomMessage ref="message"></CustomMessage>
           <DataTable
             selectionMode="single"
             :value="solarSystems"
-            @row-click="(row) => ViewerGoTo(row.data.systemId)"
-          >
-            <Column field="systemId" header="ID"></Column>
-            <Column field="ownerId" header="Owner ID"></Column>
-            <Column field="systemName" header="Name"></Column>
-            <Column field="systemVisibility" header="Privacy"></Column>
+            @row-click="(row) => ViewerGoTo(row.data.systemId)">
+          
+
+            <Column header="Name">
+              <template #body="slotProps">
+                <span class="highlight-name">{{ slotProps.data.systemName }}</span>
+              </template>
+            </Column>
+
+            <!--New Column: Total bodies in each system.-->
+            <Column header="# of Objects">
+              <template #body="slotProps">
+                <div>
+                <span>Celestial Objects:</span>
+                {{ slotProps.data.spaceObjects.length }}
+              </div>
+              </template>
+            </Column>
+
+            <Column header="Privacy">
+              <template #body="slotProps">
+                <span 
+                  v-tooltip.top="'Private'"
+                  v-if="slotProps.data.systemVisibility === 1" class="privacy-icon private">
+                  <i class="pi pi-lock"></i>
+                </span>
+                <span 
+                  v-tooltip.top="'Public'"
+                  v-else class="privacy-icon public">
+                  <i class="pi pi-globe" ></i>
+                </span>
+              </template>
+            </Column>
 
             <!--Delete button-->
             <Column header="Delete">
@@ -41,20 +68,44 @@
             <!--End Delete button-->
           </DataTable>
 
-          <!--Delete confirmation dialog-->
+          <!--Delete system dialog-->
           <Dialog v-model:visible="deleteDialogVisible" :closable="false">
-          <p>Are you sure you want to delete?</p>
-          <template #footer>
-          <Button label="Cancel" icon="pi pi-times" @click="deleteDialogVisible = false" />
-          <Button label="Yes" icon="pi pi-check" @click="deleteSolarSystem" />
-          </template>
+          <p>Are you sure you want to delete <strong style="color: #f44336; font-size: 1.3em;">
+            {{ systemNameToDelete }}</strong> ?</p>
+            <template #footer>
+              <Button label="Cancel" icon="pi pi-times" @click="deleteDialogVisible = false" />
+              <Button label="Yes" icon="pi pi-check" @click="deleteSolarSystem" />
+            </template>
           </Dialog>
 
         </template>
+
       </Card>
     </div>
   </div>
 </template>
+
+<style scoped>
+
+  .highlight-name {
+    font-weight: bold;
+    color: white; /*TODO: Choose a better color */
+    font-size: 1.2em; /*TODO: Choose a better font size*/
+  }
+
+  .privacy-icon {
+    font-size: 1.2em;
+  }
+
+  .privacy-icon.private {
+    color: red;
+    /* Additional styles if needed */
+  }
+
+  .privacy-icon.public {
+    color: rgb(2, 160, 2); /*TODO: Choose a better color */
+  }
+</style>
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
@@ -72,33 +123,39 @@ import User from '@/Entities/User'
 import SolarSystem from '@/Entities/SolarSystem'
 import CustomMessage from '@/components/CustomMessage.vue'
 
-//import SpaceObjectPicker from '@ViewerUi/SpaceObjectPicker'
-
 const user = inject<User | null>('currentUser');
 const solarSystems = ref<any>([])
 const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null);
 const message = ref()
+const systemNameToDelete = ref('');
+
 
 const confirmDelete = (systemId: number) => {
+  const system = solarSystems.value.find((s: SolarSystem) => s.systemId === systemId);
+  systemNameToDelete.value = system ? system.systemName : '';
   systemIdToDelete.value = systemId;
   deleteDialogVisible.value = true;
 };
 
-SolarSystemService.GetPublicSolarSystems().then((response) => {
-  solarSystems.value = response.data
-  solarSystems.value.forEach((solarSystem: any) => {
-    solarSystem.systemVisibility = solarSystem.systemVisibility == 0 ? 'Public' : 'Private'
-  })
-})
+//Shows user owned solar systems
+if (user){
+  SolarSystemService.GetUserSolarSystems(user)
+    .then((response) => {
+      if (response.success === false) {
+        throw new Error('Failed to load solar systems')
+      }
+      solarSystems.value = response.data
+    })
+};
 
 function ViewerGoTo(systemId: number) {
   router.push(`viewer/${systemId}`)
 }
 
 const deleteSolarSystem = () => {
-//Check if user is logged in and systemIdToDelete is not null
-if (systemIdToDelete.value !== null && user) {
+  //Check if user is logged in and systemIdToDelete is not null
+  if (systemIdToDelete.value !== null && user) {
 
   //Create user credentials object properties taken from the user object.
   const userCredentials = {
@@ -136,5 +193,4 @@ if (systemIdToDelete.value !== null && user) {
     });
   }
 };
-
 </script>

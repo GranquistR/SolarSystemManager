@@ -46,7 +46,6 @@ namespace SolarSystemManager.RESTAPI.Services
 
         }
 
-        //------------------------------------------------------------------------------------------------------------
         public bool DeleteSolarSystem(Entities.DleteSolarSystemRequest dcred)
         {
             User? temp = _userService.ValidateUser(new Entities.LoginRequest(dcred.username, dcred.password));
@@ -101,15 +100,41 @@ namespace SolarSystemManager.RESTAPI.Services
             return _baseRepo.Count("SpaceObject");
         }
 
-        public SolarSystem GetSolarSystemByID(int id)
+        public SolarSystem GetSolarSystemByID(int id, Entities.LoginRequest cred)
         {
-            return _baseRepo.GetSolarSystemByID(id);
+            
+            var system = _baseRepo.GetSolarSystemByID(id);
+            if(system.systemVisibility == Visibility.Private)
+            {
+                User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+                if(system.ownerId == temp.userID || temp.role == Role.Admin)
+                {
+                    return system;
+                }
+                else
+                {
+                    throw new BadHttpRequestException("403");
+                }
+            }
+            else
+            {
+                return system;
+            }
+
         }
 
-        public bool AddSpaceObject(SpaceObject spaceObject) //non secure, for front end testing only
+        public int AddSpaceObject(SpaceObject spaceObject, Entities.LoginRequest cred) //non secure, for front end testing only
         {
-            _baseRepo.AddSpaceObject(spaceObject);
-            return true;
+            User? temp = _userService.ValidateUser(cred) ?? throw new BadHttpRequestException("401");
+            SolarSystem system = _baseRepo.GetSolarSystemByID(spaceObject.solarSystemID) ?? throw new BadHttpRequestException("400");
+
+            if(system.ownerId == temp.userID || temp.role == Role.Admin)
+            {
+                int addedSpaceObjectId = _baseRepo.AddSpaceObject(spaceObject);
+                return addedSpaceObjectId;
+            }   
+                throw new BadHttpRequestException("403");
+
         }
         
         public bool RemoveSpaceObject(int id)

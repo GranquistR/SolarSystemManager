@@ -217,18 +217,26 @@ namespace SolarSystemManager.RESTAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetSolarSystemByID")]
-        public IActionResult GetSolarSystemByID(int id)
+        public IActionResult GetSolarSystemByID([FromBody] GetSolarSystemRequest getSolarSystemRequest)
         {
             try
             {
-                var solarSystem = _solarSystemService.GetSolarSystemByID(id);
+                var solarSystem = _solarSystemService.GetSolarSystemByID(getSolarSystemRequest.solarSystemID, getSolarSystemRequest.credentials);
                 return Ok(new Response { success = true, status = 200, message = "Successfully got solar system", data = solarSystem });
             }
             catch (BadHttpRequestException e)
             {
+                if (e.Message == "401")
+                {
+                    return Ok(new Response { success = false, status = 401, message = "Invalid login credentials", data = null });
+                }
+                if (e.Message == "403")
+                {
+                    return Ok(new Response { success = false, status = 403, message = "You do not have access to this resource", data = null });
+                }
                 return Ok(new Response { success = false, status = 400, message = e.Message, data = null });
             }
             catch
@@ -240,16 +248,13 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("AddSpaceObject")]
-        public IActionResult AddSpaceObject([FromBody] SpaceObject spaceObject)
+        public IActionResult AddSpaceObject([FromBody] AddSpaceObjectRequest spaceObjectReq)
         {
             try
             {
-                var result = _solarSystemService.AddSpaceObject(spaceObject);
-                if (result)
-                {
-                    return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = null });
-                }
-                return Ok(new Response { success = false, status = 400, message = "Failed to add space object", data = null });
+                int id = _solarSystemService.AddSpaceObject(spaceObjectReq.spaceObject, spaceObjectReq.credentials);
+                return Ok(new Response { success = true, status = 200, message = "Successfully added space object", data = id });
+
             }
             catch (BadHttpRequestException e)
             {
@@ -259,9 +264,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
             {
                 return Ok(new Response { success = false, status = 500, message = "Unknown error in AddSpaceObject", data = null });
             }
-        }
-      
-        
-        
+        }  
     }
 }

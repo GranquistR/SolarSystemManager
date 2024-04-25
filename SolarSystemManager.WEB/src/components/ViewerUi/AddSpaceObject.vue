@@ -10,16 +10,11 @@
     :disabled="isDisabled"
   />
   <Dialog
+    class="dialogNoBackground dialogNoX dialogNoPadding"
     v-model:visible="visible"
     :draggable="true"
     :dismissable="false"
     :position="'right'"
-    :pt="{
-      root: 'border-none',
-      background: 'none'
-      //note to self: trying to get ride of dialog box background so that its actual transparent
-    }"
-    class="addSpaceObjectDialog"
   >
     <template #header>
       <div class="p-3 addBox">

@@ -64,13 +64,13 @@ body {
   background-color: #a8bbbf;
 }
 /*removing "background" dialog box*/
-.p-dialog .p-dialog-header {
+.dialogNoBackground.p-dialog .p-dialog-header {
   background: transparent;
   padding: 0px;
 }
-.p-dialog .p-dialog-header-icons {
+.dialogNoX.p-dialog .p-dialog-header-icons {
   display: none;
 }
-.p-dialog .p-dialog-content {
+.dialogNoPadding.p-dialog .p-dialog-content {
   padding: 0px;
 }

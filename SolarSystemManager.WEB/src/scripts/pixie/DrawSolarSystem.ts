@@ -24,7 +24,7 @@ export default class gGraphics {
     //for every object in the solar system
     solarSystem.spaceObjects.forEach((element: any) => {
       //sets the sprite
-      let sprite = Sprite.from('/src/assets/Images/sprites/rockyRingedPlanet.png')
+      let sprite = Sprite.from('/src/assets/Images/sprites/error.png')
 
       //checks the object type and changes the sprite accordingly
       //Planets

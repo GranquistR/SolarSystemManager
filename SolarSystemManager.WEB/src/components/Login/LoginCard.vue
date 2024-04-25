@@ -44,7 +44,6 @@ import LoginService from '@/services/LoginService'
 import EncryptionModule from '@/services/encryption'
 import UserRequest from '@/Entities/UserRequest'
 import Keys from '@/Entities/Keys'
-import EncryptedMessage from '@/Entities/encrypted'
 
 const username = ref('')
 const password = ref('')

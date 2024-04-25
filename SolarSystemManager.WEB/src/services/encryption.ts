@@ -3,7 +3,7 @@
   const EncryptionModule = (() => {
     let prime: Set<number> = new Set<number>();
 
-    function IntToList(number: string): number[] {
+    function stringToList(number: string): number[] {
         const digits: number[] = [];
         for (const c of number) {
             if (/\d/.test(c)) {
@@ -13,7 +13,6 @@
         return digits;
     }
 
-    
     function listToString(numbers: number[]): string {
         let result = '';
         for (const num of numbers) {

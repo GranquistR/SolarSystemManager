@@ -7,7 +7,9 @@ import EncryptionModule from '@/services/encryption'
 import Keys from '@/Entities/Keys'
 export default class LoginService {
   static async Login(user: UserRequest) {
-    return FetchAPIService.post('/User/Login', user)
+    const message = EncryptionModule.eRSA(JSON.stringify(user));
+    const eMessage: EncryptedMessage = new EncryptedMessage(message.coded, message.privateKey, message.n); 
+    return FetchAPIService.post('/User/Login', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
 using SolarSystemManager.RESTAPI.Services;
+using System.Text.Json;
 using System.Collections.Specialized;
 using System.Numerics;
+using System;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -24,14 +26,19 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("Login")]
-        public IActionResult Login([FromBody] LoginRequest cred)
+        public IActionResult Login([FromBody] EncryptedMessage encMessage)
         {
+            string jsonString = EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n);
+            LoginRequest cred = JsonSerializer.Deserialize<LoginRequest>(jsonString);
             try
             {
                 var user = _userService.ValidateUser(cred);
                 if (user != null)
                 {
-                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Logged in", data = user });
+                    string jsonString1 = JsonSerializer.Serialize(user);
+                    EncryptedMessage eData = EncryptionController.eRSA(jsonString1);
+
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Logged in", data = eData });
                 }
                 return Ok(new Response { success = false, status = 401, message = "Failed to Login. Invalid credentials." });
             }

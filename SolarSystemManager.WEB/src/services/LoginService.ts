@@ -53,9 +53,6 @@ export default class LoginService {
   static async GetSalt(username: string): Promise<any> {
     const message = EncryptionModule.eRSA(username);
     const encMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
-    alert(encMessage.getMessage());
-    alert(encMessage.getKey()); 
-    alert(encMessage.getN());
     return FetchAPIService.post('/User/GetSalts', encMessage)
       .then((data) => {
         return JSON.parse(data)

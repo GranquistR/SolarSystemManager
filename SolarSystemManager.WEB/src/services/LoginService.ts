@@ -9,7 +9,7 @@ export default class LoginService {
   static async Login(user: UserRequest) {
     const message = EncryptionModule.eRSA(JSON.stringify(user));
     const eMessage: EncryptedMessage = new EncryptedMessage(message.coded, message.privateKey, message.n); 
-    return FetchAPIService.post('/User/Login', eMessage)
+    return FetchAPIService.post('/User/Login', message)
       .then((data) => {
         return JSON.parse(data)
       })

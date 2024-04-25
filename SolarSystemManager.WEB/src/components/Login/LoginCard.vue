@@ -41,8 +41,10 @@ import Message from 'primevue/message'
 
 import { ref } from 'vue'
 import LoginService from '@/services/LoginService'
-import encrypt from '@/scripts/Encryption/encryption'
+import EncryptionModule from '@/services/encryption'
 import UserRequest from '@/Entities/UserRequest'
+import Keys from '@/Entities/Keys'
+import EncryptedMessage from '@/Entities/encrypted'
 
 const username = ref('')
 const password = ref('')
@@ -56,15 +58,18 @@ async function Login() {
     return
   }
 
+
+ 
   try {
     // Fetch salt
     let salt = ''
+    let eMessage: any;
     await LoginService.GetSalt(username.value).then((response) => {
-      salt = response.data
-    })
+      salt = EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n);
 
+    })
     // Encrypt password using fetched salt
-    const encryptedPassword = encrypt.encrypt(password.value, salt)
+    const encryptedPassword = EncryptionModule.encrypt(password.value, salt)
 
     // Attempt login
     await LoginService.Login(new UserRequest(username.value, encryptedPassword)).then(

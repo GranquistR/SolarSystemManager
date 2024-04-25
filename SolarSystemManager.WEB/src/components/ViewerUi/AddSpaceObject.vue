@@ -5,22 +5,18 @@
     @click="openPanel"
     outlined
     rounded
-    class="tools"
-    severity="secondary"
+    class="ml-2 mt-2"
+    severity="contrast"
     :disabled="isDisabled"
   />
   <Dialog
+    class="dialogNoBackground dialogNoX dialogNoPadding"
     v-model:visible="visible"
+    :draggable="true"
     :dismissable="false"
     :position="'right'"
-    :draggable="true"
-    :pt="{
-      root: 'border-none',
-      background: 'none'
-      //note to self: trying to get ride of dialog box background so that its actual transparent
-    }"
   >
-    <template #container>
+    <template #header>
       <div class="p-3 addBox">
         <h3 v-if="!spaceObjectToEdit">Add an object to {{ solarSystem.systemName }}</h3>
         <h3 v-else>Edit {{ spaceObjectToEdit.objectName }}</h3>
@@ -29,12 +25,36 @@
           <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
 
           <label for="type">Type:</label>
-          <Dropdown
-            id="type"
-            v-model="newObject.objectType"
-            :options="types"
-            placeholder="Select..."
-          ></Dropdown>
+          <div>
+            <Dropdown
+              id="type"
+              v-model="objectMainType"
+              :options="types"
+              placeholder="Select..."
+            ></Dropdown>
+            <div>
+              <div v-if="objectMainType == 'Planet'" class="flex flex-row flex-wrap gap-3 mt-2">
+                <Dropdown
+                  v-model="objectSubType"
+                  :options="planetTypes"
+                  placeholder="Planet type"
+                  class="flex align-items-center justify-content-center"
+                ></Dropdown>
+                <div class="flex align-items-center justify-content-center">
+                  <label for="ringed" class="mr-2"> Ringed </label>
+                  <Checkbox id="ringed" v-model="objectRinged" :binary="true" />
+                </div>
+              </div>
+            </div>
+            <div v-if="objectMainType == 'Asteroid'">
+              <Dropdown
+                v-model="objectSubType"
+                :options="asteroidTypes"
+                placeholder="Asteroid type"
+                class="mt-2"
+              ></Dropdown>
+            </div>
+          </div>
           <div class="flex flex-column row-gap-4">
             <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
               Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
@@ -70,6 +90,7 @@ import Graphics from '@/scripts/pixie/DrawSolarSystem'
 import CustomMessage from '../CustomMessage.vue'
 import InputNumber from 'primevue/inputnumber'
 import Dialog from 'primevue/dialog'
+import Checkbox from 'primevue/checkbox'
 import type User from '@/Entities/User'
 
 //props
@@ -86,39 +107,55 @@ const visible = ref<boolean>(false)
 const emit = defineEmits(['opened', 'closed'])
 const message = ref()
 const panelOpen = ref(false)
+
+//for constructing specific object types
+const objectMainType = ref<string>('Star')
+const objectSubType = ref<string>('Rocky')
+const objectRinged = ref<boolean>(false)
+
 const newObject = ref<SpaceObject>({
   spaceObjectID: 0,
   solarSystemID: -1, //solarSystem.value.systemId,
   objectName: 'Sol',
-  objectType: 'Star',
+  objectType: objectMainType.value,
   xCoord: 0,
   yCoord: 0,
   objectSize: 5,
   objectColor: '#FFFFFF'
 })
-const types = ref([
-  'Star',
-  'Neutron Star',
-  'Black Hole',
-  'Comet',
-  'Water Planet',
-  'Rocky Planet',
-  'Gas Planet',
-  'Icy Planet',
-  'Lava Planet',
-  'Crater Planet',
-  'Earthlike Planet',
-  'Water Ringed Planet',
-  'Gas Ringed Planet',
-  'Icy Ringed Planet',
-  'Lava Ringed Planet',
-  'Crater Ringed Planet',
-  'Earthlike Ringed Planet',
-  'Rocky Asteroid',
-  'Icy Asteroid',
-  'Lava Asteroid',
-  'Creater Asteroid'
-])
+
+const types = ref(['Star', 'Neutron Star', 'Black Hole', 'Comet', 'Planet', 'Asteroid'])
+const planetTypes = ref(['Water', 'Rocky', 'Gas', 'Icy', 'Lava', 'Crater', 'Earthlike'])
+const asteroidTypes = ref(['Rocky', 'Icy', 'Lava', 'Crater'])
+
+watch(objectMainType, () => {
+  //constructs the object type
+  if (objectMainType.value == 'Asteroid' || objectMainType.value == 'Planet') {
+    //sets default subtype
+    objectSubType.value = 'Rocky'
+    objectRinged.value = false
+    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+  } else {
+    newObject.value.objectType = objectMainType.value
+  }
+})
+watch(objectSubType, () => {
+  //watching for changes in subtype
+  if (objectRinged.value) {
+    newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
+  } else {
+    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+  }
+})
+watch(objectRinged, () => {
+  if (objectRinged.value) {
+    //add rings
+    newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
+  } else {
+    //reset if not
+    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+  }
+})
 
 //expose
 defineExpose({ selectPosition })
@@ -244,7 +281,16 @@ function success(id: number) {
   message.value.ShowMessage('Successfully Saved!', 'success')
   //hides the add object panel
   closePanel()
+
+  //shows the success message
+  message.value.ShowMessage('Successfully Saved!', 'success')
 }
+
+watch(newObject.value, () => {
+  if (panelOpen.value) {
+    redrawWithFake()
+  }
+})
 
 function redrawWithFake() {
   //deep clones to avoid reference issues

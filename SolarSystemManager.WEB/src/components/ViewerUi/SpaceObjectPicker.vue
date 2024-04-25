@@ -56,9 +56,9 @@
             ></AddSpaceObject>
             <Button
               v-if="isAuthorized"
-              class="ml-2"
+              class="ml-2 mt-2"
               outlined
-              severity="secondary"
+              severity="contrast"
               icon="pi pi-trash"
               rounded
               iconPos="right"

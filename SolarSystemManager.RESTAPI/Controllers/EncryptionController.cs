@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Services;
+using System.Numerics;
+using Microsoft.OpenApi.Any;
+using SolarSystemManager.RESTAPI.Entities;
+using System.Security.Cryptography.X509Certificates;
 namespace SolarSystemManager.RESTAPI.Controllers
 {
 
@@ -100,77 +104,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
             return (x >> n) | (x << (32 - n));
         }
 
-        public static (uint publicKey, uint privateKey) GenerateKeyPair(int bits)
-        {
-            uint p = GeneratePrimeNumber(bits);
-            uint q = GeneratePrimeNumber(bits);
-            uint n = p * q;
-            uint phi = (p - 1) * (q - 1);
-            uint e = 2;
-            while (e < phi)
-            {
-                if (GCD(e, phi) == 1)
-                {
-                    break;
-                }
-                e++;
-            }
-            uint d = ModInverse(e, phi);
-            return (publicKey: n, privateKey: d);
-        }
-
-        public static uint EncryptRSA(uint message, uint publicKey, uint modulus)
-        {
-            return ModExp(message, publicKey, modulus);
-        }
-
-        public static uint DecryptRSA(uint ciphertext, uint privateKey, uint modulus)
-        {
-            return ModExp(ciphertext, privateKey, modulus);
-        }
-
-        public static uint GeneratePrimeNumber(int bits)
-        {
-            Random rand = new Random();
-            uint min = (uint)(1 << (bits - 1));
-            uint max = (uint)((1 << bits) - 1);
-            while (true)
-            {
-                uint num = (uint)rand.Next((int)min, (int)max);
-                if (IsProbablePrime(num, 20))
-                {
-                    return num;
-                }
-            }
-        }
-
-        public static bool IsProbablePrime(uint n, int k)
-        {
-            if (n == 2 || n == 3) return true;
-            if (n <= 1 || n % 2 == 0) return false;
-            int s = 0;
-            uint d = n - 1;
-            while (d % 2 == 0)
-            {
-                s++;
-                d /= 2;
-            }
-            for (int i = 0; i < k; i++)
-            {
-                uint a = (uint)rand.Next(2, (int)n - 2);
-                uint x = ModExp(a, d, n);
-                if (x == 1 || x == n - 1) continue;
-                for (int r = 1; r < s; r++)
-                {
-                    x = ModExp(x, 2, n);
-                    if (x == 1) return false;
-                    if (x == n - 1) break;
-                }
-                if (x != n - 1) return false;
-            }
-            return true;
-        }
-
         public static uint GCD(uint a, uint b)
         {
             while (b != 0)
@@ -223,21 +156,206 @@ namespace SolarSystemManager.RESTAPI.Controllers
             return hash.ToString("X");
         }
 
-        public static string SignData(string data, uint privateKey, uint modulus)
+        private static BigInteger ModInverse(BigInteger a, BigInteger m)
         {
-            uint hash = Encrypt256(data);
-            uint signature = EncryptRSA(hash, privateKey, modulus);
-            return signature.ToString();
+            BigInteger m0 = m;
+            BigInteger x0 = 0;
+            BigInteger x1 = 1;
+            while (a > 1)
+            {
+                BigInteger q = a / m;
+                BigInteger temp = m;
+                m = a % m;
+                a = temp;
+                temp = x0;
+                x0 = x1 - q * x0;
+                x1 = temp;
+            }
+            if (x1 < 0) x1 += m0;
+            return x1;
         }
 
-        public static bool VerifySignature(uint encryptedMessage, uint publicKey, uint modulus, string signature)
+        private static HashSet<int> prime = new HashSet<int>();
+        private static Random random = new Random();
+
+        public static List<int> IntToList(string number)
         {
-            uint decryptedMessage = DecryptRSA(encryptedMessage, publicKey, modulus);
-            uint decryptedSignature = uint.Parse(signature);
-            uint hash = Encrypt256(decryptedMessage.ToString());
-            return hash == decryptedSignature;
+            List<int> digits = new List<int>();
+            foreach (char c in number)
+            {
+                if (char.IsDigit(c))
+                {
+                    digits.Add(int.Parse(c.ToString()));
+                }
+            }
+            return digits;
         }
 
+
+        public static void PrimeFiller()
+        {
+            bool[] sieve = new bool[250];
+            for (int i = 0; i < 250; i++)
+            {
+                sieve[i] = true;
+            }
+
+            sieve[0] = false;
+            sieve[1] = false;
+
+            for (int i = 2; i < 250; i++)
+            {
+                for (int j = i * 2; j < 250; j += i)
+                {
+                    sieve[j] = false;
+                }
+            }
+
+            for (int i = 0; i < sieve.Length; i++)
+            {
+                if (sieve[i])
+                {
+                    prime.Add(i);
+                }
+            }
+        }
+
+        public static int PickRandomPrime()
+        {
+            int k = random.Next(0, prime.Count - 1);
+            var enumerator = prime.GetEnumerator();
+            for (int i = 0; i <= k; i++)
+            {
+                enumerator.MoveNext();
+            }
+
+            int ret = enumerator.Current;
+            prime.Remove(ret);
+            return ret;
+        }
+
+        public static void SetKeys(out int publicKey, out int privateKey, out int n)
+        {
+            int prime1 = PickRandomPrime();
+            int prime2 = PickRandomPrime();
+
+            n = prime1 * prime2;
+            int fi = (prime1 - 1) * (prime2 - 1);
+
+            int e = 2;
+            while (true)
+            {
+                if (GCD(e, fi) == 1)
+                {
+                    break;
+                }
+                e += 1;
+            }
+
+            publicKey = e;
+
+            int d = 2;
+            while (true)
+            {
+                if ((d * e) % fi == 1)
+                {
+                    break;
+                }
+                d += 1;
+            }
+
+            privateKey = d;
+        }
+        public static string ListToString(List<int> numbers)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (int num in numbers)
+            {
+                sb.Append(num.ToString());
+            }
+            return sb.ToString();
+        }
+        public static EncryptedMessage eRSA(string message)
+        {
+            PrimeFiller();
+            int publicKey, privateKey, n;
+            List<int> number = IntToList(message);
+            SetKeys(out publicKey, out privateKey, out n);
+            List<int> coded = Encoder(message, publicKey, n);
+            return new EncryptedMessage(coded, privateKey, n);
+
+        }
+
+        public static string dRSA(List<int> eMessage, int privateKey, int n)
+        {
+            string decrypted = "";
+            foreach (int num in eMessage)
+            {
+                int decryptedNum = Decrypt(num, privateKey, n);
+                // Convert the decrypted number to its corresponding ASCII character
+                decrypted += (char)decryptedNum;
+            }
+            return decrypted;
+        }
+        public static int Encrypt(int message, int publicKey, int n)
+        {
+            int e = publicKey;
+            int encrypted_text = 1;
+            while (e > 0)
+            {
+                encrypted_text *= message;
+                encrypted_text %= n;
+                e -= 1;
+            }
+            return encrypted_text;
+        }
+
+        public static int Decrypt(int encrypted_text, int privateKey, int n)
+        {
+            int d = privateKey;
+            int decrypted = 1;
+            while (d > 0)
+            {
+                decrypted *= encrypted_text;
+                decrypted %= n;
+                d -= 1;
+            }
+            return decrypted;
+        }
+
+        public static int GCD(int a, int b)
+        {
+            if (b == 0)
+            {
+                return a;
+            }
+            return GCD(b, a % b);
+        }
+
+        public static List<int> Encoder(string message, int publicKey, int n)
+        {
+            List<int> encoded = new List<int>();
+            foreach (char letter in message)
+            {
+                encoded.Add(Encrypt((int)letter, publicKey, n));
+            }
+            return encoded;
+        }
+
+        public static string Decoder(List<int> encryptedText, int privateKey, int n)
+        {
+            string decrypted = "";
+            foreach (int num in encryptedText)
+            {
+                int decryptedNum = Decrypt(num, privateKey, n);
+                // Convert the decrypted number to its corresponding ASCII character
+                decrypted += (char)decryptedNum;
+            }
+            return decrypted;
+        }
     }
 
 }
+    
+
+

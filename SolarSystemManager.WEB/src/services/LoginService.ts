@@ -2,7 +2,9 @@ import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
 import CreateUserRequest from '@/Entities/CreateUserRequest'
 import ChangeUsernameRequest from '@/Entities/ChangeUsernameRequest'
-
+import EncryptedMessage from '@/Entities/encrypted'
+import EncryptionModule from '@/services/encryption'
+import Keys from '@/Entities/Keys'
 export default class LoginService {
   static async Login(user: UserRequest) {
     return FetchAPIService.post('/User/Login', user)
@@ -48,8 +50,13 @@ export default class LoginService {
       })
   }
 
-  static async GetSalt(username: string) {
-    return FetchAPIService.post('/User/GetSalts', username)
+  static async GetSalt(username: string): Promise<any> {
+    const message = EncryptionModule.eRSA(username);
+    const encMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    alert(encMessage.getMessage());
+    alert(encMessage.getKey()); 
+    alert(encMessage.getN());
+    return FetchAPIService.post('/User/GetSalts', encMessage)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -58,16 +65,7 @@ export default class LoginService {
         console.error('Error in GetSaltService: ', error)
       })
   }
-  static async getKey(key: string) {
-    return FetchAPIService.post('/User/GetKey', key)
-    .then((data) => {
-      return JSON.parse(data)
-    })
-    .catch((error) => {
-      alert('Error in GetKeyService. Check console for details.')
-      console.error('Error in GetKeyService: ', error)
-    })
-  }
+
 
   static async ChangeUsername(userdata: ChangeUsernameRequest): Promise<any> {
     return FetchAPIService.post('/User/ChangeUserName', userdata)

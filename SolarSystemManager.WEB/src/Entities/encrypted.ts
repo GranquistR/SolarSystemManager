@@ -1,12 +1,14 @@
 export default class EncryptedMessage {
-    private publicKey: any;
-    private data: any;
+    private message: number[];
+    private key: number;
+    private n: number;
   
-    constructor(publicKey: any, data: any) {
-        this.publicKey = publicKey;
-        this.data = data;
+    constructor(message: number[], key: number, n: number) {
+        this.key = key;
+        this.message = message;
+        this.n = n;
     }
-  
-    getPublicKey(): string { return this.publicKey; }
-    getData(): string { return this.data; }
+    getMessage(): number[] { return this.message; }
+    getKey(): number { return this.key; }
+    getN(): number { return this.n; }
   }

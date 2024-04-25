@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SolarSystemManager.RESTAPI.Entities;
 using SolarSystemManager.RESTAPI.Services;
 using System.Collections.Specialized;
+using System.Numerics;
 
 namespace SolarSystemManager.RESTAPI.Controllers
 {
@@ -86,14 +87,20 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")]
         [Route("GetSalts")]
-        public IActionResult GetSalt([FromBody] string username)
+        public IActionResult GetSalt([FromBody] EncryptedMessage encMessage) 
         {
+
+            string username = EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n);
+
             try
             {
                 string salt = _userService.GetSalty(username);
+
                 if (salt != null)
                 {
-                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Retrieved Salt", data = salt });
+                    EncryptedMessage eData = EncryptionController.eRSA(salt);
+
+                    return Ok(new Response { success = true, status = 200, message = "Sucessfully Retrieved Salt", data = eData });
                 }
                 else
                 {

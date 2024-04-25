@@ -52,4 +52,29 @@ namespace SolarSystemManager.RESTAPI.Entities
             this.newUsername = newUsername;
         }
     }
+    public class EncryptedMessage
+    {
+        [JsonPropertyName("message")]
+        public List<int> message { get; set; }
+
+        [JsonPropertyName("key")]
+
+        public int key { get; set; }
+
+        [JsonPropertyName("n")]
+
+        public int n { get; set; }
+
+
+
+
+        public EncryptedMessage(List<int> message, int key, int n)
+        {
+            this.message = message;
+            this.key = key;
+            this.n = n;
+
+        }
+
+    }
 }

@@ -1,10 +1,10 @@
 import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
 import CreateUserRequest from '@/Entities/CreateUserRequest'
+import ChangeUsernameRequest from '@/Entities/ChangeCredRequest'
 import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import EncryptedMessage from '@/Entities/encrypted'
 import EncryptionModule from '@/services/encryption'
-import Keys from '@/Entities/Keys'
 export default class LoginService {
   static async Login(user: UserRequest) {
     const message = EncryptionModule.eRSA(JSON.stringify(user));

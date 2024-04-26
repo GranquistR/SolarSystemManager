@@ -44,12 +44,12 @@
 import { ref, onMounted } from 'vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
-import ChangeUsername from '@/services/LoginService'
 import LoginService from '@/services/LoginService'
 import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import InputText from 'primevue/inputtext'
-import encrypt from '@/scripts/Encryption/encryption'
+import EncryptionModule from '@/services/encryption'
 import Password from 'primevue/password'
+
 
 const newUN = ref('')
 const oldUN = ref('')
@@ -70,13 +70,13 @@ async function changeParam() {
   if (oldUN.value != '' && oldUN.value != '') {
     let salt = ''
     await LoginService.GetSalt(oldUN.value).then((response) => {
-      salt = response.data
+      salt = EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n);
     })
 
     // Encrypt password using fetched salt
-    const encryptedPassword = encrypt.encrypt(oldP.value, salt)
+    const encryptedPassword = EncryptionModule.encrypt(oldP.value, salt)
     if (passVisible) {
-      const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
+      const newEncryptedPassword = EncryptionModule.encrypt(newUN.value, salt)
       LoginService.ChangePassword(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword)
       )

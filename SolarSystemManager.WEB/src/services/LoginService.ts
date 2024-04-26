@@ -1,11 +1,15 @@
 import UserRequest from '@/Entities/UserRequest'
 import FetchAPIService from './FetchAPIService'
 import CreateUserRequest from '@/Entities/CreateUserRequest'
+import ChangeUsernameRequest from '@/Entities/ChangeCredRequest'
 import ChangeCredRequest from '@/Entities/ChangeCredRequest'
-
+import EncryptedMessage from '@/Entities/encrypted'
+import EncryptionModule from '@/services/encryption'
 export default class LoginService {
   static async Login(user: UserRequest) {
-    return FetchAPIService.post('/User/Login', user)
+    const message = EncryptionModule.eRSA(JSON.stringify(user));
+    const eMessage: EncryptedMessage = new EncryptedMessage(message.coded, message.privateKey, message.n); 
+    return FetchAPIService.post('/User/Login', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -48,8 +52,10 @@ export default class LoginService {
       })
   }
 
-  static async GetSalt(username: string) {
-    return FetchAPIService.post('/User/GetSalts', username)
+  static async GetSalt(username: string): Promise<any> {
+    const message = EncryptionModule.eRSA(username);
+    const encMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    return FetchAPIService.post('/User/GetSalts', encMessage)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -58,6 +64,7 @@ export default class LoginService {
         console.error('Error in GetSaltService: ', error)
       })
   }
+
 
   static async ChangeUsername(userdata: ChangeCredRequest): Promise<any> {
     return FetchAPIService.post('/User/ChangeUserName', userdata)

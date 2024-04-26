@@ -14,7 +14,7 @@
   />
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 // eslint-disable-next-line vue/return-in-computed-property
 const imageLink = computed(() => {
   if (props.spaceObject.objectType == 'Water Planet')

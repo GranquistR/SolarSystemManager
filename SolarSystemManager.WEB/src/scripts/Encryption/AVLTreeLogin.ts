@@ -154,25 +154,11 @@ function testS() {
   for (let i = 1; i < 1000001; ++i) {
     const username = `User${i}`
     const password = `Password${i}`
-    console.log(`${username}`)
-    console.time('Search Time') // Start the timer
 
     const result = avlTree.searchByUsername(username)
 
-    console.timeEnd('Search Time') // End the timer and display the time
-
     if (result) {
       const hashedInputPassword = hashPassword(password, result.salt)
-      if (result.password === hashedInputPassword) {
-        console.log('Success! Password is correct.')
-        console.log('Height:', avlTree.getHeight(result)) // Print the height
-        console.log('Salt:', result.salt)
-        console.log('Hashed Password:', result.password)
-      } else {
-        console.log('Failure! Password is incorrect.')
-      }
-    } else {
-      console.log('Username not found.')
     }
   }
 }

@@ -82,8 +82,6 @@ async function Login() {
       }
     )
   } catch (error) {
-    console.error('Error in LoginService: ', error)
-    alert('Error in LoginService. Check console for details.')
     failedLogin()
   }
 }

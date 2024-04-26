@@ -154,7 +154,6 @@ onMounted(() => {
       isLoading.value = false
     })
     .catch((error) => {
-      console.log('error in LandingPageView: ' + error)
       failedToLoad.value = true
       isLoading.value = false
     })

@@ -11,6 +11,7 @@
   />
   <Dialog
     v-model:visible="visible"
+    class="HEREHERE"
     :dismissable="false"
     :position="'right'"
     :draggable="true"

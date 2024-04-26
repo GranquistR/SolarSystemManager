@@ -173,8 +173,6 @@ const deleteSolarSystem = () => {
         //Show success message
         message.value.ShowMessage('Successfully Deleted.')
         solarSystems.value = solarSystems.value.filter((system: SolarSystem) => system.systemId !== systemIdToDelete.value);
-        //Show success message
-        console.log('Solar system deleted successfully');
 
       } else {
         //Show error message

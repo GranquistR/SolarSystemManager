@@ -100,8 +100,9 @@ export default class SolarSystemService {
     })
   }
 
-  static async DeleteSolarSystem(userdata: DeleteSolarSystemRequest): Promise<any> {
-    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, userdata)
+  static async DeleteSolarSystem(solarId: number, user: User): Promise<any> {
+    const req = new DeleteSolarSystemRequest(user.username, user.password, solarId)
+    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, req)
       .then((data) => {
         return JSON.parse(data)
       })

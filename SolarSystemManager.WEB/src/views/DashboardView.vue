@@ -105,7 +105,7 @@
   .highlight-name {
     font-weight: bold;
     color: white; /*TODO: Choose a better color */
-    font-size: 1.2em; /*TODO: Choose a better font size*/
+    font-size: 1.4em; /*TODO: Choose a better font size*/
   }
 
   .privacy-icon {

@@ -17,64 +17,66 @@
     :position="'right'"
   >
     <template #header>
-      <div class="p-3 addBox">
+      <div class="p-3 addBox border-round-top-xl">
         <h3 v-if="!spaceObjectToEdit">Add an object to {{ solarSystem.systemName }}</h3>
         <h3 v-else>Edit {{ spaceObjectToEdit.objectName }}</h3>
-        <div class="flex flex-column row-gap-2">
-          <label for="objectName">Name:</label>
-          <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
-
-          <label for="type">Type:</label>
-          <div>
-            <Dropdown
-              id="type"
-              v-model="objectMainType"
-              :options="types"
-              placeholder="Select..."
-            ></Dropdown>
-            <div>
-              <div v-if="objectMainType == 'Planet'" class="flex flex-row flex-wrap gap-3 mt-2">
-                <Dropdown
-                  v-model="objectSubType"
-                  :options="planetTypes"
-                  placeholder="Planet type"
-                  class="flex align-items-center justify-content-center"
-                ></Dropdown>
-                <div class="flex align-items-center justify-content-center">
-                  <label for="ringed" class="mr-2"> Ringed </label>
-                  <Checkbox id="ringed" v-model="objectRinged" :binary="true" />
-                </div>
-              </div>
-            </div>
-            <div v-if="objectMainType == 'Asteroid'">
-              <Dropdown
-                v-model="objectSubType"
-                :options="asteroidTypes"
-                placeholder="Asteroid type"
-                class="mt-2"
-              ></Dropdown>
-            </div>
-          </div>
-          <div class="flex flex-column row-gap-4">
-            <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
-              Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
-            </div>
-            <div>
-              Size:
-              <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
-            </div>
-            <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
-            <!--class="w-14rem"-->
-            <div>
-              <label for="color"> Color </label>
-              <ColorPicker id="color" v-model="newObject.objectColor" />
-            </div>
-          </div>
-          <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
-          <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
-        </div>
       </div>
     </template>
+    <Card>
+      <div class="flex flex-column row-gap-2 p-3 addBox">
+        <label for="objectName">Name:</label>
+        <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
+
+        <label for="type">Type:</label>
+        <div>
+          <Dropdown
+            id="type"
+            v-model="objectMainType"
+            :options="types"
+            placeholder="Select..."
+          ></Dropdown>
+          <div>
+            <div v-if="objectMainType == 'Planet'" class="flex flex-row flex-wrap gap-3 mt-2">
+              <Dropdown
+                v-model="objectSubType"
+                :options="planetTypes"
+                placeholder="Planet type"
+                class="flex align-items-center justify-content-center"
+              ></Dropdown>
+              <div class="flex align-items-center justify-content-center">
+                <label for="ringed" class="mr-2"> Ringed </label>
+                <Checkbox id="ringed" v-model="objectRinged" :binary="true" />
+              </div>
+            </div>
+          </div>
+          <div v-if="objectMainType == 'Asteroid'">
+            <Dropdown
+              v-model="objectSubType"
+              :options="asteroidTypes"
+              placeholder="Asteroid type"
+              class="mt-2"
+            ></Dropdown>
+          </div>
+        </div>
+        <div class="flex flex-column row-gap-4">
+          <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
+            Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
+          </div>
+          <div>
+            Size:
+            <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
+          </div>
+          <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
+          <!--class="w-14rem"-->
+          <div>
+            <label for="color"> Color </label>
+            <ColorPicker id="color" v-model="newObject.objectColor" />
+          </div>
+        </div>
+        <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
+        <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
+      </div>
+    </Card>
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -308,9 +310,7 @@ function redrawWithFake() {
 </script>
 <style scoped>
 .addBox {
-  backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.5);
   border: solid #27272a 1px;
-  border-radius: 10px;
 }
 </style>

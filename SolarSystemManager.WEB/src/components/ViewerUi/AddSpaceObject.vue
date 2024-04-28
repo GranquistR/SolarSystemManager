@@ -312,5 +312,6 @@ function redrawWithFake() {
 .addBox {
   background-color: rgba(0, 0, 0, 0.5);
   border: solid #27272a 1px;
+  width: 100%;
 }
 </style>

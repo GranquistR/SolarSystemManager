@@ -100,14 +100,13 @@ export default class SolarSystemService {
     })
   }
 
-  static async DeleteSolarSystem(solarId: number, user: User): Promise<any> {
-    const req = new DeleteSolarSystemRequest(user.username, user.password, solarId)
-    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, req)
+  static async DeleteSolarSystem(request: DeleteSolarSystemRequest): Promise<any> {
+    return FetchAPIService.post(`/SolarSystem/DeleteSolarSystem`, request)
       .then((data) => {
         return JSON.parse(data)
       })
       .catch((error) => {
-        console.error('Error in DeleteSolarSystem: ', error)
-      })
+        console.error('Error in DeleteSolarSystem: ', error);
+      });
   }
 }

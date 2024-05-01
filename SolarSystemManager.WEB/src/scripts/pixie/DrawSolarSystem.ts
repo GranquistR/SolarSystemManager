@@ -28,34 +28,52 @@ export default class gGraphics {
 
       //checks the object type and changes the sprite accordingly
       //Planets
-      if(element.objectType == 'Water Planet') sprite = Sprite.from('/src/assets/Images/sprites/waterPlanet.png')
-      else if(element.objectType == 'Rocky Planet') sprite = Sprite.from('/src/assets/Images/sprites/rockyPlanet.png')
-      else if(element.objectType == 'Gas Planet') sprite = Sprite.from('/src/assets/Images/sprites/gasPlanet.png')
-      else if(element.objectType == 'Icy Planet') sprite = Sprite.from('/src/assets/Images/sprites/icyPlanet.png')
-      else if(element.objectType == 'Lava Planet') sprite = Sprite.from('/src/assets/Images/sprites/lavaPlanet.png')
-      else if(element.objectType == 'Crater Planet') sprite = Sprite.from('/src/assets/Images/sprites/craterPlanet.png')
-      else if(element.objectType == 'Earthlike Planet') sprite = Sprite.from('/src/assets/Images/sprites/earthlikePlanet.png')
-      else if(element.objectType == 'Water Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/waterRingedPlanet.png')
-      else if(element.objectType == 'Rocky Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/rockyRingedPlanet.png')
-      else if(element.objectType == 'Gas Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/gasRingedPlanet.png')
-      else if(element.objectType == 'Icy Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/icyRingedPlanet.png')
-      else if(element.objectType == 'Lava Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/lavaRingedPlanet.png')
-      else if(element.objectType == 'Crater Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/craterRingedPlanet.png')
-      else if(element.objectType == 'Earthlike Ringed Planet') sprite = Sprite.from('/src/assets/Images/sprites/earthlikeRingedPlanet.png')
-    //Space Objects
-      else if(element.objectType == 'Rocky Asteroid') sprite = Sprite.from('/src/assets/Images/sprites/rockyAsteroid.png')
-      else if(element.objectType == 'Icy Asteroid') sprite = Sprite.from('/src/assets/Images/sprites/icyAsteroid.png')
-      else if(element.objectType == 'Lava Asteroid') sprite = Sprite.from('/src/assets/Images/sprites/lavaAsteroid.png')
-      else if(element.objectType == 'Crater Asteroid') sprite = Sprite.from('/src/assets/Images/sprites/craterAsteroid.png')
-      else if(element.objectType == 'Star') sprite = Sprite.from('/src/assets/Images/sprites/star.png')
-      else if(element.objectType == 'Neutron Star') sprite = Sprite.from('/src/assets/Images/sprites/neutronStar.png')
-      else if(element.objectType == 'Black Hole') sprite = Sprite.from('/src/assets/Images/sprites/blackHole.png')
-      else if(element.objectType == 'Comet') sprite = Sprite.from('/src/assets/Images/sprites/comet.png')
+      if (element.objectType == 'Water Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/waterPlanet.png')
+      else if (element.objectType == 'Rocky Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/rockyPlanet.png')
+      else if (element.objectType == 'Gas Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/gasPlanet.png')
+      else if (element.objectType == 'Icy Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/icyPlanet.png')
+      else if (element.objectType == 'Lava Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/lavaPlanet.png')
+      else if (element.objectType == 'Crater Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/craterPlanet.png')
+      else if (element.objectType == 'Earthlike Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/earthlikePlanet.png')
+      else if (element.objectType == 'Water Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/waterRingedPlanet.png')
+      else if (element.objectType == 'Rocky Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/rockyRingedPlanet.png')
+      else if (element.objectType == 'Gas Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/gasRingedPlanet.png')
+      else if (element.objectType == 'Icy Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/icyRingedPlanet.png')
+      else if (element.objectType == 'Lava Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/lavaRingedPlanet.png')
+      else if (element.objectType == 'Crater Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/craterRingedPlanet.png')
+      else if (element.objectType == 'Earthlike Ringed Planet')
+        sprite = Sprite.from('/src/assets/Images/sprites/earthlikeRingedPlanet.png')
+      //Space Objects
+      else if (element.objectType == 'Rocky Asteroid')
+        sprite = Sprite.from('/src/assets/Images/sprites/rockyAsteroid.png')
+      else if (element.objectType == 'Icy Asteroid')
+        sprite = Sprite.from('/src/assets/Images/sprites/icyAsteroid.png')
+      else if (element.objectType == 'Lava Asteroid')
+        sprite = Sprite.from('/src/assets/Images/sprites/lavaAsteroid.png')
+      else if (element.objectType == 'Crater Asteroid')
+        sprite = Sprite.from('/src/assets/Images/sprites/craterAsteroid.png')
+      else if (element.objectType == 'Star')
+        sprite = Sprite.from('/src/assets/Images/sprites/star.png')
+      else if (element.objectType == 'Neutron Star')
+        sprite = Sprite.from('/src/assets/Images/sprites/neutronStar.png')
+      else if (element.objectType == 'Black Hole')
+        sprite = Sprite.from('/src/assets/Images/sprites/blackHole.png')
+      else if (element.objectType == 'Comet')
+        sprite = Sprite.from('/src/assets/Images/sprites/comet.png')
       else console.log('Error: Object type not found')
-
-      
-
-
 
       //sets the sprite properties
       sprite.anchor.set(0.5)
@@ -71,7 +89,7 @@ export default class gGraphics {
       //TYPESCRIPT IS MAD
       //THIS IS THE EASY WAY TO ADD CUSTOM PROPERTIES TO A PIXI OBJECT
       //used in highlight space object
-      sprite['spaceObjectId'] = element.spaceObjectID
+      ;(sprite as any)['spaceObjectId'] = element.spaceObjectID
       this.viewport.addChild(sprite)
     })
 

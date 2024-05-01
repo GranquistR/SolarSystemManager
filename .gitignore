@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # sql thingy
 SpaceBox.sqbpro
+
+# build stuff
+SolarSystemManager.WEB/dist

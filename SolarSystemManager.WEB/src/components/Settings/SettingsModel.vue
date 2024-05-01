@@ -69,12 +69,11 @@ const props = defineProps<{
 
 async function changeParam() {
   try {
-    let salt: string = '';
+    let salt: any;
   if (oldUN.value != '' && oldUN.value != '') {
-     
+     console.log("fetching salt from salts");
     await LoginService.GetSalt(oldUN.value).then((response) => {
-      salt = JSON.parse(EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n));
-      console.log("salt: ", salt);
+      salt = EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n);
     })
     // Encrypt password using fetched salt
     const encryptedPassword = EncryptionModule.encrypt(oldP.value, salt)

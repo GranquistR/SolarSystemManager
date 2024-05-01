@@ -18,11 +18,11 @@
       <label for="password" class="font-semibold w-6rem">Password</label>
       <Password variant="filled" id="password" v-model="oldP" :feedback="false" />
     </div>
-    <div class="flex align-items-center gap-3 mb-3" v-if:visible="!passVisible">
+    <div class="flex align-items-center gap-3 mb-3" v-if="!passVisible">
       <label for="new username" class="font-semibold w-6rem">New Username</label>
       <InputText id="username" variant="filled" autocomplete="off" v-model="newUN" />
     </div>
-    <div class="flex align-items-center gap-3 mb-5" v-if:visible="passVisible">
+    <div class="flex align-items-center gap-3 mb-5" v-if="passVisible">
       <label for="new password" class="font-semibold w-6rem">New Password</label>
       <Password variant="filled" id="password" v-model="newUN" :feedback="true" />
     </div>
@@ -48,14 +48,15 @@ import ChangeUsername from '@/services/LoginService'
 import LoginService from '@/services/LoginService'
 import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import InputText from 'primevue/inputtext'
-import encrypt from '@/scripts/Encryption/encryption'
 import Password from 'primevue/password'
+import EncryptionModule from '@/services/encryption'
 
-const newUN = ref('')
-const oldUN = ref('')
-const oldP = ref('')
 
-const visible = ref(false)
+let newUN = ref('')
+let oldUN = ref('')
+let oldP = ref('')
+
+let visible = ref(false)
 let passVisible = false
 
 onMounted(() => {
@@ -67,20 +68,24 @@ const props = defineProps<{
 }>()
 
 async function changeParam() {
+  try {
+    let salt: string = '';
   if (oldUN.value != '' && oldUN.value != '') {
-    let salt = ''
+     
     await LoginService.GetSalt(oldUN.value).then((response) => {
-      salt = response.data
+      salt = JSON.parse(EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n));
+      console.log("salt: ", salt);
     })
-
     // Encrypt password using fetched salt
-    const encryptedPassword = encrypt.encrypt(oldP.value, salt)
+    const encryptedPassword = EncryptionModule.encrypt(oldP.value, salt)
     if (passVisible) {
-      const newEncryptedPassword = encrypt.encrypt(newUN.value, salt)
+      const newEncryptedPassword = EncryptionModule.encrypt(newUN.value, salt)
+      console.log(newEncryptedPassword);
       LoginService.ChangePassword(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword)
       )
     } else {
+      console.log(newUN.value);
       LoginService.ChangeUsername(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value)
       )
@@ -91,6 +96,8 @@ async function changeParam() {
     alert('Error in LoginService. Check console for details.')
   }
   window.location.pathname = '/login'
-}
+} catch (e) {
+  console.error('Error: ', e);
+}}
 </script>
 @/Entities/ChangeCredRequest

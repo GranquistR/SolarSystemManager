@@ -1,6 +1,7 @@
 using System.Data;
 using System.Drawing;
 using System.Security.Cryptography;
+using System.Text.Json;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -98,8 +99,10 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("GetMySolarSystems")]
-        public IActionResult GetMySolarSystems([FromBody] LoginRequest cred)
+        public IActionResult GetMySolarSystems([FromBody] EncryptedMessage encMessage)
         {
+            LoginRequest? cred = JsonSerializer.Deserialize<LoginRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
             try
             {
                 var solarSystems = _solarSystemService.GetMySolarSystems(cred);

@@ -51,8 +51,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] User newAccount)
+        public IActionResult CreateAccount([FromBody] EncryptedMessage encMessage)
         {
+            User? newAccount = JsonSerializer.Deserialize<User>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
+
             try
             {
                 _userService.CreateAccount(newAccount);
@@ -150,8 +153,10 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangeUsername")]
-        public IActionResult ChangeUsername([FromBody] ChangeCredRequest cred)
+        public IActionResult ChangeUsername([FromBody] EncryptedMessage encMessage)
         {
+            ChangeCredRequest? cred = JsonSerializer.Deserialize<ChangeCredRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
             try
             {
                 _userService.ChangeUserName(cred);
@@ -170,8 +175,10 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangePassword")]
-        public IActionResult ChangePassword([FromBody] ChangeCredRequest cred)
+        public IActionResult ChangePassword([FromBody] EncryptedMessage encMessage)
         {
+            ChangeCredRequest? cred = JsonSerializer.Deserialize<ChangeCredRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
             try
             {
                 _userService.ChangePassword(cred);

@@ -25,7 +25,7 @@
     <Card>
       <div class="flex flex-column row-gap-2 p-3 addBox">
         <label for="objectName">Name:</label>
-        <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
+        <InputText variant="filled" id="objectName" v-model="newObject.objectName" :invalid="nameValid"/>
 
         <label for="type">Type:</label>
         <div>
@@ -73,7 +73,7 @@
             <ColorPicker id="color" v-model="newObject.objectColor" />
           </div>
         </div>
-        <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
+        <Button label="Save"  icon="pi pi-check" @click="AddSpaceObject"/>
         <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
       </div>
     </Card>
@@ -175,6 +175,9 @@ const solarSystem = computed(() => {
 const isDisabled = computed(() => {
   return props.disabled
 })
+const nameValid = computed(() => {
+  return newObject.value.objectName.length > 256
+})
 
 //watchers
 watch(newObject.value, () => {
@@ -182,6 +185,7 @@ watch(newObject.value, () => {
     redrawWithFake()
   }
 })
+
 
 //methods
 //opens the panel and begins the drawing of the edits
@@ -209,8 +213,13 @@ function closePanel() {
   emit('closed')
 }
 
+
 function AddSpaceObject() {
   if (!newObject.value) {
+    return
+  }
+  if (nameValid.value) {
+    toLong()
     return
   }
   //if new objects color does not start with #, add it
@@ -265,6 +274,10 @@ function resetObject() {
 
 function failed() {
   message.value.ShowMessage('Failed to add!', 'error')
+}
+
+function toLong() {
+  message.value.ShowMessage('text exceeds 254 character limit', 'error')
 }
 
 function success(id: number) {

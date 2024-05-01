@@ -64,7 +64,6 @@ function Create() {
   } else {
     SolarSystemService.CreateSolarSystem(name.value, isPrivate.value, user)
       .then((response) => {
-        console.log(response)
         if (response.success === false) {
           hasFailed.value = true
           setTimeout(() => {

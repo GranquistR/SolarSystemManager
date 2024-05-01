@@ -24,11 +24,6 @@ const router = createRouter({
       component: () => import('../views/DashboardView.vue')
     },
     {
-      path: '/systemeditor',
-      name: 'systemeditor',
-      component: () => import('../views/SystemEditorView.vue')
-    },
-    {
       path: '/settings',
       name: 'settings',
       component: () => import('../views/SettingsView.vue')
@@ -37,11 +32,6 @@ const router = createRouter({
       path: '/unauthorized',
       name: 'unauthorized',
       component: () => import('../views/UnauthorizedView.vue')
-    },
-    {
-      path: '/editor',
-      name: 'editor',
-      component: () => import('../views/SystemEditorView.vue')
     },
     {
       path: '/viewer/:id',
@@ -67,10 +57,6 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminView.vue')
-    },
-    {
-      path: '/:catchAll(.*)',
-      redirect: '/notfound'
     }
   ]
 })

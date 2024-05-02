@@ -80,12 +80,12 @@ async function changeParam() {
     if (passVisible) {
       const newEncryptedPassword = EncryptionModule.encrypt(newUN.value, salt)
       console.log(newEncryptedPassword);
-      LoginService.ChangePassword(
+      await LoginService.ChangePassword(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword)
       )
     } else {
       console.log(newUN.value);
-      LoginService.ChangeUsername(
+      await LoginService.ChangeUsername(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value)
       )
     }

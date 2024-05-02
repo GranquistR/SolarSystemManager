@@ -28,7 +28,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("Login")]
         public IActionResult Login([FromBody] EncryptedMessage encMessage)
         {
-            
             LoginRequest? cred = JsonSerializer.Deserialize<LoginRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
             try
             {

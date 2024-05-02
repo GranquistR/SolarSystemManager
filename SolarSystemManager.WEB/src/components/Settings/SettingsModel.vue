@@ -90,6 +90,7 @@ async function changeParam() {
       ); 
       if (object != "Successfully Changed Username") {
         alert("Username is Taken, please try again");
+        window.location.href = '/dashboard'
       }
     }
     visible.value = false

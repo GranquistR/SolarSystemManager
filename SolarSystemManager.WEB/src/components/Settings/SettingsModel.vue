@@ -85,9 +85,12 @@ async function changeParam() {
       )
     } else {
       console.log(newUN.value);
-      await LoginService.ChangeUsername(
+      const object: any = await LoginService.ChangeUsername(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value)
-      )
+      ); 
+      if (object != "Successfully Changed Username") {
+        alert("Username is Taken, please try again");
+      }
     }
     visible.value = false
   } else {

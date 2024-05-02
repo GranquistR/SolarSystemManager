@@ -156,11 +156,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         public IActionResult ChangeUsername([FromBody] EncryptedMessage encMessage)
         {
             ChangeCredRequest? cred = JsonSerializer.Deserialize<ChangeCredRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
-
+            Console.WriteLine(cred);
             try
             {
                 _userService.ChangeUserName(cred);
-                return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Username", data = null });
+                return Ok(new Response { success = true, status = 200, message = "Successfully Changed Username", data = null });
             }
             catch (BadHttpRequestException e)
             {
@@ -182,7 +182,7 @@ namespace SolarSystemManager.RESTAPI.Controllers
             try
             {
                 _userService.ChangePassword(cred);
-                return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Password", data = null });
+                return Ok(new Response { success = true, status = 200, message = "Successfully Changed Password", data = null });
             }
             catch (BadHttpRequestException e)
             {

@@ -17,6 +17,8 @@ import Button from 'primevue/button'
 import SolarSystemService from '@/services/SolarSystemService'
 import type User from '@/Entities/User'
 import Dialog from 'primevue/dialog'
+import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
+
 
 const user = inject<User | null>('currentUser')
 const deleteDialogVisible = ref(false)
@@ -34,7 +36,7 @@ function confirmDelete() {
 
 function deleteSolarSystem() {
   if (user) {
-    SolarSystemService.DeleteSolarSystem(props.solarSystem.systemId, user)
+    SolarSystemService.DeleteSolarSystem(new DeleteSolarSystemRequest(user.username, user.password, props.solarSystem.systemId))
       .then((response) => {
         if (response.success) {
           props.success()

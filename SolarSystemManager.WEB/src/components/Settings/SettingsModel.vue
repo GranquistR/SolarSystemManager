@@ -50,12 +50,15 @@ import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import EncryptionModule from '@/services/encryption'
+import router from '@/router'
+import UserRequest from '@/Entities/UserRequest'
 
 
 let newUN = ref('')
 let oldUN = ref('')
 let oldP = ref('')
-
+const isLoading = ref(false)
+const hasFailed = ref(false)
 let visible = ref(false)
 let passVisible = false
 
@@ -84,15 +87,43 @@ async function changeParam() {
         new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword)
       )
     } else {
-      console.log(newUN.value);
       const object: any = await LoginService.ChangeUsername(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value)
       ); 
-      if (object != "Successfully Changed Username") {
+      if (object.message != "Successfully Changed Username") {
         alert("Username is Taken, please try again");
-        window.location.href = '/dashboard'
+      } else if (object.message == "Successfully Changed Password") {
+            // Attempt login
+    await LoginService.Login(new UserRequest(newUN.value, encryptedPassword)).then(
+      (response) => {
+        if (response.success) {
+          isLoading.value = false
+          const date = new Date()
+          date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+          document.cookie = `username=${newUN.value}; expires=${date}; path=/;`
+          document.cookie = `password=${encryptedPassword}; expires=${date}; path=/;`
+          window.location.href = '/dashboard'
+        } else {
+          failedLogin()
+        }
       }
-    }
+    )
+  }  else {
+    failedLogin()
+  }
+}
+
+function failedLogin() {
+  document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  isLoading.value = false
+  hasFailed.value = true
+  setTimeout(() => {
+    hasFailed.value = false
+  }, 2000)
+}
+      
+    
     visible.value = false
   } else {
     console.error('Error in LoginService: ', Error)

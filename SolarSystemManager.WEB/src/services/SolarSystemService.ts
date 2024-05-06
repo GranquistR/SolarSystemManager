@@ -5,7 +5,8 @@ import User from '@/Entities/User'
 import DeleteSolarSystemRequest from '@/Entities/DeleteSolarSystemRequest'
 import AddSpaceObjectRequest from '@/Entities/AddSpaceObjectRequest'
 import GetSolarSystemByIdRequest from '@/Entities/GetSolarSystemByIdRequest'
-
+import EncryptedMessage from '@/Entities/encrypted'
+import EncryptionModule from '@/services/encryption'
 export default class SolarSystemService {
   static async GetPublicSolarSystems(): Promise<any> {
     return FetchAPIService.get('/SolarSystem/GetAllPublicSolarSystems')
@@ -19,7 +20,9 @@ export default class SolarSystemService {
   }
 
   static async GetUserSolarSystems(user: User): Promise<any> {
-    return FetchAPIService.post('/SolarSystem/GetMySolarSystems', user)
+    const message = EncryptionModule.eRSA(JSON.stringify(user));
+    const eMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    return FetchAPIService.post('/SolarSystem/GetMySolarSystems', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })

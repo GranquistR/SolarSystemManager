@@ -65,7 +65,6 @@ async function Login() {
     let eMessage: any;
     await LoginService.GetSalt(username.value).then((response) => {
       salt = EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n);
-
     })
     // Encrypt password using fetched salt
     const encryptedPassword = EncryptionModule.encrypt(password.value, salt)

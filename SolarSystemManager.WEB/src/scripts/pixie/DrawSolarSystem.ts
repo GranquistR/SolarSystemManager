@@ -73,7 +73,7 @@ export default class gGraphics {
         sprite = Sprite.from('/src/assets/Images/sprites/blackHole.png')
       else if (element.objectType == 'Comet')
         sprite = Sprite.from('/src/assets/Images/sprites/comet.png')
-      else console.log('Error: Object type not found: ', element.objectType)
+      else console.log('Error: Object type not found')
 
       //sets the sprite properties
       sprite.anchor.set(0.5)
@@ -89,7 +89,7 @@ export default class gGraphics {
       //TYPESCRIPT IS MAD
       //THIS IS THE EASY WAY TO ADD CUSTOM PROPERTIES TO A PIXI OBJECT
       //used in highlight space object
-      sprite['spaceObjectId'] = element.spaceObjectID
+      ;(sprite as any)['spaceObjectId'] = element.spaceObjectID
       this.viewport.addChild(sprite)
     })
 

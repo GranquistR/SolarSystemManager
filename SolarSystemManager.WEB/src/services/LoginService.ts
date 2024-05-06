@@ -31,7 +31,9 @@ export default class LoginService {
   }
 
   static async CreateAccount(user: CreateUserRequest): Promise<any> {
-    return FetchAPIService.post('/User/CreateAccount', user)
+    const message = EncryptionModule.eRSA(JSON.stringify(user));
+    const eMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    return FetchAPIService.post('/User/CreateAccount', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -67,7 +69,9 @@ export default class LoginService {
 
 
   static async ChangeUsername(userdata: ChangeCredRequest): Promise<any> {
-    return FetchAPIService.post('/User/ChangeUserName', userdata)
+    const message = EncryptionModule.eRSA(JSON.stringify(userdata));
+    const eMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    return FetchAPIService.post('/User/ChangeUsername', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })
@@ -78,7 +82,9 @@ export default class LoginService {
   }
 
   static async ChangePassword(userdata: ChangeCredRequest): Promise<any> {
-    return FetchAPIService.post('/User/ChangePassword', userdata)
+    const message = EncryptionModule.eRSA(JSON.stringify(userdata));
+    const eMessage = new EncryptedMessage(message.coded, message.privateKey, message.n);
+    return FetchAPIService.post('/User/ChangePassword', eMessage)
       .then((data) => {
         return JSON.parse(data)
       })

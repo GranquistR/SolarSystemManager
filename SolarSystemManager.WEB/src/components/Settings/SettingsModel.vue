@@ -18,11 +18,11 @@
       <label for="password" class="font-semibold w-6rem">Password</label>
       <Password variant="filled" id="password" v-model="oldP" :feedback="false" />
     </div>
-    <div class="flex align-items-center gap-3 mb-3" v-if:visible="!passVisible">
+    <div class="flex align-items-center gap-3 mb-3" v-if="!passVisible">
       <label for="new username" class="font-semibold w-6rem">New Username</label>
       <InputText id="username" variant="filled" autocomplete="off" v-model="newUN" />
     </div>
-    <div class="flex align-items-center gap-3 mb-5" v-if:visible="passVisible">
+    <div class="flex align-items-center gap-3 mb-5" v-if="passVisible">
       <label for="new password" class="font-semibold w-6rem">New Password</label>
       <Password variant="filled" id="password" v-model="newUN" :feedback="true" />
     </div>
@@ -44,18 +44,22 @@
 import { ref, onMounted } from 'vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
+import ChangeUsername from '@/services/LoginService'
 import LoginService from '@/services/LoginService'
 import ChangeCredRequest from '@/Entities/ChangeCredRequest'
 import InputText from 'primevue/inputtext'
-import EncryptionModule from '@/services/encryption'
 import Password from 'primevue/password'
+import EncryptionModule from '@/services/encryption'
+import router from '@/router'
+import UserRequest from '@/Entities/UserRequest'
 
 
-const newUN = ref('')
-const oldUN = ref('')
-const oldP = ref('')
-
-const visible = ref(false)
+let newUN = ref('')
+let oldUN = ref('')
+let oldP = ref('')
+const isLoading = ref(false)
+const hasFailed = ref(false)
+let visible = ref(false)
 let passVisible = false
 
 onMounted(() => {
@@ -67,30 +71,67 @@ const props = defineProps<{
 }>()
 
 async function changeParam() {
+  try {
+    let salt: any;
   if (oldUN.value != '' && oldUN.value != '') {
-    let salt = ''
+     console.log("fetching salt from salts");
     await LoginService.GetSalt(oldUN.value).then((response) => {
       salt = EncryptionModule.dRSA(response.data.message, response.data.key, response.data.n);
     })
-
     // Encrypt password using fetched salt
     const encryptedPassword = EncryptionModule.encrypt(oldP.value, salt)
     if (passVisible) {
       const newEncryptedPassword = EncryptionModule.encrypt(newUN.value, salt)
-      LoginService.ChangePassword(
+      console.log(newEncryptedPassword);
+      await LoginService.ChangePassword(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newEncryptedPassword)
       )
     } else {
-      LoginService.ChangeUsername(
+      const object: any = await LoginService.ChangeUsername(
         new ChangeCredRequest(oldUN.value, encryptedPassword, newUN.value)
-      )
-    }
+      ); 
+      if (object.message != "Successfully Changed Username") {
+        alert("Username is Taken, please try again");
+      } else if (object.message == "Successfully Changed Password") {
+            // Attempt login
+    await LoginService.Login(new UserRequest(newUN.value, encryptedPassword)).then(
+      (response) => {
+        if (response.success) {
+          isLoading.value = false
+          const date = new Date()
+          date.setTime(date.getTime() + 24 * 60 * 60 * 1000)
+          document.cookie = `username=${newUN.value}; expires=${date}; path=/;`
+          document.cookie = `password=${encryptedPassword}; expires=${date}; path=/;`
+          window.location.href = '/dashboard'
+        } else {
+          failedLogin()
+        }
+      }
+    )
+  }  else {
+    failedLogin()
+  }
+}
+
+function failedLogin() {
+  document.cookie = `username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  document.cookie = `password=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+  isLoading.value = false
+  hasFailed.value = true
+  setTimeout(() => {
+    hasFailed.value = false
+  }, 2000)
+}
+      
+    
     visible.value = false
   } else {
     console.error('Error in LoginService: ', Error)
     alert('Error in LoginService. Check console for details.')
   }
   window.location.pathname = '/login'
-}
+} catch (e) {
+  console.error('Error: ', e);
+}}
 </script>
 @/Entities/ChangeCredRequest

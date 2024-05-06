@@ -28,7 +28,6 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [Route("Login")]
         public IActionResult Login([FromBody] EncryptedMessage encMessage)
         {
-            
             LoginRequest? cred = JsonSerializer.Deserialize<LoginRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
             try
             {
@@ -51,8 +50,11 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("CreateAccount")]
-        public IActionResult CreateAccount([FromBody] User newAccount)
+        public IActionResult CreateAccount([FromBody] EncryptedMessage encMessage)
         {
+            User? newAccount = JsonSerializer.Deserialize<User>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
+
             try
             {
                 _userService.CreateAccount(newAccount);
@@ -150,12 +152,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangeUsername")]
-        public IActionResult ChangeUsername([FromBody] ChangeCredRequest cred)
+        public IActionResult ChangeUsername([FromBody] EncryptedMessage encMessage)
         {
+            ChangeCredRequest? cred = JsonSerializer.Deserialize<ChangeCredRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+            Console.WriteLine(cred);
             try
             {
                 _userService.ChangeUserName(cred);
-                return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Username", data = null });
+                return Ok(new Response { success = true, status = 200, message = "Successfully Changed Username", data = null });
             }
             catch (BadHttpRequestException e)
             {
@@ -170,12 +174,14 @@ namespace SolarSystemManager.RESTAPI.Controllers
         [HttpPost]
         [EnableCors("AllowSpecificOrigin")] // Apply the CORS policy
         [Route("ChangePassword")]
-        public IActionResult ChangePassword([FromBody] ChangeCredRequest cred)
+        public IActionResult ChangePassword([FromBody] EncryptedMessage encMessage)
         {
+            ChangeCredRequest? cred = JsonSerializer.Deserialize<ChangeCredRequest>(EncryptionController.dRSA(encMessage.message, encMessage.key, encMessage.n));
+
             try
             {
                 _userService.ChangePassword(cred);
-                return Ok(new Response { success = true, status = 200, message = "Sucessfully Changed Password", data = null });
+                return Ok(new Response { success = true, status = 200, message = "Successfully Changed Password", data = null });
             }
             catch (BadHttpRequestException e)
             {

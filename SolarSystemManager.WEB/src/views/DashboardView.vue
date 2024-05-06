@@ -23,7 +23,7 @@
           <DataTable
             selectionMode="single"
             headerStyle="width: 3rem"
-            :value="processedSolarSystems"
+            :value="solarSystems"
             @row-click="(row) => ViewerGoTo(row.data.systemId)"
           >
             <Column header="Name">
@@ -37,7 +37,7 @@
             <Column header="Preview">
               <template #body="slotProps">
                 <SpaceObjectDisplay
-                  v-for="(object, index) in slotProps.data.previewObjects"
+                  v-for="(object, index) in slotProps.data.spaceObjects.slice(0, 6)"
                   :key="index"
                   :spaceObject="object"
                   :size="60"
@@ -140,47 +140,18 @@ import CustomMessage from '@/components/CustomMessage.vue'
 import SpaceObjectDisplay from '@/components/ViewerUi/SpaceObjectDisplay.vue'
 
 const user = inject<User | null>('currentUser')
-const solarSystems = ref([])
+const solarSystems = ref<SolarSystem[]>([])
 const deleteDialogVisible = ref(false)
 const systemIdToDelete = ref<number | null>(null)
 const message = ref()
 const systemNameToDelete = ref('')
-//const selectedSystems = ref('');
-const processedSolarSystems = ref([])
 
 const confirmDelete = (systemId: number) => {
-  const system = solarSystems.value.find((s: SolarSystem) => s.systemId === systemId)
+  const system = solarSystems.value.find((s: SolarSystem) => s.systemId === systemId) as SolarSystem
   systemNameToDelete.value = system ? system.systemName : ''
   systemIdToDelete.value = systemId
   deleteDialogVisible.value = true
 }
-
-//Function to process the solarSystems and update processedSolarSystems
-function processSolarSystems() {
-  processedSolarSystems.value = solarSystems.value.map((solarSystem) => {
-    //Shallow copy of the solar system
-    const processedSystem = { ...solarSystem }
-
-    //If there are more than 6 objects, pick 6 at random, otherwise use all available
-    processedSystem.previewObjects =
-      solarSystem.spaceObjects.length > 6
-        ? getRandomObjects(solarSystem.spaceObjects, 6)
-        : solarSystem.spaceObjects
-
-    return processedSystem
-  })
-}
-
-//Function to get random objects serving as a preview
-function getRandomObjects(objects, count) {
-  const shuffled = objects.sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
-}
-
-//Watch the solarSystems for changes and reprocess
-watch(solarSystems, () => {
-  processSolarSystems()
-})
 
 //Call processSolarSystems initially on component mount
 onMounted(() => {
@@ -190,11 +161,16 @@ onMounted(() => {
         throw new Error('Failed to load solar systems')
       }
       solarSystems.value = response.data
-      //Process the data for previews
-      processSolarSystems()
+      randomizeArray()
     })
   }
 })
+
+function randomizeArray() {
+  solarSystems.value.forEach((system) => {
+    system.spaceObjects = system.spaceObjects.sort(() => Math.random() - 0.5)
+  })
+}
 
 //Shows user owned solar systems
 if (user) {

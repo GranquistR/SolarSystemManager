@@ -21,61 +21,59 @@
         <h3 v-else>Edit {{ spaceObjectToEdit.objectName }}</h3>
       </div>
     </template>
-    <Card>
-      <div class="flex flex-column row-gap-2 p-3 addBox">
-        <label for="objectName">Name:</label>
-        <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
+    <div class="flex flex-column row-gap-2 p-3 addBox">
+      <label for="objectName">Name:</label>
+      <InputText variant="filled" id="objectName" v-model="newObject.objectName" />
 
-        <label for="type">Type:</label>
+      <label for="type">Type:</label>
+      <div>
+        <Dropdown
+          id="type"
+          v-model="objectMainType"
+          :options="types"
+          placeholder="Select..."
+        ></Dropdown>
         <div>
-          <Dropdown
-            id="type"
-            v-model="objectMainType"
-            :options="types"
-            placeholder="Select..."
-          ></Dropdown>
-          <div>
-            <div v-if="objectMainType == 'Planet'" class="flex flex-row flex-wrap gap-3 mt-2">
-              <Dropdown
-                v-model="objectSubType"
-                :options="planetTypes"
-                placeholder="Planet type"
-                class="flex align-items-center justify-content-center"
-              ></Dropdown>
-              <div class="flex align-items-center justify-content-center">
-                <label for="ringed" class="mr-2"> Ringed </label>
-                <Checkbox id="ringed" v-model="objectRinged" :binary="true" />
-              </div>
-            </div>
-          </div>
-          <div v-if="objectMainType == 'Asteroid'">
+          <div v-if="objectMainType == 'Planet'" class="flex flex-row flex-wrap gap-3 mt-2">
             <Dropdown
               v-model="objectSubType"
-              :options="asteroidTypes"
-              placeholder="Asteroid type"
-              class="mt-2"
+              :options="planetTypes"
+              placeholder="Planet type"
+              class="flex align-items-center justify-content-center"
             ></Dropdown>
+            <div class="flex align-items-center justify-content-center">
+              <label for="ringed" class="mr-2"> Ringed </label>
+              <Checkbox id="ringed" v-model="objectRinged" :binary="true" />
+            </div>
           </div>
         </div>
-        <div class="flex flex-column row-gap-4">
-          <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
-            Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
-          </div>
-          <div>
-            Size:
-            <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
-          </div>
-          <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
-          <!--class="w-14rem"-->
-          <div>
-            <label for="color"> Color </label>
-            <ColorPicker id="color" v-model="newObject.objectColor" />
-          </div>
+        <div v-if="objectMainType == 'Asteroid'">
+          <Dropdown
+            v-model="objectSubType"
+            :options="asteroidTypes"
+            placeholder="Asteroid type"
+            class="mt-2"
+          ></Dropdown>
         </div>
-        <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
-        <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
       </div>
-    </Card>
+      <div class="flex flex-column row-gap-4">
+        <div class="mt-3" v-tooltip.top="'Click where you want your object to be.'">
+          Position: ({{ newObject.xCoord }},{{ newObject.yCoord }})
+        </div>
+        <div>
+          Size:
+          <InputNumber v-model="newObject.objectSize" inputId="minmax" :min="0" :max="100" />
+        </div>
+        <Slider v-model="newObject.objectSize" :min="1" :max="100"></Slider>
+        <!--class="w-14rem"-->
+        <div>
+          <label for="color"> Color </label>
+          <ColorPicker id="color" v-model="newObject.objectColor" />
+        </div>
+      </div>
+      <Button label="Save" icon="pi pi-check" @click="AddSpaceObject" />
+      <Button label="Cancel" icon="pi pi-times" severity="danger" @click="closePanel" />
+    </div>
   </Dialog>
 </template>
 <script setup lang="ts">
@@ -118,7 +116,7 @@ const newObject = ref<SpaceObject>({
   spaceObjectID: 0,
   solarSystemID: -1, //solarSystem.value.systemId,
   objectName: 'Sol',
-  objectType: objectMainType.value,
+  objectType: 'Star',
   xCoord: 0,
   yCoord: 0,
   objectSize: 5,
@@ -131,7 +129,11 @@ const asteroidTypes = ref(['Rocky', 'Icy', 'Lava', 'Crater'])
 
 watch(objectMainType, () => {
   //constructs the object type
-  if (objectMainType.value == 'Asteroid' || objectMainType.value == 'Planet') {
+  //console.log('Main type watch triggered')
+  if (
+    (objectMainType.value == 'Asteroid' || objectMainType.value == 'Planet') &&
+    !panelOpen.value
+  ) {
     //sets default subtype
     objectSubType.value = 'Rocky'
     objectRinged.value = false
@@ -245,11 +247,34 @@ function resetObject() {
     newObject.value.spaceObjectID = props.spaceObjectToEdit.spaceObjectID
     newObject.value.solarSystemID = props.spaceObjectToEdit.solarSystemID
     newObject.value.objectName = props.spaceObjectToEdit.objectName
-    newObject.value.objectType = props.spaceObjectToEdit.objectType
     newObject.value.xCoord = props.spaceObjectToEdit.xCoord
     newObject.value.yCoord = props.spaceObjectToEdit.yCoord
     newObject.value.objectSize = props.spaceObjectToEdit.objectSize
     newObject.value.objectColor = props.spaceObjectToEdit.objectColor
+
+    newObject.value.objectType = props.spaceObjectToEdit.objectType
+    //parse and separate type
+    //var parsedType = newObject.value.objectType.split(' ')
+    //console.log(parsedType)
+    if (newObject.value.objectType.includes('Asteroid')) {
+      objectMainType.value = 'Asteroid'
+      objectSubType.value = newObject.value.objectType.split(' ', 1)[0]
+    } else {
+      if (newObject.value.objectType.includes('Planet')) {
+        objectMainType.value = 'Planet'
+        objectSubType.value = newObject.value.objectType.split(' ', 1)[0]
+        if (newObject.value.objectType.includes('Ringed')) {
+          objectRinged.value = true
+        } else {
+          objectRinged.value = false
+        }
+      } else {
+        objectMainType.value = newObject.value.objectType
+      }
+    }
+    console.log('MAIN TYPE : ', objectMainType.value)
+    console.log('SUB TYPE : ', objectSubType.value)
+    console.log('RINGED : ', objectRinged.value)
   } else {
     newObject.value.spaceObjectID = 0
     newObject.value.solarSystemID = -1
@@ -259,6 +284,11 @@ function resetObject() {
     newObject.value.yCoord = 0
     newObject.value.objectSize = 5
     newObject.value.objectColor = '#FFFFFF'
+
+    //resets subtypes
+    objectMainType.value = 'Star'
+    objectSubType.value = 'Rocky'
+    objectRinged.value = false
   }
 }
 

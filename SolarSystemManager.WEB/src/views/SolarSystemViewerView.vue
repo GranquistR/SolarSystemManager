@@ -8,7 +8,6 @@
       <div class="spacer"></div>
       <SpaceObjectPicker
         ref="editSpaceObject"
-        class="w-22rem"
         :solar-system="solarSystem"
         @select-id="Select"
         :graphics="graphics"

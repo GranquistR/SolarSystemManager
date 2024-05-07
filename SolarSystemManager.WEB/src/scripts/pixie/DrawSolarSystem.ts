@@ -73,7 +73,7 @@ export default class gGraphics {
         sprite = Sprite.from('/src/assets/Images/sprites/blackHole.png')
       else if (element.objectType == 'Comet')
         sprite = Sprite.from('/src/assets/Images/sprites/comet.png')
-      else console.log('Error: Object type not found')
+      else console.log('Error: Object type not found', element.objectType)
 
       //sets the sprite properties
       sprite.anchor.set(0.5)

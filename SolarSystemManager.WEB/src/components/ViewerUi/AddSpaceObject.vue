@@ -115,7 +115,7 @@ const panelOpen = ref(false)
 //for constructing specific object types
 const objectMainType = ref<string>('Star')
 const objectSubType = ref<string>('Rocky')
-const objectRinged = ref<boolean>(false)
+const objectRinged = ref<boolean>()
 
 const newObject = ref<SpaceObject>({
   spaceObjectID: 0,
@@ -135,34 +135,56 @@ const asteroidTypes = ref(['Rocky', 'Icy', 'Lava', 'Crater'])
 watch(objectMainType, () => {
   //constructs the object type
   //console.log('Main type watch triggered')
-  if (
-    (objectMainType.value == 'Asteroid' || objectMainType.value == 'Planet') &&
-    !panelOpen.value
-  ) {
-    //sets default subtype
+  if (objectMainType.value == 'Asteroid' && panelOpen.value) {
     objectSubType.value = 'Rocky'
     objectRinged.value = false
     newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+    watch(objectSubType, () => {
+      //console.log('Sub type watch triggered')
+      //watching for changes in subtype
+      newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+      console.log('SUB WATCH TRIGGERED')
+      console.log('MAIN TYPE : ', objectMainType.value)
+      console.log('SUB TYPE : ', objectSubType.value)
+      console.log('RINGED : ', objectRinged.value)
+    })
+  } else if (objectMainType.value == 'Planet' && panelOpen.value) {
+    objectSubType.value = 'Rocky'
+    objectRinged.value = false
+    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+    watch(objectSubType, () => {
+      //console.log('Sub type watch triggered')
+      //watching for changes in subtype
+      if (objectRinged.value) {
+        newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
+      } else {
+        newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+      }
+      console.log('SUB WATCH TRIGGERED')
+      console.log('MAIN TYPE : ', objectMainType.value)
+      console.log('SUB TYPE : ', objectSubType.value)
+      console.log('RINGED : ', objectRinged.value)
+    })
+    watch(objectRinged, () => {
+      if (objectRinged.value) {
+        //add rings
+        newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
+      } else {
+        //reset if not
+        newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
+      }
+      console.log('RINGED WATCH TRIGGERED')
+      console.log('MAIN TYPE : ', objectMainType.value)
+      console.log('SUB TYPE : ', objectSubType.value)
+      console.log('RINGED : ', objectRinged.value)
+    })
   } else {
     newObject.value.objectType = objectMainType.value
   }
-})
-watch(objectSubType, () => {
-  //watching for changes in subtype
-  if (objectRinged.value) {
-    newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
-  } else {
-    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
-  }
-})
-watch(objectRinged, () => {
-  if (objectRinged.value) {
-    //add rings
-    newObject.value.objectType = objectSubType.value + ' Ringed ' + objectMainType.value
-  } else {
-    //reset if not
-    newObject.value.objectType = objectSubType.value + ' ' + objectMainType.value
-  }
+  console.log('MAIN WATCH TRIGGERED')
+  console.log('MAIN TYPE : ', objectMainType.value)
+  console.log('SUB TYPE : ', objectSubType.value)
+  console.log('RINGED : ', objectRinged.value)
 })
 
 //expose
@@ -266,8 +288,8 @@ function resetObject() {
 
     newObject.value.objectType = props.spaceObjectToEdit.objectType
     //parse and separate type
-    //var parsedType = newObject.value.objectType.split(' ')
-    //console.log(parsedType)
+    var parsedType = newObject.value.objectType.split(' ')
+    console.log(parsedType)
     if (newObject.value.objectType.includes('Asteroid')) {
       objectMainType.value = 'Asteroid'
       objectSubType.value = newObject.value.objectType.split(' ', 1)[0]
@@ -284,9 +306,6 @@ function resetObject() {
         objectMainType.value = newObject.value.objectType
       }
     }
-    console.log('MAIN TYPE : ', objectMainType.value)
-    console.log('SUB TYPE : ', objectSubType.value)
-    console.log('RINGED : ', objectRinged.value)
   } else {
     newObject.value.spaceObjectID = 0
     newObject.value.solarSystemID = -1
